@@ -8,7 +8,6 @@ const { User } = require("../../db/models");
 const router = express.Router();
 
 // Log in
-
 const nextLoginError = (next) => {
   const err = new Error("Login Failed");
   err.status = 401;
@@ -40,6 +39,12 @@ router.post("/", async (req, res, next) => {
   return res.json({
     user: safeUser
   });
+});
+
+// Log out
+router.delete("/", (req, res) => {
+  res.clearCookie("token");
+  return res.json({ message: "success" });
 });
 
 module.exports = router;
