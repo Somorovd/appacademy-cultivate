@@ -7,6 +7,14 @@ const { User } = require("../../db/models");
 
 const router = express.Router();
 
+const makeSafeUser = (user) => {
+  return {
+    id: user.id,
+    email: user.email,
+    username: user.username,
+  };
+}
+
 // Log in
 const nextLoginError = (next) => {
   const err = new Error("Login Failed");
@@ -28,11 +36,7 @@ router.post("/", async (req, res, next) => {
   const isMatchingPassword = bcrypt.compareSync(password, user?.hashedPassword.toString());
   if (!user || !isMatchingPassword) return nextLoginError(next);
 
-  const safeUser = {
-    id: user.id,
-    email: user.email,
-    username: user.username,
-  };
+  const safeUser = makeSafeUser(user);
 
   setTokenCookie(res, safeUser);
 
@@ -45,6 +49,11 @@ router.post("/", async (req, res, next) => {
 router.delete("/", (req, res) => {
   res.clearCookie("token");
   return res.json({ message: "success" });
+});
+
+router.get("/", (req, res) => {
+  if (!req.user) return res.json({ user: null });
+  return res.json({ user: makeSafeUser(req.user) });
 });
 
 module.exports = router;
