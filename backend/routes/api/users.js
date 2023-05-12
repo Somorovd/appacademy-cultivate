@@ -2,7 +2,10 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 
 const { check } = require("express-validator");
-const { handleValidationErrors } = require("../../utils/validation");
+const {
+  handleInputValidationErrors,
+  buildValidationErrorResponce
+} = require("../../utils/validation");
 
 const { setTokenCookie, requireAuth } = require("../../utils/auth");
 const { User } = require("../../db/models");
@@ -25,7 +28,7 @@ const validateUserSignupInput = [
     .withMessage("Please provide a first name"),
   check("lastName").exists({ checkFalsy: true })
     .withMessage("Please provide a last name"),
-  handleValidationErrors
+  handleInputValidationErrors
 ];
 //#endregion
 
@@ -38,7 +41,10 @@ router.post("/", validateUserSignupInput, async (req, res, next) => {
     const safeUser = makeSafeUser(await createNewUser(req));
     buildSuccessfulSignupResponce(res, safeUser);
   }
-  catch (e) { buildSignupError(e, next); }
+  catch (e) {
+    const msg = "User already exists";
+    buildValidationErrorResponce(e.errors, 500, msg, next);
+  }
 });
 
 //#region             POST responces
@@ -48,18 +54,6 @@ function buildSuccessfulSignupResponce(res, safeUser) {
   return res.json({ user: safeUser });
 }
 
-function buildSignupError(e, next) {
-  const errors = {};
-  e.errors.forEach(
-    (error) => errors[error.path] = error.message
-  );
-
-  const err = new Error("User already exists");
-  err.errors = errors;
-  err.status = 500;
-  err.title = "Bad request";
-  next(err);
-}
 //#endregion
 //#endregion
 

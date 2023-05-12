@@ -3,7 +3,7 @@ const { Op } = require("sequelize");
 const bcrypt = require("bcryptjs");
 
 const { check } = require("express-validator");
-const { handleValidationErrors } = require("../../utils/validation");
+const { handleInputValidationErrors } = require("../../utils/validation");
 
 const { setTokenCookie, restoreUser, requireAuth } = require("../../utils/auth");
 const { User } = require("../../db/models");
@@ -21,7 +21,7 @@ const validateUserLoginInput = [
   check("password")
     .exists({ checkFalsy: true })
     .withMessage("Please provide a password"),
-  handleValidationErrors
+  handleInputValidationErrors
 ];
 //#endregion
 
