@@ -10,17 +10,7 @@ const { User } = require("../../db/models");
 
 const router = express.Router();
 
-const makeSafeUser = (user) => {
-  return {
-    id: user.id,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    email: user.email,
-    username: user.username,
-  };
-}
-
-// Log in
+//#region             Express middleware
 const validateUserLoginInput = [
   check("credential")
     .exists({ checkFalsy: true })
@@ -31,34 +21,16 @@ const validateUserLoginInput = [
     .withMessage("Please provide a password"),
   handleValidationErrors
 ];
+//#endregion
 
-async function isValidLogin(user, password) {
-  if (!user) return false;
-  return bcrypt.compareSync(password, user.hashedPassword.toString());
-}
+//#region             GET requests
+router.get("/", (req, res) => {
+  if (!req.user) return res.json({ user: null });
+  return res.json({ user: makeSafeUser(req.user) });
+});
+//#endregion
 
-function buildLoginError(next) {
-  const err = new Error("Login Failed");
-  err.status = 401;
-  err.title = "Login Failed";
-  err.errors = { credential: "Invalid credentials" };
-  return next(err);
-}
-
-async function attemptFindUser(credential, password) {
-  const user = await User.unscoped().findOne({
-    where: { [Op.or]: { username: credential, email: credential } }
-  });
-
-  return (await isValidLogin(user, password)) ? user : null;
-}
-
-function buildSuccessfulLoginResponce(res, user) {
-  const safeUser = makeSafeUser(user);
-  setTokenCookie(res, safeUser);
-  return res.json({ user: safeUser });
-}
-
+//#region             POST requests
 router.post("/", validateUserLoginInput, async (req, res, next) => {
   const { credential, password } = req.body;
 
@@ -68,15 +40,52 @@ router.post("/", validateUserLoginInput, async (req, res, next) => {
     buildLoginError(next);
 });
 
-// Log out
+//#region             POST responses
+function buildLoginError(next) {
+  const err = new Error("Login Failed");
+  err.status = 401;
+  err.title = "Login Failed";
+  err.errors = { credential: "Invalid credentials" };
+  return next(err);
+}
+
+function buildSuccessfulLoginResponce(res, user) {
+  const safeUser = makeSafeUser(user);
+  setTokenCookie(res, safeUser);
+  return res.json({ user: safeUser });
+}
+//#endregion
+//#endregion
+
+//#region             DELETE requests
 router.delete("/", (req, res) => {
   res.clearCookie("token");
   return res.json({ message: "success" });
 });
+//#endregion
 
-router.get("/", (req, res) => {
-  if (!req.user) return res.json({ user: null });
-  return res.json({ user: makeSafeUser(req.user) });
-});
+
+async function attemptFindUser(credential, password) {
+  const user = await User.unscoped().findOne({
+    where: { [Op.or]: { username: credential, email: credential } }
+  });
+
+  return (await isValidLogin(user, password)) ? user : null;
+}
+
+async function isValidLogin(user, password) {
+  if (!user) return false;
+  return bcrypt.compareSync(password, user.hashedPassword.toString());
+}
+
+function makeSafeUser(user) {
+  return {
+    id: user.id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    username: user.username,
+  };
+}
 
 module.exports = router;
