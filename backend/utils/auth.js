@@ -34,41 +34,22 @@ const restoreUser = async (req, res, next) => {
   const { token } = req.cookies;
   req.user = null;
 
-  return jwt.verify(token, secret, null, async (err, jwtPayload) => {
-    if (err) return next();
+  let payload;
+  try { payload = jwt.verify(token, secret); }
+  catch { return next(); }
 
-    try {
-      const { id } = jwtPayload.data;
-      req.user = await User.findByPk(id, {
-        attributes: {
-          include: ["email", "createdAt", "updatedAt"]
-        }
-      });
-    } catch (e) {
-      res.clearCookie("token");
-      return next();
-    }
-
-    if (!req.user) res.clearCookie("token");
+  try {
+    const userId = payload.data.id;
+    req.user = await User.findByPk(userId, {
+      attributes: { include: ["email", "createdAt", "updatedAt"] }
+    });
+  } catch {
+    res.clearCookie('token');
     return next();
-  });
+  }
 
-  // let payload;
-  // try { payload = jwt.verify(token, secret); }
-  // catch { return next(); }
-
-  // try {
-  //   const userId = payload.data.id;
-  //   req.user = await User.findByPk(userId, {
-  //     attributes: { include: ["email", "createdAt", "updatedAt"] }
-  //   });
-  // } catch {
-  //   res.clearCookie('token');
-  //   return next();
-  // }
-
-  // if (!req.user) res.clearCookie("token");
-  // return next();
+  if (!req.user) res.clearCookie("token");
+  return next();
 }
 
 const requireAuth = (req, res, next) => {

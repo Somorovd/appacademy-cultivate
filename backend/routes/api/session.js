@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 
-const { setTokenCookie, restoreUser } = require("../../utils/auth");
+const { setTokenCookie, restoreUser, requireAuth } = require("../../utils/auth");
 const { User } = require("../../db/models");
 
 const router = express.Router();
@@ -24,7 +24,7 @@ const validateUserLoginInput = [
 //#endregion
 
 //#region             GET requests
-router.get("/", (req, res) => {
+router.get("/", requireAuth, (req, res) => {
   if (!req.user) return res.json({ user: null });
   return res.json({ user: makeSafeUser(req.user) });
 });
