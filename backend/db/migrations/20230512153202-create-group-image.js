@@ -18,7 +18,7 @@ module.exports = {
       groupId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: "Group" }
+        references: { model: "Groups" }
       },
       url: {
         type: Sequelize.STRING,
