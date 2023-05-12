@@ -8,6 +8,8 @@ const { handleValidationErrors } = require("../../utils/validation");
 const { setTokenCookie, restoreUser, requireAuth } = require("../../utils/auth");
 const { User } = require("../../db/models");
 
+const { makeSafeUser } = require("../../utils/helpers");
+
 const router = express.Router();
 
 //#region             Express middleware
@@ -76,16 +78,6 @@ async function attemptFindUser(credential, password) {
 async function isValidLogin(user, password) {
   if (!user) return false;
   return bcrypt.compareSync(password, user.hashedPassword.toString());
-}
-
-function makeSafeUser(user) {
-  return {
-    id: user.id,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    email: user.email,
-    username: user.username,
-  };
 }
 
 module.exports = router;
