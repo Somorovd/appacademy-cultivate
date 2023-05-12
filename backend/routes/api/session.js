@@ -21,15 +21,7 @@ const makeSafeUser = (user) => {
 }
 
 // Log in
-const nextLoginError = (next) => {
-  const err = new Error("Login Failed");
-  err.status = 401;
-  err.title = "Login Failed";
-  err.errors = { credential: "Invalid credentials" };
-  return next(err);
-}
-
-const validateLogin = [
+const validateUserLoginInput = [
   check("credential")
     .exists({ checkFalsy: true })
     .notEmpty()
@@ -38,27 +30,42 @@ const validateLogin = [
     .exists({ checkFalsy: true })
     .withMessage("Please provide a password"),
   handleValidationErrors
-]
+];
 
-router.post("/", validateLogin, async (req, res, next) => {
+async function isValidLogin(user, password) {
+  if (!user) return false;
+  return bcrypt.compareSync(password, user.hashedPassword.toString());
+}
+
+function buildLoginError(next) {
+  const err = new Error("Login Failed");
+  err.status = 401;
+  err.title = "Login Failed";
+  err.errors = { credential: "Invalid credentials" };
+  return next(err);
+}
+
+async function attemptFindUser(credential, password) {
+  const user = await User.unscoped().findOne({
+    where: { [Op.or]: { username: credential, email: credential } }
+  });
+
+  return (await isValidLogin(user, password)) ? user : null;
+}
+
+function buildSuccessfulLoginResponce(res, user) {
+  const safeUser = makeSafeUser(user);
+  setTokenCookie(res, safeUser);
+  return res.json({ user: safeUser });
+}
+
+router.post("/", validateUserLoginInput, async (req, res, next) => {
   const { credential, password } = req.body;
 
-  const user = await User.unscoped().findOne({
-    where: {
-      [Op.or]: { username: credential, email: credential }
-    }
-  });
-
-  const isMatchingPassword = bcrypt.compareSync(password, user?.hashedPassword.toString());
-  if (!user || !isMatchingPassword) return nextLoginError(next);
-
-  const safeUser = makeSafeUser(user);
-
-  setTokenCookie(res, safeUser);
-
-  return res.json({
-    user: safeUser
-  });
+  const loggedInUser = await attemptFindUser(credential, password);
+  return loggedInUser ?
+    buildSuccessfulLoginResponce(res, loggedInUser) :
+    buildLoginError(next);
 });
 
 // Log out
