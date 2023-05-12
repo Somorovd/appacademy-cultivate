@@ -9,7 +9,8 @@ const { User } = require("../../db/models");
 
 const router = express.Router();
 
-const validateSignup = [
+//#region             Express middleware
+const validateUserSignupInput = [
   check("email").exists({ checkFalsy: true }).isEmail()
     .withMessage("Please privide a valid email."),
   check("username").exists({ checkFalsy: true }).isLength({ min: 4 })
@@ -20,8 +21,13 @@ const validateSignup = [
     .withMessage("Password must be 6 characters or more."),
   handleValidationErrors
 ];
+//#endregion
 
-router.post("/", validateSignup, async (req, res) => {
+//#region             GET requests
+//#endregion
+
+//#region             POST requests
+router.post("/", validateUserSignupInput, async (req, res) => {
   const { username, email, password, firstName, lastName } = req.body;
   const hashedPassword = bcrypt.hashSync(password, 12);
 
@@ -29,5 +35,6 @@ router.post("/", validateSignup, async (req, res) => {
   const safeUser = { id: user.id, username, email, firstName, lastName };
   return res.json({ user: safeUser });
 });
+//#endregion
 
 module.exports = router;
