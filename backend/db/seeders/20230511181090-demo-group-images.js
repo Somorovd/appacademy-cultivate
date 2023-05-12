@@ -18,7 +18,7 @@ module.exports = {
       {
         groupId: 1,
         url: "this is image 2 of group 1",
-        preview: true
+        preview: false
       },
       {
         groupId: 2,
@@ -28,12 +28,12 @@ module.exports = {
       {
         groupId: 2,
         url: "this is image 2 of group 2",
-        preview: true
+        preview: false
       },
       {
         groupId: 2,
         url: "this is image 3 of group 2",
-        preview: true
+        preview: false
       },
     ], {});
   },
