@@ -13,12 +13,12 @@ router.get("/", async (req, res, next) => {
 });
 
 router.get("/current", requireAuth, async (req, res) => {
-  const options = { userIds: [req.user.id] }
+  const options = { userIds: req.user.id }
   return await handleGetGroupsRequest(res, options);
 });
 
 router.get("/:groupId", async (req, res, next) => {
-  const options = { "groupIds": [req.params.groupId], details: true }
+  const options = { "groupIds": req.params.groupId, details: true }
   const { groups, memberCounts } = await getGroupsInfo(options);
   addCountsToGroups(groups, memberCounts);
   return (groups[0]) ? res.json(groups[0]) : buildMissingResourceError(next, "Group");

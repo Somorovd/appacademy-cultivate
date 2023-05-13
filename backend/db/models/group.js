@@ -78,7 +78,12 @@ module.exports = (sequelize, DataTypes) => {
             where: { "id": userIds },
             through: { as: "Membership" }
           }],
-          where: { "$Member.Membership.status$": "co-host" }
+          where: {
+            [Op.or]: {
+              "organizerId": userIds,
+              "$Member.Membership.status$": "co-host"
+            }
+          }
         }
       },
       filterByGroups(groupIds) {
