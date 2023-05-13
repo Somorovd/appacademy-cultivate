@@ -63,11 +63,24 @@ module.exports = (sequelize, DataTypes) => {
           }
         }
       },
-      filterByMembers(ids) {
+      filterByMembers(userIds) {
         const { User } = require("../models");
         return {
           include: [{ model: User, as: "Member", attributes: [] }],
-          where: { [Op.or]: { "organizerId": ids, "$Member.id$": ids } }
+          where: { [Op.or]: { "organizerId": userIds, "$Member.id$": userIds } }
+        }
+      },
+      filterByGroups(groupIds) {
+        return { where: { "id": groupIds } }
+      },
+      details() {
+        const { GroupImage, User, Venue } = require("../models");
+        return {
+          include: [
+            { model: GroupImage, attributes: ["id", "url", "preview"] },
+            { model: User, as: "Organizer", attributes: ["id", "firstName", "lastName"] },
+            { model: Venue }
+          ]
         }
       }
     }

@@ -8,38 +8,49 @@ const { buildMissingResourceError } = require("../../utils/helpers");
 
 //#region               GET requests
 router.get("/", async (req, res, next) => {
-  return await handleGetGroupsRequest(res);
+  const options = {};
+  return await handleGetGroupsRequest(res, options);
 });
 
 router.get("/current", requireAuth, async (req, res) => {
-  return await handleGetGroupsRequest(res, [req.user.id])
+  const options = { userIds: [req.user.id] }
+  return await handleGetGroupsRequest(res, options);
 });
 
 router.get("/:groupId", async (req, res, next) => {
-  const group = await attemptFindGroupById(req.params.groupId);
-  return (group) ? res.json(group) : buildMissingResourceError(next, "Group");
+  const options = { "groupIds": [req.params.groupId], details: true }
+  const { groups, memberCounts } = await getGroupsInfo(options);
+  addCountsToGroups(groups, memberCounts);
+  return (groups[0]) ? res.json(groups[0]) : buildMissingResourceError(next, "Group");
 });
 
 //#region               GET responses
-function buildGroupInfoResponse(res, groups, memberCounts) {
+
+async function handleGetGroupsRequest(res, options) {
+  const { groups, memberCounts } = await getGroupsInfo(options);
+  addCountsToGroups(groups, memberCounts);
+  if (!options.details) assignGroupPreviewImages(groups);
+  return res.json({ "Groups": groups });
+}
+//#endregion
+//#endregion
+
+function addCountsToGroups(groups, memberCounts) {
   for (let i in groups) {
     const group = groups[i];
     group.numMembers = memberCounts[i];
+  }
+  return groups;
+}
+
+function assignGroupPreviewImages(groups) {
+  for (let i in groups) {
+    const group = groups[i];
     group.previewImage = group.GroupImages[0]?.url || null;
     delete group.GroupImages;
   }
-  return res.json({ "Groups": groups });
+  return groups;
 }
-
-async function handleGetGroupsRequest(res, ids) {
-  const groups = await getGroupsInfoAndImage(ids);
-  const memberCounts = await Promise.all(
-    groups.map(async (group) => await countGroupMembers(group))
-  );
-  return buildGroupInfoResponse(res, groups, memberCounts);
-}
-//#endregion
-//#endregion
 
 async function countGroupMembers(group) {
   return await Membership.count({
@@ -47,22 +58,17 @@ async function countGroupMembers(group) {
   });
 }
 
-async function getGroupsInfoAndImage(ids) {
-  const scopes = ["getPreviewImage"];
-  if (ids) scopes.push({ method: ["filterByMembers", [ids]] })
-  const groups = await Group.scope(scopes).findAll();
-  return groups.map((group) => group.toJSON());
-}
+async function getGroupsInfo(options) {
+  const { userIds, groupIds, details } = options;
+  const scopes = [details ? "details" : "getPreviewImage"];
+  if (userIds?.length) scopes.push({ method: ["filterByMembers", userIds] });
+  if (groupIds?.length) scopes.push({ method: ["filterByGroups", groupIds] });
 
-async function attemptFindGroupById(id) {
-  const group = Group.findByPk(id, {
-    include: [
-      { model: GroupImage, attributes: ["id", "url", "preview"] },
-      { model: User, as: "Organizer", attributes: ["id", "firstName", "lastName"] },
-      { model: Venue }
-    ]
-  });
-  return group;
+  const groups = await Group.scope(scopes).findAll();
+  const memberCounts = await Promise.all(
+    groups.map(async (group) => await countGroupMembers(group))
+  );
+  return { "groups": groups.map((group) => group.toJSON()), memberCounts };
 }
 
 module.exports = router;
