@@ -8,6 +8,14 @@ function makeSafeUser(user) {
   };
 }
 
+function buildMissingResourceError(next, resource) {
+  const err = new Error(`${resource} could not be found`);
+  err.title = "Resource not found"
+  err.status = 404;
+  return next(err);
+}
+
 module.exports = {
-  makeSafeUser
+  makeSafeUser,
+  buildMissingResourceError
 };
