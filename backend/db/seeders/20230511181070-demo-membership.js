@@ -16,6 +16,16 @@ module.exports = {
         status: "co-host"
       },
       {
+        userId: 1,
+        groupId: 2,
+        status: "co-host"
+      },
+      {
+        userId: 1,
+        groupId: 3,
+        status: "pending"
+      },
+      {
         userId: 2,
         groupId: 2,
         status: "co-host"
@@ -26,16 +36,6 @@ module.exports = {
         status: "co-host"
       },
       {
-        userId: 1,
-        groupId: 2,
-        status: "member"
-      },
-      {
-        userId: 1,
-        groupId: 3,
-        status: "pending"
-      },
-      {
         userId: 4,
         groupId: 2,
         status: "co-host"
@@ -62,13 +62,13 @@ module.exports = {
       },
       {
         userId: 6,
-        groupId: 3,
-        status: "member"
+        groupId: 2,
+        status: "pending"
       },
       {
         userId: 6,
-        groupId: 2,
-        status: "pending"
+        groupId: 3,
+        status: "member"
       },
       {
         userId: 7,

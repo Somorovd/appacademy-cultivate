@@ -70,6 +70,17 @@ module.exports = (sequelize, DataTypes) => {
           where: { [Op.or]: { "organizerId": userIds, "$Member.id$": userIds } }
         }
       },
+      filterByHosts(userIds) {
+        const { User } = require("../models");
+        return {
+          include: [{
+            model: User, as: "Member", attributes: [],
+            where: { "id": userIds },
+            through: { as: "Membership" }
+          }],
+          where: { "$Member.Membership.status$": "co-host" }
+        }
+      },
       filterByGroups(groupIds) {
         return { where: { "id": groupIds } }
       },

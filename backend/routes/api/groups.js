@@ -24,6 +24,14 @@ router.get("/:groupId", async (req, res, next) => {
   return (groups[0]) ? res.json(groups[0]) : buildMissingResourceError(next, "Group");
 });
 
+router.get("/:groupId/venues", requireAuth, async (req, res, next) => {
+  const options = { hostIds: req.user.id, groupIds: req.params.groupId, details: true };
+  const group = (await getGroupsInfo(options)).groups[0];
+  return (group) ?
+    res.json({ "Venues": group["Venues"] }) :
+    buildMissingResourceError(next, "Group");
+});
+
 //#region               GET responses
 
 async function handleGetGroupsRequest(res, options) {
@@ -59,10 +67,11 @@ async function countGroupMembers(group) {
 }
 
 async function getGroupsInfo(options) {
-  const { userIds, groupIds, details } = options;
+  const { userIds, hostIds, groupIds, details } = options;
   const scopes = [details ? "details" : "getPreviewImage"];
-  if (userIds?.length) scopes.push({ method: ["filterByMembers", userIds] });
-  if (groupIds?.length) scopes.push({ method: ["filterByGroups", groupIds] });
+  if (userIds || userIds?.length) scopes.push({ method: ["filterByMembers", userIds] });
+  if (hostIds || hostIds?.length) scopes.push({ method: ["filterByHosts", hostIds] });
+  if (groupIds || groupIds?.length) scopes.push({ method: ["filterByGroups", groupIds] });
 
   const groups = await Group.scope(scopes).findAll();
   const memberCounts = await Promise.all(
