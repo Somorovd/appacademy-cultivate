@@ -43,39 +43,19 @@ async function countGroupMembers(group) {
 }
 
 async function getAllGroupsByUserId(id) {
-  const groups = await Group.findAll({
+  const groups = await Group.scope("getPreviewImage").findAll({
     include: [
-      {
-        model: GroupImage,
-        attributes: ["url"],
-        where: { "preview": true },
-        limit: 1
-      },
-      {
-        model: User,
-        as: "Member",
-        attributes: [],
-      }
+      { model: User, as: "Member", attributes: [] }
     ],
     where: {
-      [Op.or]: {
-        "organizerId": id,
-        "$Member.id$": id
-      }
+      [Op.or]: { "organizerId": id, "$Member.id$": id }
     }
   });
   return groups.map((group) => group.toJSON());
 }
 
 async function getAllGroupsInfoAndImage() {
-  const groups = await Group.findAll({
-    include: {
-      model: GroupImage,
-      attributes: ["url"],
-      where: { "preview": true },
-      limit: 1
-    }
-  });
+  const groups = await Group.scope("getPreviewImage").findAll();
   return groups.map((group) => group.toJSON());
 }
 

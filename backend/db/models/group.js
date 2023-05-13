@@ -51,6 +51,19 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Group',
+    scopes: {
+      getPreviewImage() {
+        const { GroupImage } = require("../models");
+        return {
+          include: {
+            model: GroupImage,
+            attributes: ["url"],
+            where: { "preview": true },
+            limit: 1
+          }
+        }
+      }
+    }
   });
   return Group;
 };
