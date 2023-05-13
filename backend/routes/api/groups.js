@@ -6,7 +6,34 @@ const { Op } = require("sequelize");
 
 //#region               GET requests
 router.get("/", async (req, res, next) => {
-  const responce = { "Groups": [] };
+  const groups = await getAllGroupsInfoAndImage();
+  const memberCounts = await Promise.all(
+    groups.map(async (group) => await countGroupMembers(group))
+  );
+  return buildGroupInfoResponce(res, groups, memberCounts);
+});
+
+//#region               GET responses
+function buildGroupInfoResponce(res, groups, memberCounts) {
+  for (let i in groups) {
+    const group = groups[i];
+    group.numMembers = memberCounts[i];
+    group.previewImage = group.GroupImages[0]?.url || null;
+    delete group.GroupImages;
+  }
+  return res.json({ "Groups": groups });
+}
+//#endregion
+//#endregion
+
+
+async function countGroupMembers(group) {
+  return await Membership.count({
+    where: { "groupId": group.id, [Op.not]: { "status": "pending" } }
+  });
+}
+
+async function getAllGroupsInfoAndImage() {
   const groups = await Group.findAll({
     include: {
       model: GroupImage,
@@ -15,20 +42,9 @@ router.get("/", async (req, res, next) => {
       limit: 1
     }
   });
+  return groups.map((group) => group.toJSON());
+}
 
-  for (let group of groups) {
-    const { GroupImages, ...g } = group.toJSON();
-    g.numMembers = await Membership.count({
-      where: {
-        "groupId": group.id,
-        [Op.not]: { "status": "pending" }
-      }
-    });
-    g.previewImage = GroupImages[0]?.url || null;
-    responce["Groups"].push(g);
-  }
-  return res.json(responce);
-});
-//#endregion
+
 
 module.exports = router;
