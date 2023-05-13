@@ -7,7 +7,7 @@ const { requireAuth } = require("../../utils/auth");
 
 //#region               GET requests
 router.get("/", async (req, res, next) => {
-  const groups = await getAllGroupsInfoAndImage();
+  const groups = await getGroupsInfoAndImage();
   const memberCounts = await Promise.all(
     groups.map(async (group) => await countGroupMembers(group))
   );
@@ -16,7 +16,7 @@ router.get("/", async (req, res, next) => {
 
 router.get("/current", requireAuth, async (req, res) => {
   const user = req.user;
-  const groups = await getAllGroupsByUserId(user.id);
+  const groups = await getGroupsInfoAndImage([user.id]);
   const memberCounts = await Promise.all(
     groups.map(async (group) => await countGroupMembers(group))
   );
@@ -42,20 +42,10 @@ async function countGroupMembers(group) {
   });
 }
 
-async function getAllGroupsByUserId(id) {
-  const groups = await Group.scope("getPreviewImage").findAll({
-    include: [
-      { model: User, as: "Member", attributes: [] }
-    ],
-    where: {
-      [Op.or]: { "organizerId": id, "$Member.id$": id }
-    }
-  });
-  return groups.map((group) => group.toJSON());
-}
-
-async function getAllGroupsInfoAndImage() {
-  const groups = await Group.scope("getPreviewImage").findAll();
+async function getGroupsInfoAndImage(ids = null) {
+  const scopes = ["getPreviewImage"];
+  if (ids) scopes.push({ method: ["filterByMembers", [ids]] })
+  const groups = await Group.scope(scopes).findAll();
   return groups.map((group) => group.toJSON());
 }
 

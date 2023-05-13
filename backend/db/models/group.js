@@ -1,5 +1,5 @@
 'use strict';
-const { Model } = require('sequelize');
+const { Model, Op } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class Group extends Model {
@@ -61,6 +61,13 @@ module.exports = (sequelize, DataTypes) => {
             where: { "preview": true },
             limit: 1
           }
+        }
+      },
+      filterByMembers(ids) {
+        const { User } = require("../models");
+        return {
+          include: [{ model: User, as: "Member", attributes: [] }],
+          where: { [Op.or]: { "organizerId": ids, "$Member.id$": ids } }
         }
       }
     }
