@@ -18,7 +18,7 @@ module.exports = {
       {
         eventId: 1,
         url: "this is image 2 of event 1",
-        preview: true
+        preview: false
       },
       {
         eventId: 1,
@@ -33,17 +33,17 @@ module.exports = {
       {
         eventId: 2,
         url: "this is image 2 of event 2",
-        preview: true
+        preview: false
       },
       {
         eventId: 2,
         url: "this is image 3 of event 2",
-        preview: true
+        preview: false
       },
       {
         eventId: 4,
         url: "this is image 1 of event 4",
-        preview: true
+        preview: false
       },
     ], {});
   },

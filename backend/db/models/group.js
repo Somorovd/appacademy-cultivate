@@ -59,7 +59,8 @@ module.exports = (sequelize, DataTypes) => {
             model: GroupImage,
             attributes: ["url"],
             where: { "preview": true },
-            limit: 1
+            limit: 1,
+            required: false
           }
         }
       },

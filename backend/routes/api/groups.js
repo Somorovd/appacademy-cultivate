@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { Group, Membership, GroupImage, User, Venue } = require("../../db/models");
+const { Group, Membership } = require("../../db/models");
 const { Op } = require("sequelize");
 const { requireAuth } = require("../../utils/auth");
 const { buildMissingResourceError } = require("../../utils/helpers");
@@ -69,9 +69,9 @@ async function countGroupMembers(group) {
 async function getGroupsInfo(options) {
   const { userIds, hostIds, groupIds, details } = options;
   const scopes = [details ? "details" : "getPreviewImage"];
-  if (userIds || userIds?.length) scopes.push({ method: ["filterByMembers", userIds] });
-  if (hostIds || hostIds?.length) scopes.push({ method: ["filterByHosts", hostIds] });
-  if (groupIds || groupIds?.length) scopes.push({ method: ["filterByGroups", groupIds] });
+  if (userIds) scopes.push({ method: ["filterByMembers", userIds] });
+  if (hostIds) scopes.push({ method: ["filterByHosts", hostIds] });
+  if (groupIds) scopes.push({ method: ["filterByGroups", groupIds] });
 
   const groups = await Group.scope(scopes).findAll();
   const memberCounts = await Promise.all(
