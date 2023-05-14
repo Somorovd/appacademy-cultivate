@@ -44,20 +44,14 @@ async function handleGetGroupsRequest(res, options) {
 //#endregion
 
 function addCountsToGroups(groups, memberCounts) {
-  for (let i in groups) {
-    const group = groups[i];
-    group.numMembers = memberCounts[i];
-  }
-  return groups;
+  for (let i in groups) groups[i].numMembers = memberCounts[i];
 }
 
 function assignGroupPreviewImages(groups) {
-  for (let i in groups) {
-    const group = groups[i];
+  for (let group of groups) {
     group.previewImage = group.GroupImages[0]?.url || null;
     delete group.GroupImages;
   }
-  return groups;
 }
 
 async function countGroupMembers(group) {
