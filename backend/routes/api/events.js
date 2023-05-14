@@ -38,11 +38,12 @@ async function countAttending(event) {
 
 async function getEventsInfo(options) {
   const events = (await Event.findAll({
+    attributes: ["id", "name", "type", "groupId", "venueId", "startDate", "endDate"],
     include: [
       { model: EventImage, attributes: ["url"], where: { "preview": true }, limit: 1, required: false },
       { model: Group, attributes: ["id", "name", "city", "state"] },
       { model: Venue, attributes: ["id", "city", "state"] }
-    ]
+    ],
   })).map((event) => event.toJSON());
   const attendingCounts = await Promise.all(
     events.map(async (event) => await countAttending(event))

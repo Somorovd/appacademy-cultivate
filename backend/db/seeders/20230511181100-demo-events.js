@@ -44,7 +44,7 @@ module.exports = {
         endDate: "2023-08-15"
       },
       {
-        venueId: 3,
+        venueId: null,
         groupId: 3,
         name: "Virtual Bowling Lessons",
         description: "Learn to bowl from the comfort of your couch",
