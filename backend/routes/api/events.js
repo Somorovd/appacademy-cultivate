@@ -28,8 +28,10 @@ router.get("/:eventId/attendees", async (req, res, next) => {
 
   const isHost = await Event.findByPk(req.params.eventId, {
     include: {
+      duplicate: true,
       model: Group, attributes: ["organizerId"],
       include: {
+        duplicate: true,
         model: User, as: "Member",
         through: { as: "Membership", where: userId },
       },
@@ -39,9 +41,8 @@ router.get("/:eventId/attendees", async (req, res, next) => {
           "$Group.Member.Membership.status$": "co-host"
         }
       },
-      subQuery: false,
-      duplicating: false
-    }
+    },
+    duplicate: true
   });
 
   options.attendees = isHost;
