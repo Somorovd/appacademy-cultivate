@@ -39,6 +39,7 @@ router.get("/:eventId/attendees", async (req, res, next) => {
           "$Group.Member.Membership.status$": "co-host"
         }
       },
+      subQuery: false
     }
   });
 
