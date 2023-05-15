@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { Event, Attendance, User, Group } = require("../../db/models");
+const { Event, Attendance, Membership, Group, User } = require("../../db/models");
 const { buildMissingResourceError } = require("../../utils/helpers");
 const event = require("../../db/models/event");
 
@@ -25,27 +25,25 @@ router.get("/:eventId", async (req, res, next) => {
 router.get("/:eventId/attendees", async (req, res, next) => {
   const options = { eventIds: req.params.eventId };
   const userId = req.user.id;
-
-  const isHost = await Event.findByPk(req.params.eventId, {
+  const event = await Event.findByPk(req.params.eventId, {
     include: {
-      duplicate: true,
       model: Group, attributes: ["organizerId"],
       include: {
-        duplicate: true,
         model: User, as: "Member",
-        through: { as: "Membership", where: userId },
+        where: { "id": userId },
+        through: { as: "Membership" }
       },
+      required: false,
       where: {
         [Op.or]: {
           "organizerId": userId,
           "$Group.Member.Membership.status$": "co-host"
         }
-      },
-    },
-    duplicate: true
+      }
+    }
   });
 
-  options.attendees = isHost;
+  options.attendees = event !== null;
   const events = await handleGetEventsRequest(options);
 
   return (events[0]) ?
