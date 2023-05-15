@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-const { Event, Attendance } = require("../../db/models");
+const { Event, Attendance, User } = require("../../db/models");
 const { buildMissingResourceError } = require("../../utils/helpers");
+const event = require("../../db/models/event");
 
 //#region               GET requests
 router.get("/", async (req, res) => {
@@ -16,6 +17,22 @@ router.get("/:eventId", async (req, res, next) => {
   const event = await handleGetEventsRequest(options);
   return (event[0]) ?
     res.json(event[0]) :
+    buildMissingResourceError(next, "Event");
+});
+
+router.get("/:eventId/attendees", async (req, res, next) => {
+  const events = await Event.findAll({
+    attributes: [],
+    include: {
+      model: User,
+      attributes: ["id", "firstName", "lastName"],
+      through: { attributes: ["status"] }
+    },
+    where: { "id": req.params.eventId }
+  });
+
+  return (events[0]) ?
+    res.json({ "Attendees": events[0]["Users"] }) :
     buildMissingResourceError(next, "Event");
 });
 
