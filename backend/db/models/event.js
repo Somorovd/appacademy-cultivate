@@ -73,6 +73,9 @@ module.exports = (sequelize, DataTypes) => {
       filterByGroups(groupIds) {
         return { where: { "groupId": groupIds } }
       },
+      filterByEvents(eventIds) {
+        return { where: { "id": eventIds } }
+      },
     }
   });
   return Event;

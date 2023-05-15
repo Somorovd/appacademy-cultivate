@@ -2,13 +2,22 @@ const express = require("express");
 const router = express.Router();
 
 const { Event, Attendance } = require("../../db/models");
+const { buildMissingResourceError } = require("../../utils/helpers");
 
 //#region               GET requests
 router.get("/", async (req, res) => {
   const options = { details: true };
   const events = await handleGetEventsRequest(options);
   return res.json(events);
-})
+});
+
+router.get("/:eventId", async (req, res, next) => {
+  const options = { eventIds: req.params.eventId, details: true };
+  const event = await handleGetEventsRequest(options);
+  return (event[0]) ?
+    res.json(event[0]) :
+    buildMissingResourceError(next, "Event");
+});
 
 //#region               GET responces
 async function handleGetEventsRequest(options) {
@@ -38,10 +47,11 @@ async function countAttending(event) {
 }
 
 async function getEventsInfo(options) {
-  const { details, groupIds } = options;
+  const { details, groupIds, eventIds } = options;
   const scopes = [];
   if (details) scopes.push("details");
   if (groupIds) scopes.push({ method: ["filterByGroups", groupIds] });
+  if (eventIds) scopes.push({ method: ["filterByEvents", eventIds] });
 
   const events = (await Event.scope(scopes).findAll()).map((event) => event.toJSON());
   const attendingCounts = await Promise.all(
