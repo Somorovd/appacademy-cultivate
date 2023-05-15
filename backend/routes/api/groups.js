@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { Group, Membership, Event } = require("../../db/models");
+const { Group, Membership, User } = require("../../db/models");
 const { Op } = require("sequelize");
 const { requireAuth } = require("../../utils/auth");
 const { buildMissingResourceError } = require("../../utils/helpers");
@@ -39,6 +39,35 @@ router.get("/:groupId/events", async (req, res, next) => {
   return (events.length) ?
     res.json(events) :
     buildMissingResourceError(next, "Group");
+});
+
+router.get("/:groupId/members", async (req, res, next) => {
+  const groupId = req.params.groupId;
+  const group = await Group.findAll({
+    where: { "id": groupId, "organizerId": req.user.id }
+  });
+
+  const where = (group[0]) ? {} : { "status": { [Op.ne]: "pending" } };
+  const users = await User.findAll({
+    attributes: ["id", "firstName", "lastName"],
+    include: {
+      model: Group, attributes: ["id"],
+      where: { "id": groupId },
+      through: { attributes: ["status"], where: where }
+    }
+  });
+
+  const userArr = [];
+  for (let user of users) {
+    user = user.toJSON();
+    user["Membership"] = user["Groups"][0]["Membership"];
+    delete user["Groups"];
+    userArr.push(user);
+  }
+
+  return (userArr[0]) ?
+    res.json(userArr) :
+    buildMissingResourceError(next, "Group")
 });
 
 //#region               GET responses
