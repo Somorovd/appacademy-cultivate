@@ -6,7 +6,7 @@ router.use(restoreUser);
 const sessionRouter = require("./session.js");
 const usersRouter = require("./users.js");
 const groupsRouter = require("./groups.js");
-const eventsRouter = require("./events.js");
+const { router: eventsRouter } = require("./events.js");
 router.use("/session", sessionRouter);
 router.use("/users", usersRouter);
 router.use("/groups", groupsRouter);

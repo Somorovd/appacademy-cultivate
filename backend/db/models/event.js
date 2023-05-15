@@ -69,7 +69,10 @@ module.exports = (sequelize, DataTypes) => {
             { model: Venue, attributes: ["id", "city", "state"] }
           ],
         }
-      }
+      },
+      filterByGroups(groupIds) {
+        return { where: { "groupId": groupIds } }
+      },
     }
   });
   return Event;

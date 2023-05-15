@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-const { Group, Membership } = require("../../db/models");
+const { Group, Membership, Event } = require("../../db/models");
 const { Op } = require("sequelize");
 const { requireAuth } = require("../../utils/auth");
 const { buildMissingResourceError } = require("../../utils/helpers");
+const { handleGetEventsRequest } = require("../api/events");
 
 //#region               GET requests
 router.get("/", async (req, res, next) => {
@@ -30,6 +31,11 @@ router.get("/:groupId/venues", requireAuth, async (req, res, next) => {
   return (group) ?
     res.json({ "Venues": group["Venues"] }) :
     buildMissingResourceError(next, "Group");
+});
+
+router.get("/:groupId/events", async (req, res) => {
+  const options = { groupIds: req.params.groupId, details: true };
+  return handleGetEventsRequest(res, options);
 });
 
 //#region               GET responses

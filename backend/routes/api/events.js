@@ -5,9 +5,8 @@ const { Event, Group, Venue, Attendance, EventImage } = require("../../db/models
 
 //#region               GET requests
 router.get("/", async (req, res) => {
-  const options = {};
+  const options = { details: true };
   return handleGetEventsRequest(res, options);
-  return res.json(events);
 })
 
 //#region               GET responces
@@ -38,12 +37,19 @@ async function countAttending(event) {
 }
 
 async function getEventsInfo(options) {
-  const events = (await Event.scope("details").findAll()).map((event) => event.toJSON());
+  const { details, groupIds } = options;
+  const scopes = [];
+  if (details) scopes.push("details");
+  if (groupIds) scopes.push({ method: ["filterByGroups", groupIds] });
+
+  const events = (await Event.scope(scopes).findAll()).map((event) => event.toJSON());
   const attendingCounts = await Promise.all(
     events.map(async (event) => await countAttending(event))
   );
   return { events, attendingCounts };
 }
 
-module.exports = router;
+module.exports = {
+  router, handleGetEventsRequest
+};
 
