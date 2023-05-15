@@ -27,14 +27,17 @@ module.exports = (sequelize, DataTypes) => {
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      unique: true,
+      validate: { len: [1, 60] }
     },
     about: {
       type: DataTypes.STRING,
+      validate: { len: [50] }
     },
     type: {
       type: DataTypes.ENUM("in person", "online"),
-      defaultValue: "in person"
+      allowNull: false
     },
     private: {
       type: DataTypes.BOOLEAN,

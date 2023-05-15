@@ -6,6 +6,8 @@ const { Op } = require("sequelize");
 const { requireAuth } = require("../../utils/auth");
 const { buildMissingResourceError } = require("../../utils/helpers");
 const { handleGetEventsRequest } = require("../api/events");
+const { check } = require("express-validator");
+const { handleInputValidationErrors } = require("../../utils/validation");
 
 //#region               GET requests
 router.get("/", async (req, res, next) => {
@@ -79,6 +81,17 @@ async function handleGetGroupsRequest(res, options) {
   return res.json({ "Groups": groups });
 }
 //#endregion
+//#endregion
+
+//#region               POST requests
+router.post("/", requireAuth, async (req, res, next) => {
+  const { name, about, type, private, city, state } = req.body;
+  const group = await Group.create({
+    organizerId: req.user.id,
+    name, about, type, private, city, state
+  });
+  return res.json(group);
+});
 //#endregion
 
 function addCountsToGroups(groups, memberCounts) {
