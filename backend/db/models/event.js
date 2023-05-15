@@ -1,7 +1,8 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+
+const { Model } = require('sequelize');
+
+
 module.exports = (sequelize, DataTypes) => {
   class Event extends Model {
     /**
@@ -57,6 +58,19 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Event',
+    scopes: {
+      details() {
+        const { Group, EventImage, Venue } = require("../models");
+        return {
+          attributes: ["id", "name", "type", "groupId", "venueId", "startDate", "endDate"],
+          include: [
+            { model: EventImage, attributes: ["url"], where: { "preview": true }, limit: 1, required: false },
+            { model: Group, attributes: ["id", "name", "city", "state"] },
+            { model: Venue, attributes: ["id", "city", "state"] }
+          ],
+        }
+      }
+    }
   });
   return Event;
 };
