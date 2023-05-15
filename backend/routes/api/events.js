@@ -33,20 +33,17 @@ router.get("/:eventId/attendees", async (req, res, next) => {
         where: { "id": userId },
         through: { as: "Membership" }
       },
-      required: true,
+      required: false,
       where: {
         [Op.or]: {
           "organizerId": userId,
-          [Op.and]: {
-            "$Group.Member.id$": userId,
-            "$Group.Member.Membership.status$": "co-host"
-          }
+          "$Group.Member.Membership.status$": "co-host"
         }
       }
     }
   });
 
-  options.attendees = event !== null;
+  options.attendees = event["Group"] !== null;
   const events = await handleGetEventsRequest(options);
 
   return (events[0]) ?
