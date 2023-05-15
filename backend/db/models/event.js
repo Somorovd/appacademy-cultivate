@@ -59,15 +59,37 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Event',
     scopes: {
-      details() {
-        const { Group, EventImage, Venue } = require("../models");
+      getPreviewImage() {
+        const { EventImage } = require("../models");
+        return {
+          include: {
+            model: EventImage,
+            attributes: ["url"],
+            where: { "preview": true },
+            limit: 1,
+            required: false
+          }
+        }
+      },
+      general() {
+        const { Group, Venue } = require("../models");
         return {
           attributes: ["id", "name", "type", "groupId", "venueId", "startDate", "endDate"],
           include: [
-            { model: EventImage, attributes: ["url"], where: { "preview": true }, limit: 1, required: false },
             { model: Group, attributes: ["id", "name", "city", "state"] },
             { model: Venue, attributes: ["id", "city", "state"] }
           ],
+        }
+      },
+      details() {
+        const { Group, EventImage, Venue } = require("../models");
+        return {
+          attributes: ["capacity", "description", "price"],
+          include: [
+            { model: Group, attributes: ["private"] },
+            { model: Venue, attributes: ["lat", "lng"] },
+            { model: EventImage, attributes: ["id", "url", "preview"] }
+          ]
         }
       },
       filterByGroups(groupIds) {

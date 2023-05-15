@@ -6,7 +6,7 @@ const { buildMissingResourceError } = require("../../utils/helpers");
 
 //#region               GET requests
 router.get("/", async (req, res) => {
-  const options = { details: true };
+  const options = {};
   const events = await handleGetEventsRequest(options);
   return res.json(events);
 });
@@ -23,7 +23,7 @@ router.get("/:eventId", async (req, res, next) => {
 async function handleGetEventsRequest(options) {
   const { events, attendingCounts } = await getEventsInfo(options);
   addCountsToEvents(events, attendingCounts);
-  assignEventPreviewImages(events);
+  if (!options.details) assignEventPreviewImages(events);
   return events;
 }
 //#endregion
@@ -48,8 +48,9 @@ async function countAttending(event) {
 
 async function getEventsInfo(options) {
   const { details, groupIds, eventIds } = options;
-  const scopes = [];
-  if (details) scopes.push("details");
+  const scopes = ["general"];
+  if (details) scopes.push("details")
+  else scopes.push("getPreviewImage");
   if (groupIds) scopes.push({ method: ["filterByGroups", groupIds] });
   if (eventIds) scopes.push({ method: ["filterByEvents", eventIds] });
 

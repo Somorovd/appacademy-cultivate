@@ -34,7 +34,7 @@ router.get("/:groupId/venues", requireAuth, async (req, res, next) => {
 });
 
 router.get("/:groupId/events", async (req, res, next) => {
-  const options = { groupIds: req.params.groupId, details: true };
+  const options = { groupIds: req.params.groupId };
   const events = await handleGetEventsRequest(options);
   return (events.length) ?
     res.json(events) :
