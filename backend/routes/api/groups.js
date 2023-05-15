@@ -33,9 +33,12 @@ router.get("/:groupId/venues", requireAuth, async (req, res, next) => {
     buildMissingResourceError(next, "Group");
 });
 
-router.get("/:groupId/events", async (req, res) => {
+router.get("/:groupId/events", async (req, res, next) => {
   const options = { groupIds: req.params.groupId, details: true };
-  return handleGetEventsRequest(res, options);
+  const events = await handleGetEventsRequest(options);
+  return (events.length) ?
+    res.json(events) :
+    buildMissingResourceError(next, "Group");
 });
 
 //#region               GET responses

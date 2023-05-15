@@ -1,20 +1,21 @@
 const express = require("express");
 const router = express.Router();
 
-const { Event, Group, Venue, Attendance, EventImage } = require("../../db/models");
+const { Event, Attendance } = require("../../db/models");
 
 //#region               GET requests
 router.get("/", async (req, res) => {
   const options = { details: true };
-  return handleGetEventsRequest(res, options);
+  const events = await handleGetEventsRequest(options);
+  return res.json(events);
 })
 
 //#region               GET responces
-async function handleGetEventsRequest(res, options) {
+async function handleGetEventsRequest(options) {
   const { events, attendingCounts } = await getEventsInfo(options);
   addCountsToEvents(events, attendingCounts);
   assignEventPreviewImages(events);
-  return res.json({ "Events": events });
+  return events;
 }
 //#endregion
 //#endregion
