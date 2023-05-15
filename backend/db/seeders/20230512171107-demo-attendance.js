@@ -60,6 +60,16 @@ module.exports = {
         userId: 4,
         status: "waitlist",
       },
+      {
+        eventId: 3,
+        userId: 5,
+        status: "pending",
+      },
+      {
+        eventId: 3,
+        userId: 6,
+        status: "pending",
+      },
     ], {});
   },
 

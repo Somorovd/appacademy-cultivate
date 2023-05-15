@@ -1,7 +1,7 @@
 'use strict';
 
 const { Model } = require('sequelize');
-
+const { Op } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Event extends Model {
@@ -98,6 +98,18 @@ module.exports = (sequelize, DataTypes) => {
       filterByEvents(eventIds) {
         return { where: { "id": eventIds } }
       },
+      getAttendees(isHost) {
+        const { User } = require("../models");
+        const where = (isHost) ? {} : { "status": { [Op.ne]: "pending" } }
+        return {
+          attributes: [],
+          include: {
+            model: User,
+            attributes: ["id", "firstName", "lastName"],
+            through: { attributes: ["status"], where: where }
+          }
+        }
+      }
     }
   });
   return Event;

@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-const { Event, Attendance, User } = require("../../db/models");
+const { Event, Attendance, User, Group } = require("../../db/models");
 const { buildMissingResourceError } = require("../../utils/helpers");
 const event = require("../../db/models/event");
+
+const { Op } = require("sequelize");
 
 //#region               GET requests
 router.get("/", async (req, res) => {
@@ -14,26 +16,38 @@ router.get("/", async (req, res) => {
 
 router.get("/:eventId", async (req, res, next) => {
   const options = { eventIds: req.params.eventId, details: true };
-  const event = await handleGetEventsRequest(options);
-  return (event[0]) ?
-    res.json(event[0]) :
+  const events = await handleGetEventsRequest(options);
+  return (events[0]) ?
+    res.json(events[0]) :
     buildMissingResourceError(next, "Event");
 });
 
 router.get("/:eventId/attendees", async (req, res, next) => {
-  const events = await Event.findAll({
-    attributes: [],
+  const options = { eventIds: req.params.eventId };
+  const userId = req.user.id;
+
+  const isHost = await Event.findByPk(req.params.eventId, {
     include: {
-      model: User,
-      attributes: ["id", "firstName", "lastName"],
-      through: { attributes: ["status"] }
-    },
-    where: { "id": req.params.eventId }
+      model: Group, attributes: ["organizerId"],
+      include: {
+        model: User, as: "Member",
+        through: { as: "Membership", where: userId },
+      },
+      where: {
+        [Op.or]: {
+          "organizerId": userId,
+          "$Group.Member.Membership.status$": "co-host"
+        }
+      },
+    }
   });
+
+  options.attendees = isHost;
+  const events = await handleGetEventsRequest(options);
 
   return (events[0]) ?
     res.json({ "Attendees": events[0]["Users"] }) :
-    buildMissingResourceError(next, "Event");
+    buildMissingResourceError(next, "Event")
 });
 
 //#region               GET responces
@@ -64,12 +78,13 @@ async function countAttending(event) {
 }
 
 async function getEventsInfo(options) {
-  const { details, groupIds, eventIds } = options;
+  const { details, groupIds, eventIds, attendees } = options;
   const scopes = ["general"];
   if (details) scopes.push("details")
   else scopes.push("getPreviewImage");
   if (groupIds) scopes.push({ method: ["filterByGroups", groupIds] });
   if (eventIds) scopes.push({ method: ["filterByEvents", eventIds] });
+  if (attendees !== undefined) scopes.push({ method: ["getAttendees", attendees] });
 
   const events = (await Event.scope(scopes).findAll()).map((event) => event.toJSON());
   const attendingCounts = await Promise.all(
