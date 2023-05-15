@@ -33,11 +33,14 @@ router.get("/:eventId/attendees", async (req, res, next) => {
         where: { "id": userId },
         through: { as: "Membership" }
       },
-      required: false,
+      required: true,
       where: {
         [Op.or]: {
           "organizerId": userId,
-          "$Group.Member.Membership.status$": "co-host"
+          [Op.and]: {
+            "$Group.Member.id$": userId,
+            "$Group.Member.Membership.status$": "co-host"
+          }
         }
       }
     }
