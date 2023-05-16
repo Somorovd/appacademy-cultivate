@@ -25,7 +25,7 @@ router.delete("/:imageId", requireAuth, async (req, res, next) => {
     return buildMissingResourceError(next, "Image");
 
   const isNotAuthorized = (
-    group.organizerId != userId || !group["Member"][0]
+    group.organizerId != userId && !group["Member"][0]
   );
   if (isNotAuthorized) return buildAuthorzationErrorResponce(next);
 
