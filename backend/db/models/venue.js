@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+var validator = require('validator');
 module.exports = (sequelize, DataTypes) => {
   class Venue extends Model {
     /**
@@ -22,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     address: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     city: {
       type: DataTypes.STRING,
@@ -34,11 +35,21 @@ module.exports = (sequelize, DataTypes) => {
     },
     lat: {
       type: DataTypes.FLOAT,
-      allowNull: false
+      allowNull: false,
+      isLatLong(value) {
+        if (!validator.isLatLong(`${value},${this.lat}`))
+          throw new Error("Must be valid lat\/lng pair");
+      }
     },
     lng: {
       type: DataTypes.FLOAT,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isLatLong(value) {
+          if (!validator.isLatLong(`${value},${this.lng}`))
+            throw new Error("Must be valid lat\/lng pair");
+        }
+      }
     },
   }, {
     sequelize,
