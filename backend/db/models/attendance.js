@@ -16,11 +16,13 @@ module.exports = (sequelize, DataTypes) => {
   Attendance.init({
     eventId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      onDelete: "cascade"
     },
     userId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      onDelete: "cascade"
     },
     status: {
       type: DataTypes.ENUM('attending', 'waitlist', 'pending'),

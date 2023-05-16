@@ -3,8 +3,7 @@ const router = express.Router();
 
 const { Event, Attendance, Membership, Group, User } = require("../../db/models");
 const { buildMissingResourceError } = require("../../utils/helpers");
-const event = require("../../db/models/event");
-
+const { requireAuth, buildAuthorzationErrorResponce } = require("../../utils/auth");
 const { Op } = require("sequelize");
 
 //#region               GET requests
@@ -59,6 +58,37 @@ async function handleGetEventsRequest(options) {
   return events;
 }
 //#endregion
+//#endregion
+
+//#region               DELETE requests
+router.delete("/:eventId", requireAuth, async (req, res, next) => {
+  const userId = req.user.id;
+  const event = await Event.findByPk(req.params.eventId, {
+    include: {
+      model: Group, attributes: ["organizerId"],
+      include: {
+        model: User, as: "Member",
+        through: {
+          attributes: ["status"],
+          where: { "status": "co-host", "userId": userId }
+        }
+      }
+    }
+  });
+  if (!event)
+    return buildMissingResourceError(next, "Event");
+
+  const isNotAuthorized = (
+    event["Group"].organizerId != userId &&
+    !event["Group"]["Member"][0]
+  );
+
+  if (isNotAuthorized)
+    return buildAuthorzationErrorResponce(next);
+
+  await event.destroy();
+  return res.json({ message: "Successfully deleted" });
+});
 //#endregion
 
 function addCountsToEvents(events, counts) {
