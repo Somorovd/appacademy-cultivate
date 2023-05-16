@@ -3,11 +3,9 @@ const router = express.Router();
 
 const { Group, Membership, User } = require("../../db/models");
 const { Op } = require("sequelize");
-const { requireAuth } = require("../../utils/auth");
+const { requireAuth, buildAuthorzationErrorResponce } = require("../../utils/auth");
 const { buildMissingResourceError } = require("../../utils/helpers");
 const { handleGetEventsRequest } = require("../api/events");
-const { check } = require("express-validator");
-const { handleInputValidationErrors } = require("../../utils/validation");
 
 //#region               GET requests
 router.get("/", async (req, res, next) => {
@@ -92,6 +90,19 @@ router.post("/", requireAuth, async (req, res, next) => {
   });
   return res.json(group);
 });
+//#endregion
+
+//#region               DELETE Requests
+router.delete("/:groupId", requireAuth, async (req, res, next) => {
+  const group = await Group.findByPk(req.params.groupId);
+  if (!group)
+    return buildMissingResourceError(next, "Group");
+  if (group.organizerId !== req.user.id)
+    return buildAuthorzationErrorResponce(next);
+
+  await group.destroy();
+  return res.json({ message: "Successfully deleted" })
+})
 //#endregion
 
 function addCountsToGroups(groups, memberCounts) {

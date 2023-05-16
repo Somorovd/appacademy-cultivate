@@ -4,6 +4,8 @@ const { User } = require("../db/models");
 
 const { secret, expiresIn } = jwtConfig;
 
+
+
 const setTokenCookie = (res, user) => {
   // Create the token
   const safeUser = {
@@ -62,4 +64,16 @@ const requireAuth = (req, res, next) => {
   return next(err);
 }
 
-module.exports = { setTokenCookie, restoreUser, requireAuth };
+const buildAuthorzationErrorResponce = (next) => {
+  const err = new Error("Forbidden");
+  err.title = "Not Authorized";
+  err.status = 403;
+  return next(err);
+}
+
+module.exports = {
+  setTokenCookie,
+  restoreUser,
+  requireAuth,
+  buildAuthorzationErrorResponce
+};
