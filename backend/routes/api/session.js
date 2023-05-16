@@ -26,21 +26,26 @@ const validateUserLoginInput = [
 //#endregion
 
 //#region             GET requests
-router.get("/", requireAuth, (req, res) => {
-  if (!req.user) return res.json({ user: null });
-  return res.json({ user: makeSafeUser(req.user) });
-});
+router.get("/",
+  requireAuth, (req, res) => {
+    if (!req.user) return res.json({ user: null });
+    return res.json({ user: makeSafeUser(req.user) });
+  }
+);
 //#endregion
 
 //#region             POST requests
-router.post("/", validateUserLoginInput, async (req, res, next) => {
-  const { credential, password } = req.body;
+router.post("/",
+  validateUserLoginInput,
+  async (req, res, next) => {
+    const { credential, password } = req.body;
 
-  const loggedInUser = await attemptFindUser(credential, password);
-  return loggedInUser ?
-    buildSuccessfulLoginResponce(res, loggedInUser) :
-    buildLoginError(next);
-});
+    const loggedInUser = await attemptFindUser(credential, password);
+    return loggedInUser ?
+      buildSuccessfulLoginResponce(res, loggedInUser) :
+      buildLoginError(next);
+  }
+);
 
 //#region             POST responses
 function buildLoginError(next) {
@@ -60,12 +65,13 @@ function buildSuccessfulLoginResponce(res, user) {
 //#endregion
 
 //#region             DELETE requests
-router.delete("/", (req, res) => {
-  res.clearCookie("token");
-  return res.json({ message: "success" });
-});
+router.delete("/",
+  (req, res) => {
+    res.clearCookie("token");
+    return res.json({ message: "success" });
+  }
+);
 //#endregion
-
 
 async function attemptFindUser(credential, password) {
   const user = await User.unscoped().findOne({

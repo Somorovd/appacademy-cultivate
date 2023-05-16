@@ -32,20 +32,20 @@ const validateUserSignupInput = [
 ];
 //#endregion
 
-//#region             GET requests
-//#endregion
-
 //#region             POST requests
-router.post("/", validateUserSignupInput, async (req, res, next) => {
-  try {
-    const safeUser = makeSafeUser(await createNewUser(req));
-    buildSuccessfulSignupResponce(res, safeUser);
+router.post("/",
+  validateUserSignupInput,
+  async (req, res, next) => {
+    try {
+      const safeUser = makeSafeUser(await createNewUser(req));
+      buildSuccessfulSignupResponce(res, safeUser);
+    }
+    catch (e) {
+      const msg = "User already exists";
+      buildValidationErrorResponce(e.errors, 500, msg, next);
+    }
   }
-  catch (e) {
-    const msg = "User already exists";
-    buildValidationErrorResponce(e.errors, 500, msg, next);
-  }
-});
+);
 
 //#region             POST responces
 
