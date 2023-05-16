@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { Event, Attendance, Membership, Group, User } = require("../../db/models");
+const { Event, EventImage, Attendance, Group, User } = require("../../db/models");
 const { buildMissingResourceError } = require("../../utils/helpers");
 const { requireAuth, buildAuthorzationErrorResponce } = require("../../utils/auth");
 const { Op } = require("sequelize");
@@ -95,6 +95,60 @@ router.delete("/:eventId",
       return buildAuthorzationErrorResponce(next);
 
     await event.destroy();
+    return res.json({ message: "Successfully deleted" });
+  }
+);
+
+router.delete("/:eventId/attendance",
+  requireAuth,
+  async (req, res, next) => {
+    const userId = req.user.id;
+    const memberId = req.body.memberId;
+    const eventId = req.params.eventId;
+
+    const group = (await Group.findAll({
+      attributes: ["organizerId"],
+      include: [
+        {
+          model: User, as: "Member",
+          attributes: ["id"],
+          through: {
+            attributes: ["status"],
+            where: { "status": "co-host" }
+          },
+          where: { "id": userId },
+          required: false
+        },
+        {
+          model: Event, attributes: ["id"],
+          include: {
+            model: User, attributes: ["id"],
+            where: { "id": memberId },
+            required: false
+          },
+          where: { "id": eventId },
+        }
+      ],
+
+      required: true
+    }))[0];
+
+    if (!group)
+      return buildMissingResourceError(next, "Event");
+
+    const isNotAuthorized = (
+      memberId != userId &&
+      group.organizerId != userId &&
+      !group["Member"][0]
+    );
+    if (isNotAuthorized)
+      return buildAuthorzationErrorResponce(next);
+
+    const user = group["Events"][0]["Users"][0];
+    if (!user)
+      return buildMissingResourceError(next, "Attendance");
+
+    await user["Attendance"].destroy();
     return res.json({ message: "Successfully deleted" });
   }
 );
