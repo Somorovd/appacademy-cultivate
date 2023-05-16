@@ -91,7 +91,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       },
       filterByGroups(groupIds) {
-        return { where: { "id": groupIds } }
+        return { where: { "id": groupIds }, required: false }
       },
       details() {
         const { GroupImage, User, Venue } = require("../models");

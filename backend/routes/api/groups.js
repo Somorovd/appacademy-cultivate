@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-const { Group, Membership, User } = require("../../db/models");
-const { Op } = require("sequelize");
+const { Group, Membership, User, Venue } = require("../../db/models");
+const { Op, where } = require("sequelize");
 const { requireAuth, buildAuthorzationErrorResponce } = require("../../utils/auth");
 const { buildMissingResourceError } = require("../../utils/helpers");
 const { handleGetEventsRequest } = require("../api/events");
@@ -35,8 +35,34 @@ router.get("/:groupId",
 router.get("/:groupId/venues",
   requireAuth,
   async (req, res, next) => {
-    const options = { hostIds: req.user.id, groupIds: req.params.groupId, details: true };
-    const group = (await getGroupsInfo(options)).groups[0];
+    const userId = req.user.id;
+    const groupId = req.params.groupId;
+
+    const group = (await Group.findAll({
+      attributes: ["organizerId", "id"],
+      include: [{
+        model: User, as: "Member", attributes: ["id"],
+        through: {
+          as: "Membership", attributes: ["status"],
+          where: { "status": "co-host" }
+        },
+        required: false,
+        where: { "id": userId }
+      },
+      { model: Venue }
+      ],
+      where: { "id": groupId }
+    }))[0];
+
+    if (!group)
+      return buildMissingResourceError(next, "Group");
+
+    const isNotAuthorized = (
+      group.organizerId != userId && !group["Member"][0]
+    );
+    if (isNotAuthorized)
+      return buildAuthorzationErrorResponce(next);
+
     return (group) ?
       res.json({ "Venues": group["Venues"] }) :
       buildMissingResourceError(next, "Group");
@@ -105,6 +131,43 @@ router.post("/",
       name, about, type, private, city, state
     });
     return res.json(group);
+  }
+);
+
+router.post("/:groupId/venues",
+  requireAuth,
+  async (req, res, next) => {
+    const userId = req.user.id;
+    const groupId = req.params.groupId;
+    const { address, city, state, lat, lng } = req.body;
+
+    const group = (await Group.findAll({
+      attributes: ["organizerId", "id"],
+      include: {
+        model: User, as: "Member", attributes: ["id"],
+        through: {
+          as: "Membership", attributes: ["status"],
+          where: { "status": "co-host" }
+        },
+        required: false,
+        where: { "id": userId }
+      },
+      where: { "id": groupId }
+    }))[0];
+
+    if (!group)
+      return buildMissingResourceError(next, "Group");
+
+    const isNotAuthorized = (
+      group.organizerId != userId && !group["Member"][0]
+    );
+    if (isNotAuthorized)
+      return buildAuthorzationErrorResponce(next);
+
+    const venue = await group.createVenue(
+      { groupId, address, city, state, lat, lng }
+    );
+    return res.json(venue);
   }
 );
 //#endregion
