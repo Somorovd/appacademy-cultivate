@@ -147,12 +147,6 @@ router.delete("/:groupId/membership",
 
     if (!group) return buildMissingResourceError(next, "Group");
 
-    const isNotAuthorized = (
-      userId != group.organizerId && userId != memberId
-    );
-    if (isNotAuthorized)
-      return buildAuthorzationErrorResponce(next);
-
     let member;
     for (let user of group["Member"]) {
       if (user.id != memberId) continue;
@@ -167,6 +161,12 @@ router.delete("/:groupId/membership",
       else
         return res.json({ message: "membership does not exists between user and group" });
     }
+
+    const isNotAuthorized = (
+      userId != group.organizerId && userId != memberId
+    );
+    if (isNotAuthorized)
+      return buildAuthorzationErrorResponce(next);
 
     await member["Membership"].destroy();
     return res.json({ message: "Successfully deleted" });
