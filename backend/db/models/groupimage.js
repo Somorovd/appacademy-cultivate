@@ -16,7 +16,8 @@ module.exports = (sequelize, DataTypes) => {
   GroupImage.init({
     groupId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      onDelete: "cascade"
     },
     url: {
       type: DataTypes.STRING,

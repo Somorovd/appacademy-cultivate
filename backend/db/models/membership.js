@@ -16,11 +16,13 @@ module.exports = (sequelize, DataTypes) => {
   Membership.init({
     userId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      onDelete: "cascade"
     },
     groupId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      onDelete: "cascade"
     },
     status: {
       type: DataTypes.ENUM('member', 'pending', 'co-host'),
