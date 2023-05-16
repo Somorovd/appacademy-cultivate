@@ -106,49 +106,49 @@ router.delete("/:eventId/attendance",
     const memberId = req.body.memberId;
     const eventId = req.params.eventId;
 
-    const group = (await Group.findAll({
-      attributes: ["organizerId"],
+    const user = (await User.findAll({
+      where: { "id": memberId },
+      attributes: ["id"],
       include: [
         {
-          model: User, as: "Member",
-          attributes: ["id"],
-          through: {
-            attributes: ["status"],
-            where: { "status": "co-host" }
-          },
-          where: { "id": userId },
-          required: false
-        },
-        {
-          model: Event, attributes: ["id"],
+          model: Event, attributes: ["id"], where: { "id": eventId },
+          required: false,
           include: {
-            model: User, attributes: ["id"],
-            where: { "id": memberId },
-            required: false
-          },
-          where: { "id": eventId },
-        }
-      ],
-
-      required: true
+            model: Group, attributes: ["organizerId"],
+            required: false,
+            include: {
+              model: User, as: "Member", attributes: ["id"],
+              required: false,
+              where: { "id": userId },
+              through: { attributes: ["status"] }
+            }
+          }
+        },
+      ]
     }))[0];
 
-    if (!group)
-      return buildMissingResourceError(next, "Event");
+    if (!user)
+      return buildMissingResourceError(next, "User");
 
+    let event = user["Events"][0];
+    if (!event) {
+      event = await Event.findByPk(eventId);
+      if (!event)
+        return buildMissingResourceError(next, "Event");
+      else
+        return res.json({ message: "attendance does not exist between user and event" });
+    }
+
+    const { organizerId, Member } = event["Group"];
     const isNotAuthorized = (
-      memberId != userId &&
-      group.organizerId != userId &&
-      !group["Member"][0]
+      userId != memberId &&
+      userId != organizerId &&
+      !Member[0]
     );
     if (isNotAuthorized)
       return buildAuthorzationErrorResponce(next);
 
-    const user = group["Events"][0]["Users"][0];
-    if (!user)
-      return buildMissingResourceError(next, "Attendance");
-
-    await user["Attendance"].destroy();
+    await event["Attendance"].destroy();
     return res.json({ message: "Successfully deleted" });
   }
 );
