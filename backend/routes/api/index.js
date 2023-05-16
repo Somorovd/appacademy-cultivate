@@ -7,10 +7,12 @@ const sessionRouter = require("./session.js");
 const usersRouter = require("./users.js");
 const groupsRouter = require("./groups.js");
 const { router: eventsRouter } = require("./events.js");
+const groupImagesRouter = require("./groupImages.js");
 router.use("/session", sessionRouter);
 router.use("/users", usersRouter);
 router.use("/groups", groupsRouter);
 router.use("/events", eventsRouter);
+router.use("/group-images", groupImagesRouter);
 
 router.post('/test', (req, res) => {
   res.json({ requestBody: req.body });

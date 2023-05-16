@@ -80,14 +80,14 @@ module.exports = (sequelize, DataTypes) => {
           include: [{
             model: User, as: "Member", attributes: [],
             where: { "id": userIds },
-            through: { as: "Membership" }
+            through: { as: "Membership" },
           }],
           where: {
             [Op.or]: {
               "organizerId": userIds,
               "$Member.Membership.status$": "co-host"
             }
-          }
+          },
         }
       },
       filterByGroups(groupIds) {
