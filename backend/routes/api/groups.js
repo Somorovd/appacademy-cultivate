@@ -102,7 +102,57 @@ router.delete("/:groupId", requireAuth, async (req, res, next) => {
 
   await group.destroy();
   return res.json({ message: "Successfully deleted" })
-})
+});
+
+router.delete(
+  "/:groupId/membership",
+  requireAuth,
+  async (req, res, next) => {
+    const userId = req.user.id;
+    const memberId = req.body.memberId;
+    const groupId = req.params.groupId;
+
+    console.log({ userId, memberId });
+
+    const group = (await Group.findAll({
+      attributes: ["organizerId"],
+      include: {
+        model: User, as: "Member",
+        attributes: ["id"],
+        where: { "id": [memberId, userId] },
+        required: false
+      },
+      where: { "id": groupId },
+      required: true
+    }))[0];
+
+    if (!group)
+      return buildMissingResourceError(next, "Group");
+
+
+    const isNotAuthorized = (
+      userId != group.organizerId && userId != memberId
+    );
+
+    if (isNotAuthorized)
+      return buildAuthorzationErrorResponce(next);
+
+    let membershipToDelete;
+    for (let user of group["Member"]) {
+      if (user.id != memberId) continue;
+      membershipToDelete = user["Membership"];
+      break;
+    }
+
+    if (!membershipToDelete)
+      return buildMissingResourceError(next, "Membership");
+
+    // return res.json(membershipToDelete);
+    console.log("\n\n\n\n\n")
+    await membershipToDelete.destroy();
+    return res.json({ message: "Successfully deleted" });
+  }
+);
 //#endregion
 
 function addCountsToGroups(groups, memberCounts) {
