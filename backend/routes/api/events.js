@@ -42,7 +42,7 @@ router.get("/:eventId/attendees", async (req, res, next) => {
     }
   });
 
-  options.attendees = event["Group"] !== null;
+  options.attendees = event != null && event["Group"] !== null;
   const events = await handleGetEventsRequest(options);
 
   return (events[0]) ?
