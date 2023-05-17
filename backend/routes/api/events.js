@@ -92,7 +92,11 @@ router.post("/:eventId/images",
 		);
 		event.addEventImage(image);
 
-		return res.json(image);
+		return res.json({
+			id: image.id,
+			url: image.url,
+			preview: image.preview
+		});
 	}
 );
 //#endregion
