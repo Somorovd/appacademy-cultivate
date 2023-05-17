@@ -6,6 +6,18 @@ const { Op } = require("sequelize");
 const { requireAuth, buildAuthorzationErrorResponce } = require("../../utils/auth");
 const { handleGetEventsRequest } = require("../api/events");
 const { buildMissingResourceError } = require("../../utils/helpers");
+const { check } = require("express-validator");
+const { handleInputValidationErrors } = require("../../utils/validation");
+
+//#region 							Express Middleware
+const validateMembershipRequestInput = [
+	check("memberId").exists({ checkFalsy: true })
+		.withMessage("Member Id is required"),
+	check("status").exists({ checkFalsy: true }).isIn(["member", "co-host"])
+		.withMessage("Status must be 'member' or 'co-host'"),
+	handleInputValidationErrors
+]
+//#endregion
 
 //#region               GET requests
 router.get("/",
@@ -285,8 +297,7 @@ router.post("/:groupId/membership",
 			{ userId, groupId, status: "pending" }
 		);
 
-		const membershipResponse = { memberId: userId, status: "pending" };
-		return res.json(membershipResponse);
+		return res.json(membership);
 	}
 );
 //#endregion
@@ -312,6 +323,63 @@ router.put("/:groupId",
 		await group.save();
 
 		return res.json(group);
+	}
+);
+
+router.put("/:groupId/membership",
+	requireAuth, validateMembershipRequestInput,
+	async (req, res, next) => {
+		const { memberId, status } = req.body;
+		const groupId = req.params.groupId;
+		const userId = req.user.id;
+
+		const group = await Group.findByPk(groupId, {
+			attributes: ["organizerId"],
+			include: {
+				model: User, as: "Member",
+				attributes: ["id"],
+				required: false,
+				where: { "id": [memberId, userId] }
+			}
+		});
+
+
+		if (!group)
+			return buildMissingResourceError(next, "Group");
+
+		let host, member;
+		for (let user of group["Member"]) {
+			if (user.id == userId) host = user;
+			if (user.id == memberId) member = user;
+		}
+
+		const isAuthorized = (
+			group.organizerId == host.id ||
+			(
+				host["Membership"].status == "co-host" &&
+				status == "member"
+			)
+		);
+
+		if (!isAuthorized)
+			return buildAuthorzationErrorResponce(next);
+
+		if (!member) {
+			member = await User.findByPk(memberId);
+			if (!member) {
+				const err = new Error("User could not be found");
+				err.title = "Validation Error";
+				err.status = 400;
+				next(err);
+			} else
+				return buildMissingResourceError(next, "Membership");
+		}
+
+		const membership = member["Membership"];
+		membership.set({ status });
+		await membership.save();
+
+		return res.json(membership);
 	}
 );
 //#endregion

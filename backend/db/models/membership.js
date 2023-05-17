@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Membership.init({
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      unique: true
+    },
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
