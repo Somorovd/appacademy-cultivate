@@ -246,6 +246,49 @@ router.post("/:groupId/images",
 		});
 	}
 );
+
+router.post("/:groupId/membership",
+	requireAuth,
+	async (req, res, next) => {
+		const groupId = req.params.groupId;
+		const userId = req.user.id;
+		const group = await Group.findByPk(groupId, {
+			include: {
+				model: User, as: "Member",
+				attributes: ["id"],
+				through: { attributes: ["status"] },
+				required: false,
+				where: { "id": userId }
+			}
+		});
+
+		if (!group)
+			return buildMissingResourceError(next, "Group");
+
+		if (group["Member"][0]) {
+			const status = group["Member"][0]["Membership"].status;
+			if (status === "pending") {
+				const err = new Error("Membership has already been requested");
+				err.title = "Bad Request";
+				err.status = 400;
+				return next(err);
+			}
+			else {
+				const err = new Error("User is already a member of the group");
+				err.title = "Bad Request";
+				err.status = 400;
+				return next(err);
+			}
+		}
+
+		const membership = await Membership.create(
+			{ userId, groupId, status: "pending" }
+		);
+
+		const membershipResponse = { memberId: userId, status: "pending" };
+		return res.json(membershipResponse);
+	}
+);
 //#endregion
 
 //#region 							PUT requests
