@@ -76,14 +76,24 @@ router.post("/:eventId/images",
 
 		const event = (await Event.findAll({
 			attributes: ["id"],
-			include: { model: Group, attributes: ["organizerId"] },
+			include: {
+				model: User, attributes: ["id"],
+				through: {
+					attributes: ["status"],
+					where: { "status": "attending" }
+				},
+				required: false,
+				where: { "id": userId }
+			},
 			where: { "id": eventId }
 		}))[0];
+
+		// return res.json(event);
 
 		if (!event)
 			return buildMissingResourceError(next, "Event");
 
-		const isNotAuthorized = event["Group"].organizerId != userId;
+		const isNotAuthorized = !event["Users"][0];
 		if (isNotAuthorized)
 			return buildAuthorzationErrorResponce(next);
 
