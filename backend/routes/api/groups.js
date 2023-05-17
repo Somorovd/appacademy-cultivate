@@ -223,25 +223,13 @@ router.post("/:groupId/images",
 
 		const group = (await Group.findAll({
 			attributes: ["organizerId"],
-			include: {
-				model: User, as: "Member",
-				attributes: ["id"],
-				required: false,
-				where: { "id": userId },
-				through: {
-					attributes: ["status"],
-					where: { "status": "co-host" }
-				}
-			},
 			where: { "id": groupId }
 		}))[0];
 
 		if (!group)
 			return buildMissingResourceError(next, "Group");
 
-		const isNotAuthorized = (
-			group.organizerId != userId && !group["Member"][0]
-		);
+		const isNotAuthorized = group.organizerId != userId;
 		if (isNotAuthorized)
 			return buildAuthorzationErrorResponce(next);
 
