@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { Event, EventImage, Attendance, Group, User } = require("../../db/models");
+const { Event, EventImage, Attendance, Group, User, Venue } = require("../../db/models");
 const { buildMissingResourceError } = require("../../utils/helpers");
 const { requireAuth, buildAuthorzationErrorResponce } = require("../../utils/auth");
 const { Op } = require("sequelize");
@@ -143,6 +143,12 @@ router.put("/:eventId",
 		);
 		if (isNotAuthorized)
 			return buildAuthorzationErrorResponce(next);
+
+		if (venueId) {
+			const venue = await Venue.findByPk(venueId);
+			if (!venue)
+				return buildMissingResourceError(next, "Venue");
+		}
 
 		event.set({
 			venueId, name, type, capacity,
