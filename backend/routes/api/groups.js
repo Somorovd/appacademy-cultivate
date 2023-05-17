@@ -2,10 +2,30 @@ const express = require("express");
 const router = express.Router();
 
 const { Group, Membership, User, Venue, GroupImage } = require("../../db/models");
-const { Op, where } = require("sequelize");
+const { Op } = require("sequelize");
 const { requireAuth, buildAuthorzationErrorResponce } = require("../../utils/auth");
-const { buildMissingResourceError } = require("../../utils/helpers");
 const { handleGetEventsRequest } = require("../api/events");
+const { check } = require("express-validator");
+const { handleInputValidationErrors } = require("../../utils/validation");
+const { buildMissingResourceError } = require("../../utils/helpers");
+
+//#region 							Express Middleware
+const validateGroupInput = [
+	check("name").exists({ checkFalsy: true }).isLength({ min: 1, max: 60 })
+		.withMessage("Name must be have length between 0 and 60 characters"),
+	check("about").exists({ checkFalsy: true }).isLength({ min: 50 })
+		.withMessage("About must be at least 50 characters"),
+	check("type").exists({ checkFalsy: true }).isIn(["in person", "online"])
+		.withMessage("Type must be 'in person' or 'online'"),
+	check("private").exists({ checkFalsy: true })
+		.withMessage("Private musts be true or false"),
+	check("city").exists({ checkFalsy: true })
+		.withMessage("City is required"),
+	check("state").exists({ checkFalsy: true })
+		.withMessage("State is required"),
+	handleInputValidationErrors
+]
+//#endregion
 
 //#region               GET requests
 router.get("/",
@@ -244,6 +264,37 @@ router.post("/:groupId/images",
 			url: image.url,
 			preview: image.preview
 		});
+	}
+);
+//#endregion
+
+//#region 							PUT requests
+router.put("/:groupId",
+	requireAuth, validateGroupInput,
+	async (req, res, next) => {
+		const { name, about, type, private, city, state } = req.body;
+		const groupId = req.params.groupId;
+		const userId = req.user.id;
+
+		const group = await Group.findByPk(groupId);
+
+		if (!group)
+			return buildMissingResourceError(next, "Group");
+
+		const isNotAuthorized = group.organizerId != userId;
+		if (isNotAuthorized)
+			return buildAuthorzationErrorResponce(next);
+
+		Object.assign(group.dataValues,
+			{ name, about, type, private, city, state }
+		);
+
+		await Group.update(
+			{ name, about, type, private, city, state },
+			{ where: { "id": groupId } }
+		)
+
+		return res.json(group);
 	}
 );
 //#endregion

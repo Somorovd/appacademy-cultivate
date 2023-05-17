@@ -88,8 +88,6 @@ router.post("/:eventId/images",
 			where: { "id": eventId }
 		}))[0];
 
-		// return res.json(event);
-
 		if (!event)
 			return buildMissingResourceError(next, "Event");
 
