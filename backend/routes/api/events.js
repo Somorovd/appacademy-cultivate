@@ -107,6 +107,69 @@ router.post("/:eventId/images",
 		});
 	}
 );
+
+router.post("/:eventId/attendance",
+	requireAuth,
+	async (req, res, next) => {
+		const eventId = req.params.eventId;
+		const userId = req.user.id;
+
+		const event = await Event.findByPk(eventId, {
+			attributes: ["id"],
+			include: [
+				{
+					model: Group, attributes: ["id"],
+					include: {
+						model: User, as: "Member",
+						attributes: ["id"],
+						through: {
+							attributes: ["status"],
+							where: { "status": { [Op.ne]: "pending" } }
+						},
+						required: false,
+						where: { "id": userId }
+					}
+				},
+				{
+					model: User, attributes: ["id"],
+					through: { attributes: ["status"] },
+					where: { "id": userId },
+					required: false
+				}
+			]
+		});
+
+		if (!event)
+			return buildMissingResourceError(next, "Event");
+
+		const member = event["Group"]["Member"][0];
+
+		if (!member)
+			return buildAuthorzationErrorResponce(next);
+
+		const user = event["Users"][0];
+		if (user) {
+			const status = user["Attendance"].status;
+			if (status == "pending") {
+				const err = new Error("Attendance has already been requested");
+				err.title = "Bad Request";
+				err.status = 400;
+				return next(err);
+			} else {
+				const err = new Error("User is already attending this event");
+				err.title = "Bad Request";
+				err.status = 400;
+				return next(err);
+			}
+		}
+
+		const attendance = await Attendance.create(
+			{ userId, eventId, status: "pending" }
+		);
+
+		return res.json(attendance);
+	}
+);
 //#endregion
 
 //#region 							PUT requests
