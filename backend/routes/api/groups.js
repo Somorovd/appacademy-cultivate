@@ -233,8 +233,6 @@ router.post("/:groupId/images",
 		if (isNotAuthorized)
 			return buildAuthorzationErrorResponce(next);
 
-		console.log(groupId);
-
 		const image = await GroupImage.create(
 			{ groupId, url, preview }
 		);
