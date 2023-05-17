@@ -3,46 +3,49 @@
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
-  options.schema = process.env.SCHEMA;
+	options.schema = process.env.SCHEMA;
 }
 
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('GroupImages', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
-      groupId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: "Groups" },
-        onDelete: "cascade"
-      },
-      url: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      preview: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: true
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
-      }
-    }, options);
-  },
-  async down(queryInterface, Sequelize) {
-    options.tableName = "GroupImages";
-    return queryInterface.dropTable(options);
-  }
+	async up(queryInterface, Sequelize) {
+		await queryInterface.createTable('GroupImages', {
+			id: {
+				allowNull: false,
+				autoIncrement: true,
+				primaryKey: true,
+				type: Sequelize.INTEGER
+			},
+			groupId: {
+				type: Sequelize.INTEGER,
+				allowNull: false,
+				references: { model: "Groups" },
+				onDelete: "cascade"
+			},
+			url: {
+				type: Sequelize.STRING,
+				allowNull: false
+			},
+			preview: {
+				type: Sequelize.BOOLEAN,
+				defaultValue: true
+			},
+			createdAt: {
+				allowNull: false,
+				type: Sequelize.DATE,
+				defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
+			},
+			updatedAt: {
+				allowNull: false,
+				type: Sequelize.DATE,
+				defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
+			}
+		}, options);
+		options.tableName = "GroupImages";
+		await queryInterface.addIndex(options, ["groupId", "url"], { unique: true });
+	},
+	async down(queryInterface, Sequelize) {
+		options.tableName = "GroupImages";
+		await queryInterface.dropTable(options);
+		await queryInterface.removeIndex(options, ["groupId", "url"]);
+	}
 };
