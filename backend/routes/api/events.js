@@ -157,6 +157,7 @@ router.put("/:eventId",
 
 		await event.save();
 
+		delete event.dataValues["Group"];
 		return res.json(event);
 	}
 );
