@@ -370,7 +370,7 @@ router.put("/:groupId/membership",
 				const err = new Error("User could not be found");
 				err.title = "Validation Error";
 				err.status = 400;
-				next(err);
+				return next(err);
 			} else
 				return buildMissingResourceError(next, "Membership");
 		}

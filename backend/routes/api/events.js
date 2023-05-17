@@ -5,6 +5,19 @@ const { Event, EventImage, Attendance, Group, User, Venue } = require("../../db/
 const { buildMissingResourceError } = require("../../utils/helpers");
 const { requireAuth, buildAuthorzationErrorResponce } = require("../../utils/auth");
 const { Op } = require("sequelize");
+const { check } = require("express-validator");
+const { handleInputValidationErrors } = require("../../utils/validation");
+
+
+//#region 							Express Middleware
+const validateAttendanceRequestInput = [
+	check("userId").exists({ checkFalsy: true })
+		.withMessage("User Id is required"),
+	check("status").exists({ checkFalsy: true }).isIn(["waitlist", "attending"])
+		.withMessage("Status must be 'waitlist' or 'attending'"),
+	handleInputValidationErrors
+]
+//#endregion
 
 //#region               GET requests
 router.get("/",
@@ -222,6 +235,63 @@ router.put("/:eventId",
 
 		delete event.dataValues["Group"];
 		return res.json(event);
+	}
+);
+
+router.put("/:eventId/attendance",
+	requireAuth, validateAttendanceRequestInput,
+	async (req, res, next) => {
+		const { userId, status } = req.body;
+		const eventId = req.params.eventId;
+
+		const event = await Event.findByPk(eventId, {
+			attributes: ["id"],
+			include: [
+				{
+					model: Group, attributes: ["organizerId"],
+					include: {
+						model: User, as: "Member",
+						attributes: ["id"],
+						through: { attributes: ["status"], where: { "status": "co-host" } },
+						required: false,
+						where: { "id": req.user.id }
+					}
+				},
+				{
+					model: User, attributes: ["id"],
+					required: false,
+					where: { "id": userId }
+				}
+			]
+		});
+
+		if (!event)
+			return buildMissingResourceError(next, "Event");
+
+		const group = event["Group"];
+		const isNotAuthorized = (
+			group.organizerId != req.user.id && !group["Member"][0]
+		);
+		if (isNotAuthorized)
+			return buildAuthorzationErrorResponce(next);
+
+		let attendee = event["Users"][0];
+		if (!attendee) {
+			attendee = await User.findByPk(userId);
+			if (!attendee) {
+				const err = new Error("User could not be found");
+				err.title = "Validation Error";
+				err.status = 400;
+				return next(err);
+			} else
+				return buildMissingResourceError(next, "Attendance");
+		}
+
+		const attendance = attendee["Attendance"];
+		attendance.set({ status });
+		await attendance.save();
+
+		return res.json(attendance);
 	}
 );
 //#endregion
