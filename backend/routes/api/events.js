@@ -109,6 +109,53 @@ router.post("/:eventId/images",
 );
 //#endregion
 
+//#region 							PUT requests
+router.put("/:eventId",
+	requireAuth,
+	async (req, res, next) => {
+		const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
+		const eventId = req.params.eventId;
+		const userId = req.user.id;
+
+		const event = await Event.findByPk(eventId, {
+			include: {
+				model: Group, attributes: ["organizerId"],
+				include: {
+					model: User, as: "Member",
+					attributes: ["id"],
+					through: {
+						attributes: ["status"],
+						where: { "status": "co-host" }
+					},
+					required: false,
+					where: { "id": userId }
+				}
+			}
+		});
+
+
+		if (!event)
+			return buildMissingResourceError(next, "Event");
+
+		const group = event["Group"];
+		const isNotAuthorized = (
+			group.organizerId != userId && !group["Member"][0]
+		);
+		if (isNotAuthorized)
+			return buildAuthorzationErrorResponce(next);
+
+		event.set({
+			venueId, name, type, capacity,
+			price, description, startDate, endDate
+		});
+
+		await event.save();
+
+		return res.json(event);
+	}
+);
+//#endregion
+
 //#region               DELETE requests
 router.delete("/:eventId",
 	requireAuth,

@@ -30,7 +30,8 @@ module.exports = {
 				allowNull: false
 			},
 			description: {
-				type: Sequelize.STRING
+				type: Sequelize.STRING,
+				allowNull: false
 			},
 			type: {
 				type: Sequelize.ENUM("in person", "online"),
