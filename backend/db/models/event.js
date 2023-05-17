@@ -2,6 +2,8 @@
 
 const { Model } = require('sequelize');
 const { Op } = require("sequelize");
+var validator = require('validator');
+
 
 module.exports = (sequelize, DataTypes) => {
   class Event extends Model {
@@ -31,30 +33,61 @@ module.exports = (sequelize, DataTypes) => {
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        len: [5]
+      }
     },
     description: {
       type: DataTypes.STRING,
     },
     type: {
       type: DataTypes.ENUM("in person", "online"),
-      defaultValue: "in person"
+      defaultValue: "in person",
+      validate: {
+        isIn: ["in person", "online"]
+      }
     },
     capacity: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        min: 0,
+        isInt: true
+      }
     },
     price: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0
+      type: DataTypes.FLOAT,
+      defaultValue: 0,
+      validate: {
+        isFloat: true,
+        min: 0
+      }
     },
     startDate: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isDate: true,
+        startsInFuture(value) {
+          const startDate = new Date(value);
+          if (startDate.getTime() < Date.now())
+            throw new Error("Start date must be in the future");
+        }
+      }
     },
     endDate: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isDate: true,
+        mustEndAfterStart(value) {
+          const startDate = new Date(this.startDate);
+          const endDate = new Date(value);
+          if (startDate.getTime() > endDate.getTime())
+            throw new Error("End date must be after start date");
+        }
+      }
     },
   }, {
     sequelize,

@@ -170,6 +170,49 @@ router.post("/:groupId/venues",
     return res.json(venue);
   }
 );
+
+router.post("/:groupId/events",
+  requireAuth,
+  async (req, res, next) => {
+    const userId = req.user.id;
+    const groupId = req.params.groupId;
+    const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
+
+    const group = (await Group.findAll({
+      attributes: ["organizerId", "id"],
+      include: {
+        model: User, as: "Member", attributes: ["id"],
+        through: {
+          as: "Membership", attributes: ["status"],
+          where: { "status": "co-host" }
+        },
+        required: false,
+        where: { "id": userId }
+      },
+      where: { "id": groupId }
+    }))[0];
+
+    if (!group)
+      return buildMissingResourceError(next, "Group");
+
+    if (venueId) {
+      const venue = await Venue.findByPk(venueId);
+      if (!venue)
+        return buildMissingResourceError(next, "Venue");
+    }
+
+    const isNotAuthorized = (
+      group.organizerId != userId && !group["Member"][0]
+    );
+    if (isNotAuthorized)
+      return buildAuthorzationErrorResponce(next);
+
+    const event = await group.createEvent(
+      { groupId, venueId, name, type, capacity, price, description, startDate, endDate }
+    );
+    return res.json(event);
+  }
+);
 //#endregion
 
 //#region               DELETE Requests

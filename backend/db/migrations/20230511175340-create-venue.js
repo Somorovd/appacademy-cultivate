@@ -8,7 +8,6 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    options.tableName = "Venues";
     await queryInterface.createTable('Venues', {
       id: {
         allowNull: false,
@@ -53,6 +52,7 @@ module.exports = {
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
       }
     }, options);
+    options.tableName = "Venues";
     await queryInterface.addIndex(options, ["groupId", "address"], { unique: true });
   },
   async down(queryInterface, Sequelize) {

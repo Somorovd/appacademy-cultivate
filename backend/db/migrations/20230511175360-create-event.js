@@ -41,7 +41,7 @@ module.exports = {
         allowNull: false
       },
       price: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.FLOAT,
         defaultValue: 0
       },
       startDate: {
@@ -63,6 +63,8 @@ module.exports = {
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
       }
     }, options);
+    options.tableName = "Events";
+    await queryInterface.addIndex(options, ["groupId", "name"], { unique: true });
   },
   async down(queryInterface, Sequelize) {
     options.tableName = "Events";
