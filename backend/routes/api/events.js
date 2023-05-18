@@ -60,7 +60,7 @@ router.get("/",
 		);
 		addCountsToEvents(events, attendingCounts);
 		assignEventPreviewImages(events);
-		return res.json({ events, page, size });
+		return res.json({ "Events": events, page, size });
 	}
 );
 
@@ -69,7 +69,7 @@ router.get("/:eventId",
 		const options = { eventIds: req.params.eventId, details: true };
 		const events = await handleGetEventsRequest(options);
 		return (events[0]) ?
-			res.json(events[0]) :
+			res.json({ "Events": events[0] }) :
 			buildMissingResourceError(next, "Event");
 	}
 );

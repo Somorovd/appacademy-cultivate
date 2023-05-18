@@ -37,10 +37,13 @@ router.get("/current",
 
 router.get("/:groupId",
 	async (req, res, next) => {
-		const options = { "groupIds": req.params.groupId, details: true }
-		const { groups, memberCounts } = await getGroupsInfo(options);
-		addCountsToGroups(groups, memberCounts);
-		return (groups[0]) ? res.json(groups[0]) : buildMissingResourceError(next, "Group");
+		const options = { groupIds: req.params.groupId, details: true }
+		const group = (await getGroupsInfo(options))[0];
+
+		if (!group)
+			buildMissingResourceError(next, "Group");
+
+		return res.json(group);
 	}
 );
 
@@ -50,21 +53,17 @@ router.get("/:groupId/venues",
 		const userId = req.user.id;
 		const groupId = req.params.groupId;
 
-		const group = (await Group.findAll({
-			attributes: ["organizerId", "id"],
+		const group = await Group.findByPk(groupId, {
+			attributes: ["organizerId"],
 			include: [{
 				model: User, as: "Members", attributes: ["id"],
-				through: {
-					as: "Membership", attributes: ["status"],
-					where: { "status": "co-host" }
-				},
+				through: { attributes: ["status"], where: { "status": "co-host" } },
 				required: false,
 				where: { "id": userId }
 			},
 			{ model: Venue }
-			],
-			where: { "id": groupId }
-		}))[0];
+			]
+		});
 
 		if (!group)
 			return buildMissingResourceError(next, "Group");
@@ -75,9 +74,7 @@ router.get("/:groupId/venues",
 		if (isNotAuthorized)
 			return buildAuthorzationErrorResponce(next);
 
-		return (group) ?
-			res.json({ "Venues": group["Venues"] }) :
-			buildMissingResourceError(next, "Group");
+		return res.json({ "Venues": group["Venues"] });
 	}
 );
 
@@ -131,9 +128,7 @@ router.get("/:groupId/members",
 //#region               GET responses
 
 async function handleGetGroupsRequest(res, options) {
-	const { groups, memberCounts } = await getGroupsInfo(options);
-	addCountsToGroups(groups, memberCounts);
-	if (!options.details) assignGroupPreviewImages(groups);
+	const groups = await getGroupsInfo(options);
 	return res.json({ "Groups": groups });
 }
 //#endregion
@@ -159,19 +154,15 @@ router.post("/:groupId/venues",
 		const groupId = req.params.groupId;
 		const { address, city, state, lat, lng } = req.body;
 
-		const group = (await Group.findAll({
-			attributes: ["organizerId", "id"],
+		const group = await Group.findByPk(groupId, {
+			attributes: ["organizerId"],
 			include: {
 				model: User, as: "Members", attributes: ["id"],
-				through: {
-					as: "Membership", attributes: ["status"],
-					where: { "status": "co-host" }
-				},
-				required: false,
-				where: { "id": userId }
+				through: { attributes: ["status"], where: { "status": "co-host" } },
+				required: false
 			},
-			where: { "id": groupId }
-		}))[0];
+			where: { "id": userId }
+		});
 
 		if (!group)
 			return buildMissingResourceError(next, "Group");
@@ -182,9 +173,9 @@ router.post("/:groupId/venues",
 		if (isNotAuthorized)
 			return buildAuthorzationErrorResponce(next);
 
-		const venue = await group.createVenue(
-			{ groupId, address, city, state, lat, lng }
-		);
+		const venue = await group.createVenue({
+			groupId, address, city, state, lat, lng
+		});
 		return res.json(venue);
 	}
 );
@@ -225,9 +216,10 @@ router.post("/:groupId/events",
 		if (isNotAuthorized)
 			return buildAuthorzationErrorResponce(next);
 
-		const event = await group.createEvent(
-			{ groupId, venueId, name, type, capacity, price, description, startDate, endDate }
-		);
+		const event = await group.createEvent({
+			groupId, venueId, name, type, capacity,
+			price, description, startDate, endDate
+		});
 		return res.json(event);
 	}
 );
@@ -299,9 +291,9 @@ router.post("/:groupId/membership",
 			}
 		}
 
-		const membership = await Membership.create(
-			{ userId, groupId, status: "pending" }
-		);
+		const membership = await Membership.create({
+			userId, groupId, status: "pending"
+		});
 
 		return res.json(membership);
 	}
@@ -455,17 +447,6 @@ router.delete("/:groupId/membership",
 );
 //#endregion
 
-function addCountsToGroups(groups, memberCounts) {
-	for (let i in groups) groups[i].numMembers = memberCounts[i];
-}
-
-function assignGroupPreviewImages(groups) {
-	for (let group of groups) {
-		group.previewImage = group.GroupImages[0]?.url || null;
-		delete group.GroupImages;
-	}
-}
-
 async function countGroupMembers(group) {
 	return await Membership.count({
 		where: { "groupId": group.id, [Op.not]: { "status": "pending" } }
@@ -480,10 +461,18 @@ async function getGroupsInfo(options) {
 	if (groupIds) scopes.push({ method: ["filterByGroups", groupIds] });
 
 	const groups = await Group.scope(scopes).findAll();
-	const memberCounts = await Promise.all(
-		groups.map(async (group) => await countGroupMembers(group))
-	);
-	return { "groups": groups.map((group) => group.toJSON()), memberCounts };
+
+	for (let group of groups) {
+		const numMembers = await countGroupMembers(group);
+		const groupData = group.dataValues;
+		groupData.numMembers = numMembers;
+
+		if (!details) {
+			groupData.previewImage = groupData["GroupImages"][0]?.url || null;
+			delete groupData["GroupImages"]
+		}
+	}
+	return groups;
 }
 
 module.exports = router;
