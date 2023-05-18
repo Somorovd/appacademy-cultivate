@@ -436,6 +436,7 @@ async function countGroupMembers(group) {
 
 async function getGroupsInfo(options) {
 	const { userIds, hostIds, groupIds, details } = options;
+	const scopes = [];
 	if (details) scopes.push("details")
 	else scopes.push("getPreviewImage");
 	if (userIds) scopes.push({ method: ["filterByMembers", userIds] });
