@@ -31,7 +31,7 @@ router.get("/",
 			errors.push({ path: "size", message: "Size must be grater than or equal to 1" })
 		if (name && (!isNaN(name) || typeof name !== "string"))
 			errors.push({ path: "name", message: "Name must be a string" });
-		if (type && (type !== "in person" && type !== "online"))
+		if (type && (type !== "In Person" && type !== "Online"))
 			errors.push({ path: "type", message: "Type must be either 'in person' or 'online'" });
 		if (startDate && (isNaN(new Date(startDate).getTime())))
 			errors.push({ path: "startDate", message: "Start Date must be a valid date" });
