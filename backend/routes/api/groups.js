@@ -4,7 +4,7 @@ const router = express.Router();
 const { Group, Membership, User, Venue, GroupImage, Event } = require("../../db/models");
 const { Op } = require("sequelize");
 const { requireAuth, buildAuthorzationErrorResponce } = require("../../utils/auth");
-const { handleGetEventsRequest } = require("../api/events");
+const { getEventsInfo } = require("../api/events");
 const { buildMissingResourceError } = require("../../utils/helpers");
 const { check } = require("express-validator");
 const { handleInputValidationErrors, buildValidationErrorResponce } = require("../../utils/validation");
@@ -79,7 +79,7 @@ router.get("/:groupId/events",
 	async (req, res, next) => {
 		const groupId = req.params.groupId;
 		const options = { groupIds: groupId };
-		const events = await handleGetEventsRequest(options);
+		const events = await getEventsInfo(options);
 
 		if (!events[0]) {
 			const group = await Group.findByPk(groupId);
@@ -104,7 +104,10 @@ router.get("/:groupId/members",
 		if (!group)
 			return buildMissingResourceError(next, "Group");
 
-		const isHost = group.organizerId == userId;
+		const isHost = (
+			group.organizerId == userId ||
+			group["Members"][0]
+		);
 		const where = (isHost) ? {} : { "status": { [Op.ne]: "pending" } };
 
 		const members = await User.findAll({
@@ -330,13 +333,11 @@ router.put("/:groupId/membership",
 		}
 
 		const isAuthorized = (
-			host &&
+			group.organizerId == userId ||
 			(
-				group.organizerId == host.id ||
-				(
-					host["Membership"].status == "co-host" &&
-					status == "member"
-				)
+				host &&
+				host["Membership"].status == "co-host" &&
+				status == "member"
 			)
 		);
 

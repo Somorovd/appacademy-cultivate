@@ -150,24 +150,37 @@ router.post("/:eventId/images",
 		const userId = req.user.id;
 		const { url, preview } = req.body;
 
-		const event = (await Event.findAll({
+		const event = await Event.findByPk(eventId, {
 			attributes: ["id"],
-			include: {
-				model: User, attributes: ["id"],
-				through: {
-					attributes: ["status"],
-					where: { "status": "attending" }
+			include: [
+				{
+					model: Group.scope([
+						{ method: ["includeAuthorization", userId] }
+					])
 				},
-				required: false,
-				where: { "id": userId }
-			},
-			where: { "id": eventId }
-		}))[0];
+				{
+					model: User, attributes: ["id"],
+					through: {
+						attributes: ["status"],
+						where: { "userId": userId, "status": "attending" }
+					}
+				}
+			],
+			required: false,
+			where: { "id": userId }
+		});
+
+		// return res.json(event);
 
 		if (!event)
 			return buildMissingResourceError(next, "Event");
 
-		const isNotAuthorized = !event["Users"][0];
+		const group = event["Group"];
+		const isNotAuthorized = (
+			group.organizerId != userId &&
+			!group["Members"][0] &&
+			!event["Users"][0]
+		);
 		if (isNotAuthorized)
 			return buildAuthorzationErrorResponce(next);
 
@@ -311,7 +324,7 @@ router.put("/:eventId/attendance",
 			include: [
 				{
 					model: Group.scope([
-						{ method: ["includeAuthorization", userId] }
+						{ method: ["includeAuthorization", req.user.id] }
 					])
 				},
 				{
@@ -487,5 +500,5 @@ async function getEventsInfo(options) {
 }
 
 module.exports = {
-	router, handleGetEventsRequest
+	router, getEventsInfo
 };
