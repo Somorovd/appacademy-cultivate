@@ -102,7 +102,7 @@ module.exports = (sequelize, DataTypes) => {
           include: [
             { model: GroupImage, attributes: ["id", "url", "preview"] },
             { model: User, as: "Organizer", attributes: ["id", "firstName", "lastName"] },
-            { model: Venue }
+            { model: Venue, attributes: { exclude: ["createdAt", "updatedAt"] } }
           ]
         }
       }
