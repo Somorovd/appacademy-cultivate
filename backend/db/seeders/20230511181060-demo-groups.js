@@ -14,7 +14,7 @@ module.exports = {
         organizerId: 1,
         name: "Foodies",
         about: "We find food related events",
-        type: "in person",
+        type: "In Person",
         private: false,
         city: "Boston",
         state: "MA"
@@ -23,7 +23,7 @@ module.exports = {
         organizerId: 2,
         name: "Fun for the Kidz",
         about: "Family friendly actvities, indoors and outdoors",
-        type: "in person",
+        type: "In Person",
         private: false,
         city: "Boston",
         state: "MA"
@@ -32,7 +32,7 @@ module.exports = {
         organizerId: 3,
         name: "Rick's Bowling Club",
         about: "Rick's Bowling Club based in Honolulu",
-        type: "in person",
+        type: "In Person",
         private: true,
         city: "Honolulu",
         state: "HI"

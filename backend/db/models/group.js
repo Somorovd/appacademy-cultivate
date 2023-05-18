@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: { len: [50] }
     },
     type: {
-      type: DataTypes.ENUM("in person", "online"),
+      type: DataTypes.ENUM("In Person", "Online"),
       allowNull: false
     },
     private: {
