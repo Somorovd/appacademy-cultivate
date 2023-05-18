@@ -46,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.ENUM("In Person", "Online"),
 			defaultValue: "In Person",
 			validate: {
-				isIn: ["In Person", "Online"]
+				isIn: [["In Person", "Online"]]
 			}
 		},
 		capacity: {

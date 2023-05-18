@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { Group, Membership, User, Venue, GroupImage } = require("../../db/models");
+const { Group, Membership, User, Venue, GroupImage, Event } = require("../../db/models");
 const { Op } = require("sequelize");
 const { requireAuth, buildAuthorzationErrorResponce } = require("../../utils/auth");
 const { handleGetEventsRequest } = require("../api/events");
@@ -23,7 +23,8 @@ const validateMembershipRequestInput = [
 router.get("/",
 	async (req, res, next) => {
 		const options = {};
-		return await handleGetGroupsRequest(res, options);
+		const groups = await getGroupsInfo(options);
+		return res.json({ "Groups": groups });
 	}
 );
 
@@ -31,7 +32,8 @@ router.get("/current",
 	requireAuth,
 	async (req, res) => {
 		const options = { userIds: req.user.id }
-		return await handleGetGroupsRequest(res, options);
+		const groups = await getGroupsInfo(options);
+		return res.json({ "Groups": groups });
 	}
 );
 
@@ -53,17 +55,12 @@ router.get("/:groupId/venues",
 		const userId = req.user.id;
 		const groupId = req.params.groupId;
 
-		const group = await Group.findByPk(groupId, {
-			attributes: ["organizerId"],
-			include: [{
-				model: User, as: "Members", attributes: ["id"],
-				through: { attributes: ["status"], where: { "status": "co-host" } },
-				required: false,
-				where: { "id": userId }
-			},
-			{ model: Venue }
-			]
-		});
+		const group = await Group
+			.scope([
+				"includeVenues",
+				{ method: ["includeAuthorization", userId] }
+			])
+			.findByPk(groupId);
 
 		if (!group)
 			return buildMissingResourceError(next, "Group");
@@ -98,7 +95,11 @@ router.get("/:groupId/members",
 	async (req, res, next) => {
 		const groupId = req.params.groupId;
 		const userId = req.user.id;
-		const group = await Group.findByPk(groupId, { attributes: ["organizerId"] });
+		const group = await Group
+			.scope([
+				{ method: ["includeAuthorization", userId] }
+			])
+			.findByPk(groupId);
 
 		if (!group)
 			return buildMissingResourceError(next, "Group");
@@ -124,14 +125,6 @@ router.get("/:groupId/members",
 		return res.json({ "Members": members });
 	}
 );
-
-//#region               GET responses
-
-async function handleGetGroupsRequest(res, options) {
-	const groups = await getGroupsInfo(options);
-	return res.json({ "Groups": groups });
-}
-//#endregion
 //#endregion
 
 //#region               POST requests
@@ -154,15 +147,9 @@ router.post("/:groupId/venues",
 		const groupId = req.params.groupId;
 		const { address, city, state, lat, lng } = req.body;
 
-		const group = await Group.findByPk(groupId, {
-			attributes: ["organizerId"],
-			include: {
-				model: User, as: "Members", attributes: ["id"],
-				through: { attributes: ["status"], where: { "status": "co-host" } },
-				required: false
-			},
-			where: { "id": userId }
-		});
+		const group = await Group.scope([
+			{ method: ["includeAuthorization", userId] }
+		]).findByPk(groupId);
 
 		if (!group)
 			return buildMissingResourceError(next, "Group");
@@ -173,9 +160,11 @@ router.post("/:groupId/venues",
 		if (isNotAuthorized)
 			return buildAuthorzationErrorResponce(next);
 
-		const venue = await group.createVenue({
+		const venue = await Venue.create({
 			groupId, address, city, state, lat, lng
 		});
+		await group.addVenue(venue);
+
 		return res.json(venue);
 	}
 );
@@ -185,21 +174,14 @@ router.post("/:groupId/events",
 	async (req, res, next) => {
 		const userId = req.user.id;
 		const groupId = req.params.groupId;
-		const { venueId, name, type, capacity, price, description, startDate, endDate } = req.body;
+		const {
+			venueId, name, type, capacity,
+			price, description, startDate, endDate
+		} = req.body;
 
-		const group = (await Group.findAll({
-			attributes: ["organizerId", "id"],
-			include: {
-				model: User, as: "Members", attributes: ["id"],
-				through: {
-					as: "Membership", attributes: ["status"],
-					where: { "status": "co-host" }
-				},
-				required: false,
-				where: { "id": userId }
-			},
-			where: { "id": groupId }
-		}))[0];
+		const group = await Group.scope([
+			{ method: ["includeAuthorization", userId] }
+		]).findByPk(groupId);
 
 		if (!group)
 			return buildMissingResourceError(next, "Group");
@@ -216,10 +198,11 @@ router.post("/:groupId/events",
 		if (isNotAuthorized)
 			return buildAuthorzationErrorResponce(next);
 
-		const event = await group.createEvent({
+		const event = await Event.create({
 			groupId, venueId, name, type, capacity,
 			price, description, startDate, endDate
 		});
+		await group.addEvent(event);
 		return res.json(event);
 	}
 );
@@ -231,10 +214,9 @@ router.post("/:groupId/images",
 		const userId = req.user.id;
 		const { url, preview } = req.body;
 
-		const group = (await Group.findAll({
-			attributes: ["organizerId"],
-			where: { "id": groupId }
-		}))[0];
+		const group = await Group.scope([
+			{ method: ["includeAuthorization", userId] }
+		]).findByPk(groupId);
 
 		if (!group)
 			return buildMissingResourceError(next, "Group");
@@ -246,9 +228,7 @@ router.post("/:groupId/images",
 		const image = await GroupImage.create(
 			{ groupId, url, preview }
 		);
-
-		group.addGroupImage(image);
-
+		await group.addGroupImage(image);
 		return res.json({
 			id: image.id,
 			url: image.url,
@@ -264,8 +244,7 @@ router.post("/:groupId/membership",
 		const userId = req.user.id;
 		const group = await Group.findByPk(groupId, {
 			include: {
-				model: User, as: "Members",
-				attributes: ["id"],
+				model: User, as: "Members", attributes: ["id"],
 				through: { attributes: ["status"] },
 				required: false,
 				where: { "id": userId }
@@ -458,7 +437,11 @@ async function getGroupsInfo(options) {
 	const scopes = [details ? "details" : "getPreviewImage"];
 	if (userIds) scopes.push({ method: ["filterByMembers", userIds] });
 	if (hostIds) scopes.push({ method: ["filterByHosts", hostIds] });
-	if (groupIds) scopes.push({ method: ["filterByGroups", groupIds] });
+
+	let findByPk = false;
+
+	if (groupIds.length == 1) findByPk = true;
+	if (groupIds.length > 1) scopes.push({ method: ["filterByGroups", groupIds] });
 
 	const groups = await Group.scope(scopes).findAll();
 

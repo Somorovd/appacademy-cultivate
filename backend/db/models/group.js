@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM("In Person", "Online"),
       defaultValue: "In Person",
       validate: {
-        isIn: ["In Person", "Online"]
+        isIn: [["In Person", "Online"]]
       }
     },
     private: {
@@ -104,6 +104,27 @@ module.exports = (sequelize, DataTypes) => {
             { model: User, as: "Organizer", attributes: ["id", "firstName", "lastName"] },
             { model: Venue, attributes: { exclude: ["createdAt", "updatedAt"] } }
           ]
+        }
+      },
+      includeAuthorization(userId) {
+        const { User } = require("../models");
+        return {
+          attributes: ["organizerId"],
+          include: [{
+            model: User, as: "Members", attributes: ["id"],
+            through: { attributes: ["status"], where: { "status": "co-host" } },
+            required: false,
+            where: { "id": userId }
+          }]
+        }
+      },
+      includeVenues() {
+        const { Venue } = require("../models");
+        return {
+          include: [{
+            model: Venue,
+            attributes: { exclude: ["createdAt", "updatedAt"] }
+          }]
         }
       }
     }
