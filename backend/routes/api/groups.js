@@ -94,31 +94,31 @@ router.get("/:groupId/events",
 router.get("/:groupId/members",
 	async (req, res, next) => {
 		const groupId = req.params.groupId;
-		const group = await Group.findAll({
-			where: { "id": groupId, "organizerId": req.user.id }
-		});
+		const userId = req.user.id;
+		const group = await Group.findByPk(groupId, { attributes: ["organizerId"] });
 
-		const where = (group[0]) ? {} : { "status": { [Op.ne]: "pending" } };
-		const users = await User.findAll({
+		if (!group)
+			return buildMissingResourceError(next, "Group");
+
+		const isHost = group.organizerId == userId;
+		const where = (isHost) ? {} : { "status": { [Op.ne]: "pending" } };
+
+		const members = await User.findAll({
 			attributes: ["id", "firstName", "lastName"],
 			include: {
 				model: Group, attributes: ["id"],
+				through: { attributes: ["status"], where: where },
 				where: { "id": groupId },
-				through: { attributes: ["status"], where: where }
 			}
 		});
 
-		const userArr = [];
-		for (let user of users) {
-			user = user.toJSON();
-			user["Membership"] = user["Groups"][0]["Membership"];
-			delete user["Groups"];
-			userArr.push(user);
+		for (let member of members) {
+			const memberData = member.dataValues;
+			memberData["Membership"] = memberData["Groups"][0]["Membership"];
+			delete memberData["Groups"];
 		}
 
-		return (userArr[0]) ?
-			res.json(userArr) :
-			buildMissingResourceError(next, "Group")
+		return res.json({ "Members": members });
 	}
 );
 
