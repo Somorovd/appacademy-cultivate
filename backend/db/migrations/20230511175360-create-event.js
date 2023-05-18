@@ -46,11 +46,11 @@ module.exports = {
 				defaultValue: 0
 			},
 			startDate: {
-				type: Sequelize.DATE,
+				type: Sequelize.DATEONLY,
 				allowNull: false
 			},
 			endDate: {
-				type: Sequelize.DATE,
+				type: Sequelize.DATEONLY,
 				allowNull: false
 			},
 			createdAt: {

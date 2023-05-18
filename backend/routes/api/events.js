@@ -6,7 +6,7 @@ const { buildMissingResourceError } = require("../../utils/helpers");
 const { requireAuth, buildAuthorzationErrorResponce } = require("../../utils/auth");
 const { Op } = require("sequelize");
 const { check } = require("express-validator");
-const { handleInputValidationErrors } = require("../../utils/validation");
+const { handleInputValidationErrors, buildValidationErrorResponce } = require("../../utils/validation");
 
 
 //#region 							Express Middleware
@@ -21,10 +21,46 @@ const validateAttendanceRequestInput = [
 
 //#region               GET requests
 router.get("/",
-	async (req, res) => {
-		const options = {};
-		const events = await handleGetEventsRequest(options);
-		return res.json(events);
+	async (req, res, next) => {
+		let { page, size, name, type, startDate } = req.query;
+
+		const errors = [];
+		if (page && (isNaN(page) || page <= 0))
+			errors.push({ path: "page", message: "Page must be grater than or equal to 1" })
+		if (size && (isNaN(size) || size <= 0))
+			errors.push({ path: "size", message: "Size must be grater than or equal to 1" })
+		if (name && (!isNaN(name) || typeof name !== "string"))
+			errors.push({ path: "name", message: "Name must be a string" });
+		if (type && (type !== "in person" && type !== "online"))
+			errors.push({ path: "type", message: "Type must be either 'in person' or 'online'" });
+		if (startDate && (isNaN(new Date(startDate).getTime())))
+			errors.push({ path: "startDate", message: "Start Date must be a valid date" });
+
+		if (errors.length)
+			return buildValidationErrorResponce(errors, 400, "Validation Error", next);
+
+		const where = {};
+		if (name) where.name = name;
+		if (type) where.type = type;
+		if (startDate) where.startDate = startDate;
+
+		page = Number(page || 1);
+		size = Number(size || 20)
+		const pagination = {
+			limit: size,
+			offset: (page - 1) * size
+		};
+
+		const events = (await Event.scope(["getPreviewImage", "general"]).findAll({
+			attributes: ["id", "groupId", "venueId", "name", "type", "startDate", "endDate"],
+			where: where, ...pagination
+		})).map((event) => event.toJSON());
+		const attendingCounts = await Promise.all(
+			events.map(async (event) => await countAttending(event))
+		);
+		addCountsToEvents(events, attendingCounts);
+		assignEventPreviewImages(events);
+		return res.json({ events, page, size });
 	}
 );
 
