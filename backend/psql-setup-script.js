@@ -1,5 +1,4 @@
 const { sequelize } = require('./db/models');
-require("dotenv").config();
 
 sequelize.showAllSchemas({ logging: false }).then(async (data) => {
   console.log("SCHEMA: ", process.env.SCHEMA);
