@@ -37,7 +37,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     type: {
       type: DataTypes.ENUM("In Person", "Online"),
-      allowNull: false
+      defaultValue: "In Person",
+      validate: {
+        isIn: ["In Person", "Online"]
+      }
     },
     private: {
       type: DataTypes.BOOLEAN,
