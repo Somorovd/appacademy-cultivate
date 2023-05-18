@@ -83,11 +83,17 @@ router.get("/:groupId/venues",
 
 router.get("/:groupId/events",
 	async (req, res, next) => {
-		const options = { groupIds: req.params.groupId };
+		const groupId = req.params.groupId;
+		const options = { groupIds: groupId };
 		const events = await handleGetEventsRequest(options);
-		return (events.length) ?
-			res.json(events) :
-			buildMissingResourceError(next, "Group");
+
+		if (!events[0]) {
+			const group = await Group.findByPk(groupId);
+			if (!group)
+				return buildMissingResourceError(next, "Group");
+		}
+
+		return res.json({ "Events": events });
 	}
 );
 
