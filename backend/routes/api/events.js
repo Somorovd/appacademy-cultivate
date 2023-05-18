@@ -63,7 +63,7 @@ router.get("/",
 	validateEventQueryParameters,
 	handleEventQueryParameters,
 	async (req, res, next) => {
-		const { where, pagination } = req.query;
+		const { page, size, where, pagination } = req.query;
 
 		const events = (await Event.scope(["getPreviewImage", "general"]).findAll({
 			attributes: ["id", "groupId", "venueId", "name", "type", "startDate", "endDate"],
@@ -389,30 +389,31 @@ router.delete("/:eventId",
 router.delete("/:eventId/attendance",
 	requireAuth,
 	async (req, res, next) => {
-		const userId = req.user.id;
-		const memberId = req.body.memberId;
+		const userId = req.body.userId;
 		const eventId = req.params.eventId;
 
-		const user = (await User.findAll({
-			where: { "id": memberId },
+		const errors = [];
+		if (!userId)
+			errors.push({ path: "userId", message: "User Id is required" });
+
+		if (errors.length)
+			return buildValidationErrorResponce(errors, 400, "Validation Error", next);
+
+		const user = await User.findByPk(userId, {
 			attributes: ["id"],
 			include: [
 				{
 					model: Event, attributes: ["id"], where: { "id": eventId },
 					required: false,
 					include: {
-						model: Group, attributes: ["organizerId"],
-						required: false,
-						include: {
-							model: User, as: "Members", attributes: ["id"],
-							required: false,
-							where: { "id": userId },
-							through: { attributes: ["status"] }
-						}
+						model: Group.scope([
+							{ method: ["includeAuthorization", req.user.id] }
+						]),
+						required: false
 					}
 				},
 			]
-		}))[0];
+		});
 
 		if (!user)
 			return buildMissingResourceError(next, "User");
@@ -421,14 +422,17 @@ router.delete("/:eventId/attendance",
 		if (!event) {
 			event = await Event.findByPk(eventId);
 			if (!event)
-				return buildMissingResourceError(next, "Event");
+				return buildValidationErrorResponce(
+					[{ path: "userId", message: "User could not be found" }],
+					400, "Validation Error", next
+				);
 			else
-				return res.json({ message: "attendance does not exist between user and event" });
+				return buildMissingResourceError(next, "Attendance");
 		}
 
 		const { organizerId, Member } = event["Group"];
 		const isNotAuthorized = (
-			userId != memberId &&
+			userId != userId &&
 			userId != organizerId &&
 			!Member[0]
 		);

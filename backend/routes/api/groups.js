@@ -7,7 +7,7 @@ const { requireAuth, buildAuthorzationErrorResponce } = require("../../utils/aut
 const { handleGetEventsRequest } = require("../api/events");
 const { buildMissingResourceError } = require("../../utils/helpers");
 const { check } = require("express-validator");
-const { handleInputValidationErrors } = require("../../utils/validation");
+const { handleInputValidationErrors, buildValidationErrorResponce } = require("../../utils/validation");
 
 //#region 							Express Middleware
 const validateMembershipRequestInput = [
@@ -385,8 +385,6 @@ router.delete("/:groupId/membership",
 		const memberId = req.body.memberId;
 		const groupId = req.params.groupId;
 
-		console.log({ userId, memberId });
-
 		const group = (await Group.findAll({
 			attributes: ["organizerId"],
 			include: {
@@ -411,9 +409,12 @@ router.delete("/:groupId/membership",
 		if (!member) {
 			member = await User.findByPk(memberId);
 			if (!member)
-				return buildMissingResourceError(next, "User");
+				return buildValidationErrorResponce(
+					[{ path: "memberId", message: "Member could not be found" }],
+					400, "Validation Error", next
+				);
 			else
-				return res.json({ message: "membership does not exists between user and group" });
+				return buildMissingResourceError(next, "Membership");
 		}
 
 		const isNotAuthorized = (
