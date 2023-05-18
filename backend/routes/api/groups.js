@@ -53,7 +53,7 @@ router.get("/:groupId/venues",
 		const group = (await Group.findAll({
 			attributes: ["organizerId", "id"],
 			include: [{
-				model: User, as: "Member", attributes: ["id"],
+				model: User, as: "Members", attributes: ["id"],
 				through: {
 					as: "Membership", attributes: ["status"],
 					where: { "status": "co-host" }
@@ -70,7 +70,7 @@ router.get("/:groupId/venues",
 			return buildMissingResourceError(next, "Group");
 
 		const isNotAuthorized = (
-			group.organizerId != userId && !group["Member"][0]
+			group.organizerId != userId && !group["Members"][0]
 		);
 		if (isNotAuthorized)
 			return buildAuthorzationErrorResponce(next);
@@ -156,7 +156,7 @@ router.post("/:groupId/venues",
 		const group = (await Group.findAll({
 			attributes: ["organizerId", "id"],
 			include: {
-				model: User, as: "Member", attributes: ["id"],
+				model: User, as: "Members", attributes: ["id"],
 				through: {
 					as: "Membership", attributes: ["status"],
 					where: { "status": "co-host" }
@@ -171,7 +171,7 @@ router.post("/:groupId/venues",
 			return buildMissingResourceError(next, "Group");
 
 		const isNotAuthorized = (
-			group.organizerId != userId && !group["Member"][0]
+			group.organizerId != userId && !group["Members"][0]
 		);
 		if (isNotAuthorized)
 			return buildAuthorzationErrorResponce(next);
@@ -193,7 +193,7 @@ router.post("/:groupId/events",
 		const group = (await Group.findAll({
 			attributes: ["organizerId", "id"],
 			include: {
-				model: User, as: "Member", attributes: ["id"],
+				model: User, as: "Members", attributes: ["id"],
 				through: {
 					as: "Membership", attributes: ["status"],
 					where: { "status": "co-host" }
@@ -214,7 +214,7 @@ router.post("/:groupId/events",
 		}
 
 		const isNotAuthorized = (
-			group.organizerId != userId && !group["Member"][0]
+			group.organizerId != userId && !group["Members"][0]
 		);
 		if (isNotAuthorized)
 			return buildAuthorzationErrorResponce(next);
@@ -266,7 +266,7 @@ router.post("/:groupId/membership",
 		const userId = req.user.id;
 		const group = await Group.findByPk(groupId, {
 			include: {
-				model: User, as: "Member",
+				model: User, as: "Members",
 				attributes: ["id"],
 				through: { attributes: ["status"] },
 				required: false,
@@ -277,8 +277,8 @@ router.post("/:groupId/membership",
 		if (!group)
 			return buildMissingResourceError(next, "Group");
 
-		if (group["Member"][0]) {
-			const status = group["Member"][0]["Membership"].status;
+		if (group["Members"][0]) {
+			const status = group["Members"][0]["Membership"].status;
 			if (status === "pending") {
 				const err = new Error("Membership has already been requested");
 				err.title = "Bad Request";
@@ -336,7 +336,7 @@ router.put("/:groupId/membership",
 		const group = await Group.findByPk(groupId, {
 			attributes: ["organizerId"],
 			include: {
-				model: User, as: "Member",
+				model: User, as: "Members",
 				attributes: ["id"],
 				required: false,
 				where: { "id": [memberId, userId] }
@@ -348,7 +348,7 @@ router.put("/:groupId/membership",
 			return buildMissingResourceError(next, "Group");
 
 		let host, member;
-		for (let user of group["Member"]) {
+		for (let user of group["Members"]) {
 			if (user.id == userId) host = user;
 			if (user.id == memberId) member = user;
 		}
@@ -411,7 +411,7 @@ router.delete("/:groupId/membership",
 		const group = (await Group.findAll({
 			attributes: ["organizerId"],
 			include: {
-				model: User, as: "Member",
+				model: User, as: "Members",
 				attributes: ["id"],
 				where: { "id": [memberId, userId] },
 				required: false
@@ -423,7 +423,7 @@ router.delete("/:groupId/membership",
 		if (!group) return buildMissingResourceError(next, "Group");
 
 		let member;
-		for (let user of group["Member"]) {
+		for (let user of group["Members"]) {
 			if (user.id != memberId) continue;
 			member = user;
 			break;

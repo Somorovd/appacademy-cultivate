@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       Group.hasMany(models.Event, { foreignKey: "groupId" });
       Group.belongsTo(models.User, { as: "Organizer", foreignKey: "organizerId" });
       Group.belongsToMany(models.User, {
-        as: "Member",
+        as: "Members",
         through: models.Membership,
         foreignKey: "groupId", otherKey: "userId"
       });
@@ -70,22 +70,22 @@ module.exports = (sequelize, DataTypes) => {
       filterByMembers(userIds) {
         const { User } = require("../models");
         return {
-          include: [{ model: User, as: "Member", attributes: [] }],
-          where: { [Op.or]: { "organizerId": userIds, "$Member.id$": userIds } }
+          include: [{ model: User, as: "Members", attributes: [] }],
+          where: { [Op.or]: { "organizerId": userIds, "$Members.id$": userIds } }
         }
       },
       filterByHosts(userIds) {
         const { User } = require("../models");
         return {
           include: [{
-            model: User, as: "Member", attributes: [],
+            model: User, as: "Members", attributes: [],
             where: { "id": userIds },
             through: { as: "Membership" },
           }],
           where: {
             [Op.or]: {
               "organizerId": userIds,
-              "$Member.Membership.status$": "co-host"
+              "$Members.Membership.status$": "co-host"
             }
           },
         }

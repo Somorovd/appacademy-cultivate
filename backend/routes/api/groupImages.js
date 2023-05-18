@@ -18,7 +18,7 @@ router.delete("/:imageId",
           attributes: ["id", "groupId"]
         },
         {
-          model: User, as: "Member",
+          model: User, as: "Members",
           through: { where: { "userId": userId, "status": "co-host" } }
         }
       ]
@@ -28,7 +28,7 @@ router.delete("/:imageId",
       return buildMissingResourceError(next, "Image");
 
     const isNotAuthorized = (
-      group.organizerId != userId && !group["Member"][0]
+      group.organizerId != userId && !group["Members"][0]
     );
     if (isNotAuthorized) return buildAuthorzationErrorResponce(next);
 

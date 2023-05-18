@@ -16,7 +16,7 @@ router.put("/:venueId",
 			include: {
 				model: Group, attributes: ["organizerId"],
 				include: {
-					model: User, as: "Member",
+					model: User, as: "Members",
 					through: { attributes: ["status"], where: { "status": "co-host" } },
 					required: false,
 					where: { "id": userId }
@@ -29,7 +29,7 @@ router.put("/:venueId",
 
 		const group = venue["Group"];
 		const isNotAuthorized = (
-			group.organizerId != userId && !group["Member"][0]
+			group.organizerId != userId && !group["Members"][0]
 		);
 		if (isNotAuthorized)
 			return buildAuthorzationErrorResponce(next);

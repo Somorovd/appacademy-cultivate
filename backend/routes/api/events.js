@@ -82,7 +82,7 @@ router.get("/:eventId/attendees",
 			include: {
 				model: Group, attributes: ["organizerId"],
 				include: {
-					model: User, as: "Member",
+					model: User, as: "Members",
 					where: { "id": userId },
 					through: { as: "Membership" }
 				},
@@ -90,7 +90,7 @@ router.get("/:eventId/attendees",
 				where: {
 					[Op.or]: {
 						"organizerId": userId,
-						"$Group.Member.Membership.status$": "co-host"
+						"$Group.Members.Membership.status$": "co-host"
 					}
 				}
 			}
@@ -169,7 +169,7 @@ router.post("/:eventId/attendance",
 				{
 					model: Group, attributes: ["id"],
 					include: {
-						model: User, as: "Member",
+						model: User, as: "Members",
 						attributes: ["id"],
 						through: {
 							attributes: ["status"],
@@ -191,7 +191,7 @@ router.post("/:eventId/attendance",
 		if (!event)
 			return buildMissingResourceError(next, "Event");
 
-		const member = event["Group"]["Member"][0];
+		const member = event["Group"]["Members"][0];
 
 		if (!member)
 			return buildAuthorzationErrorResponce(next);
@@ -233,7 +233,7 @@ router.put("/:eventId",
 			include: {
 				model: Group, attributes: ["organizerId"],
 				include: {
-					model: User, as: "Member",
+					model: User, as: "Members",
 					attributes: ["id"],
 					through: {
 						attributes: ["status"],
@@ -251,7 +251,7 @@ router.put("/:eventId",
 
 		const group = event["Group"];
 		const isNotAuthorized = (
-			group.organizerId != userId && !group["Member"][0]
+			group.organizerId != userId && !group["Members"][0]
 		);
 		if (isNotAuthorized)
 			return buildAuthorzationErrorResponce(next);
@@ -286,7 +286,7 @@ router.put("/:eventId/attendance",
 				{
 					model: Group, attributes: ["organizerId"],
 					include: {
-						model: User, as: "Member",
+						model: User, as: "Members",
 						attributes: ["id"],
 						through: { attributes: ["status"], where: { "status": "co-host" } },
 						required: false,
@@ -306,7 +306,7 @@ router.put("/:eventId/attendance",
 
 		const group = event["Group"];
 		const isNotAuthorized = (
-			group.organizerId != req.user.id && !group["Member"][0]
+			group.organizerId != req.user.id && !group["Members"][0]
 		);
 		if (isNotAuthorized)
 			return buildAuthorzationErrorResponce(next);
@@ -341,7 +341,7 @@ router.delete("/:eventId",
 			include: {
 				model: Group, attributes: ["organizerId"],
 				include: {
-					model: User, as: "Member",
+					model: User, as: "Members",
 					through: {
 						attributes: ["status"],
 						where: { "status": "co-host", "userId": userId }
@@ -354,7 +354,7 @@ router.delete("/:eventId",
 
 		const isNotAuthorized = (
 			event["Group"].organizerId != userId &&
-			!event["Group"]["Member"][0]
+			!event["Group"]["Members"][0]
 		);
 
 		if (isNotAuthorized)
@@ -383,7 +383,7 @@ router.delete("/:eventId/attendance",
 						model: Group, attributes: ["organizerId"],
 						required: false,
 						include: {
-							model: User, as: "Member", attributes: ["id"],
+							model: User, as: "Members", attributes: ["id"],
 							required: false,
 							where: { "id": userId },
 							through: { attributes: ["status"] }
