@@ -17,39 +17,53 @@ const validateAttendanceRequestInput = [
 		.withMessage("Status must be 'waitlist' or 'attending'"),
 	handleInputValidationErrors
 ]
+
+const validateEventQueryParameters = (req, res, next) => {
+	let { page, size, name, type, startDate } = req.query;
+	const errors = [];
+	if (page && (isNaN(page) || page <= 0))
+		errors.push({ path: "page", message: "Page must be grater than or equal to 1" })
+	if (size && (isNaN(size) || size <= 0))
+		errors.push({ path: "size", message: "Size must be grater than or equal to 1" })
+	if (name && (!isNaN(name) || typeof name !== "string"))
+		errors.push({ path: "name", message: "Name must be a string" });
+	if (type && (type !== "In Person" && type !== "Online"))
+		errors.push({ path: "type", message: "Type must be either 'In Person' or 'Online'" });
+	if (startDate && (isNaN(new Date(startDate).getTime())))
+		errors.push({ path: "startDate", message: "Start Date must be a valid date" });
+
+	if (errors.length)
+		return buildValidationErrorResponce(errors, 400, "Validation Error", next);
+	else return next();
+}
+
+const handleEventQueryParameters = (req, res, next) => {
+	let { page, size, name, type, startDate } = req.query;
+
+	const where = {};
+	if (name) where.name = name;
+	if (type) where.type = type;
+	if (startDate) where.startDate = startDate;
+
+	page = Number(page || 1);
+	size = Number(size || 20)
+	const pagination = {
+		limit: size,
+		offset: (page - 1) * size
+	};
+
+	req.query.where = where;
+	req.query.pagination = pagination;
+	return next();
+}
 //#endregion
 
 //#region               GET requests
 router.get("/",
+	validateEventQueryParameters,
+	handleEventQueryParameters,
 	async (req, res, next) => {
-		let { page, size, name, type, startDate } = req.query;
-
-		const errors = [];
-		if (page && (isNaN(page) || page <= 0))
-			errors.push({ path: "page", message: "Page must be grater than or equal to 1" })
-		if (size && (isNaN(size) || size <= 0))
-			errors.push({ path: "size", message: "Size must be grater than or equal to 1" })
-		if (name && (!isNaN(name) || typeof name !== "string"))
-			errors.push({ path: "name", message: "Name must be a string" });
-		if (type && (type !== "In Person" && type !== "Online"))
-			errors.push({ path: "type", message: "Type must be either 'in person' or 'online'" });
-		if (startDate && (isNaN(new Date(startDate).getTime())))
-			errors.push({ path: "startDate", message: "Start Date must be a valid date" });
-
-		if (errors.length)
-			return buildValidationErrorResponce(errors, 400, "Validation Error", next);
-
-		const where = {};
-		if (name) where.name = name;
-		if (type) where.type = type;
-		if (startDate) where.startDate = startDate;
-
-		page = Number(page || 1);
-		size = Number(size || 20)
-		const pagination = {
-			limit: size,
-			offset: (page - 1) * size
-		};
+		const { where, pagination } = req.query;
 
 		const events = (await Event.scope(["getPreviewImage", "general"]).findAll({
 			attributes: ["id", "groupId", "venueId", "name", "type", "startDate", "endDate"],
@@ -67,41 +81,54 @@ router.get("/",
 router.get("/:eventId",
 	async (req, res, next) => {
 		const options = { eventIds: req.params.eventId, details: true };
-		const events = await handleGetEventsRequest(options);
-		return (events[0]) ?
-			res.json({ "Events": events[0] }) :
+		const event = (await getEventsInfo(options))[0];
+
+		if (!event)
 			buildMissingResourceError(next, "Event");
+
+		return res.json(event);
 	}
 );
 
 router.get("/:eventId/attendees",
 	async (req, res, next) => {
-		const options = { eventIds: req.params.eventId };
+		const eventId = req.params.eventId;
 		const userId = req.user.id;
-		const event = await Event.findByPk(req.params.eventId, {
+
+		const event = await Event.findByPk(eventId, {
+			attributes: ["id"],
 			include: {
-				model: Group, attributes: ["organizerId"],
-				include: {
-					model: User, as: "Members",
-					where: { "id": userId },
-					through: { as: "Membership" }
-				},
-				required: false,
-				where: {
-					[Op.or]: {
-						"organizerId": userId,
-						"$Group.Members.Membership.status$": "co-host"
-					}
-				}
+				model: Group.scope([
+					{ method: ["includeAuthorization", userId] }
+				])
 			}
 		});
 
-		options.attendees = event != null && event["Group"] !== null;
-		const events = await handleGetEventsRequest(options);
+		if (!event)
+			return buildMissingResourceError(next, "Event");
 
-		return (events[0]) ?
-			res.json({ "Attendees": events[0]["Users"] }) :
-			buildMissingResourceError(next, "Event")
+		const group = event["Group"];
+		const isHost = (
+			group.organizerId == userId || group["Members"][0]
+		);
+		const where = (isHost) ? {} : { "status": { [Op.ne]: "pending" } };
+
+		const attendees = await User.findAll({
+			attributes: ["id", "firstName", "lastName"],
+			include: {
+				model: Event, attributes: ["id"],
+				through: { attributes: ["status"], where: where },
+				where: { "id": eventId },
+			}
+		});
+
+		for (let attendee of attendees) {
+			const attendeeData = attendee.dataValues;
+			attendeeData["Attendance"] = attendeeData["Events"][0]["Attendance"];
+			delete attendeeData["Events"];
+		}
+
+		return res.json({ "Attendees": attendees });
 	}
 );
 
@@ -245,7 +272,6 @@ router.put("/:eventId",
 			}
 		});
 
-
 		if (!event)
 			return buildMissingResourceError(next, "Event");
 
@@ -284,14 +310,9 @@ router.put("/:eventId/attendance",
 			attributes: ["id"],
 			include: [
 				{
-					model: Group, attributes: ["organizerId"],
-					include: {
-						model: User, as: "Members",
-						attributes: ["id"],
-						through: { attributes: ["status"], where: { "status": "co-host" } },
-						required: false,
-						where: { "id": req.user.id }
-					}
+					model: Group.scope([
+						{ method: ["includeAuthorization", userId] }
+					])
 				},
 				{
 					model: User, attributes: ["id"],
@@ -446,11 +467,19 @@ async function getEventsInfo(options) {
 	if (eventIds) scopes.push({ method: ["filterByEvents", eventIds] });
 	if (attendees !== undefined) scopes.push({ method: ["getAttendees", attendees] });
 
-	const events = (await Event.scope(scopes).findAll()).map((event) => event.toJSON());
-	const attendingCounts = await Promise.all(
-		events.map(async (event) => await countAttending(event))
-	);
-	return { events, attendingCounts };
+	const events = await Event.scope(scopes).findAll();
+
+	for (let event of events) {
+		const numAttending = await countAttending(event);
+		const eventData = event.dataValues;
+		eventData.numAttending = numAttending;
+
+		if (!details) {
+			eventData.previewImage = eventData["EventImages"][0]?.url || null;
+			delete eventData["EventImages"]
+		}
+	}
+	return events;
 }
 
 module.exports = {

@@ -320,7 +320,6 @@ router.put("/:groupId/membership",
 			}
 		});
 
-
 		if (!group)
 			return buildMissingResourceError(next, "Group");
 
@@ -331,10 +330,13 @@ router.put("/:groupId/membership",
 		}
 
 		const isAuthorized = (
-			group.organizerId == host.id ||
+			host &&
 			(
-				host["Membership"].status == "co-host" &&
-				status == "member"
+				group.organizerId == host.id ||
+				(
+					host["Membership"].status == "co-host" &&
+					status == "member"
+				)
 			)
 		);
 
@@ -434,14 +436,11 @@ async function countGroupMembers(group) {
 
 async function getGroupsInfo(options) {
 	const { userIds, hostIds, groupIds, details } = options;
-	const scopes = [details ? "details" : "getPreviewImage"];
+	if (details) scopes.push("details")
+	else scopes.push("getPreviewImage");
 	if (userIds) scopes.push({ method: ["filterByMembers", userIds] });
 	if (hostIds) scopes.push({ method: ["filterByHosts", hostIds] });
-
-	let findByPk = false;
-
-	if (groupIds.length == 1) findByPk = true;
-	if (groupIds.length > 1) scopes.push({ method: ["filterByGroups", groupIds] });
+	if (groupIds) scopes.push({ method: ["filterByGroups", groupIds] });
 
 	const groups = await Group.scope(scopes).findAll();
 
