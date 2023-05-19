@@ -8,7 +8,6 @@ const { Op } = require("sequelize");
 const { check } = require("express-validator");
 const { handleInputValidationErrors, buildValidationErrorResponce } = require("../../utils/validation");
 
-
 //#region 							Express Middleware
 const validateAttendanceRequestInput = [
 	check("userId").exists({ checkFalsy: true })
@@ -22,9 +21,9 @@ const validateEventQueryParameters = (req, res, next) => {
 	let { page, size, name, type, startDate } = req.query;
 	const errors = [];
 	if (page && (isNaN(page) || page <= 0))
-		errors.push({ path: "page", message: "Page must be grater than or equal to 1" })
+		errors.push({ path: "page", message: "Page must be greater than or equal to 1" })
 	if (size && (isNaN(size) || size <= 0))
-		errors.push({ path: "size", message: "Size must be grater than or equal to 1" })
+		errors.push({ path: "size", message: "Size must be greater than or equal to 1" })
 	if (name && (!isNaN(name) || typeof name !== "string"))
 		errors.push({ path: "name", message: "Name must be a string" });
 	if (type && (type !== "In Person" && type !== "Online"))
