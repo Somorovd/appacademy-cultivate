@@ -94,6 +94,9 @@ module.exports = (sequelize, DataTypes) => {
 		sequelize,
 		modelName: 'Event',
 		scopes: {
+			minimal() {
+				return { attributes: ["id"] }
+			},
 			getPreviewImage() {
 				const { EventImage } = require("../models");
 				return {
@@ -125,6 +128,19 @@ module.exports = (sequelize, DataTypes) => {
 						{ model: Venue, attributes: ["lat", "lng"] },
 						{ model: EventImage, attributes: ["id", "url", "preview"] }
 					]
+				}
+			},
+			useQueryParams(query) {
+				return { where: query.where, ...query.pagination }
+			},
+			includeAuthorization(userId) {
+				const { Group } = require("../models");
+				return {
+					include: [{
+						model: Group.scope([
+							{ method: ["includeAuthorization", userId] }
+						])
+					}]
 				}
 			},
 			filterByGroups(groupIds) {

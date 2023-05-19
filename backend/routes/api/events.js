@@ -51,6 +51,8 @@ const handleEventQueryParameters = (req, res, next) => {
 		offset: (page - 1) * size
 	};
 
+	req.query.page = page;
+	req.query.size = size;
 	req.query.where = where;
 	req.query.pagination = pagination;
 	return next();
@@ -63,16 +65,8 @@ router.get("/",
 	handleEventQueryParameters,
 	async (req, res, next) => {
 		const { page, size, where, pagination } = req.query;
-
-		const events = (await Event.scope(["getPreviewImage", "general"]).findAll({
-			attributes: ["id", "groupId", "venueId", "name", "type", "startDate", "endDate"],
-			where: where, ...pagination
-		})).map((event) => event.toJSON());
-		const attendingCounts = await Promise.all(
-			events.map(async (event) => await countAttending(event))
-		);
-		addCountsToEvents(events, attendingCounts);
-		assignEventPreviewImages(events);
+		const options = { query: { where, pagination } }
+		const events = await getEventsInfo(options);
 		return res.json({ "Events": events, page, size });
 	}
 );
@@ -130,15 +124,6 @@ router.get("/:eventId/attendees",
 		return res.json({ "Attendees": attendees });
 	}
 );
-
-//#region               GET responces
-async function handleGetEventsRequest(options) {
-	const { events, attendingCounts } = await getEventsInfo(options);
-	addCountsToEvents(events, attendingCounts);
-	if (!options.details) assignEventPreviewImages(events);
-	return events;
-}
-//#endregion
 //#endregion
 
 //#region 							POST requests
@@ -149,25 +134,24 @@ router.post("/:eventId/images",
 		const userId = req.user.id;
 		const { url, preview } = req.body;
 
-		const event = await Event.findByPk(eventId, {
-			attributes: ["id"],
-			include: [
-				{
-					model: Group.scope([
-						{ method: ["includeAuthorization", userId] }
-					])
-				},
-				{
-					model: User, attributes: ["id"],
-					through: {
-						attributes: ["status"],
-						where: { "userId": userId, "status": "attending" }
+		const event = await Event
+			.scope([
+				"minimal",
+				{ method: ["includeAuthorization", userId] }
+			])
+			.findByPk(eventId, {
+				include: [
+					{
+						model: User, attributes: ["id"],
+						through: {
+							attributes: ["status"],
+							where: { "userId": userId, "status": "attending" }
+						}
 					}
-				}
-			],
-			required: false,
-			where: { "id": userId }
-		});
+				],
+				required: false,
+				where: { "id": userId }
+			});
 
 		// return res.json(event);
 
@@ -474,13 +458,14 @@ async function countAttending(event) {
 }
 
 async function getEventsInfo(options) {
-	const { details, groupIds, eventIds, attendees } = options;
+	const { details, groupIds, eventIds, attendees, query } = options;
 	const scopes = ["general"];
 	if (details) scopes.push("details")
 	else scopes.push("getPreviewImage");
 	if (groupIds) scopes.push({ method: ["filterByGroups", groupIds] });
 	if (eventIds) scopes.push({ method: ["filterByEvents", eventIds] });
 	if (attendees !== undefined) scopes.push({ method: ["getAttendees", attendees] });
+	if (query) scopes.push({ method: ["useQueryParams", query] })
 
 	const events = await Event.scope(scopes).findAll();
 
