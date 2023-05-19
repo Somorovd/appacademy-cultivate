@@ -41,8 +41,7 @@ router.post("/",
       buildSuccessfulSignupResponce(res, safeUser);
     }
     catch (e) {
-      const msg = "User already exists";
-      buildValidationErrorResponce(e.errors, 500, msg, next);
+      buildValidationErrorResponce(next, e.errors, 500);
     }
   }
 );

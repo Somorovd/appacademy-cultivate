@@ -4,19 +4,16 @@ const handleInputValidationErrors = (req, res, next) => {
   const validationErrors = validationResult(req);
 
   if (validationErrors.isEmpty()) return next();
-  buildValidationErrorResponce(
-    validationErrors.array(),
-    400, "Bad Request", next
-  );
+  buildValidationErrorResponce(next, validationErrors.array());
 };
 
-function buildValidationErrorResponce(errorArray, status, message, next) {
+function buildValidationErrorResponce(next, errorArray, status = 400) {
   const errors = {};
   errorArray.forEach(
     (error) => errors[error.path] = error.msg || error.message
   );
 
-  const err = new Error(message);
+  const err = new Error("Bad Request");
   err.errors = errors;
   err.status = status;
   err.title = "Bad request";

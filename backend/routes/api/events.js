@@ -33,7 +33,7 @@ const validateEventQueryParameters = (req, res, next) => {
 		errors.push({ path: "startDate", message: "Start Date must be a valid date" });
 
 	if (errors.length)
-		return buildValidationErrorResponce(errors, 400, "Validation Error", next);
+		return buildValidationErrorResponce(next, errors);
 	else return next();
 }
 
@@ -410,7 +410,7 @@ router.delete("/:eventId/attendance",
 			errors.push({ path: "userId", message: "User Id is required" });
 
 		if (errors.length)
-			return buildValidationErrorResponce(errors, 400, "Validation Error", next);
+			return buildValidationErrorResponce(next, errors);
 
 		const user = await User.findByPk(userId, {
 			attributes: ["id"],
@@ -436,8 +436,7 @@ router.delete("/:eventId/attendance",
 			event = await Event.findByPk(eventId);
 			if (!event)
 				return buildValidationErrorResponce(
-					[{ path: "userId", message: "User could not be found" }],
-					400, "Validation Error", next
+					next, [{ path: "userId", message: "User could not be found" }]
 				);
 			else
 				return buildMissingResourceError(next, "Attendance");

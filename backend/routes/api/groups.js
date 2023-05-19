@@ -411,8 +411,7 @@ router.delete("/:groupId/membership",
 			member = await User.findByPk(memberId);
 			if (!member)
 				return buildValidationErrorResponce(
-					[{ path: "memberId", message: "Member could not be found" }],
-					400, "Validation Error", next
+					next, [{ path: "memberId", message: "Member could not be found" }]
 				);
 			else
 				return buildMissingResourceError(next, "Membership");
