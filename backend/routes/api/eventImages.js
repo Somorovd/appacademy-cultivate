@@ -11,40 +11,25 @@ router.delete("/:imageId",
     const imageId = req.params.imageId;
     const userId = req.user.id;
 
-    const group = (await Group.findAll({
-      attributes: ["organizerId"],
-      include: [
-        {
-          model: User, as: "Members", attributes: ["id"],
-          through: {
-            attributes: [],
-            where: { "userId": userId, "status": "co-host" },
-          }
-        },
-        {
-          model: Event, attributes: ["id"],
-          include: {
-            model: EventImage, attributes: ["id"],
-            where: { "id": imageId },
-          },
-          required: true
+    const eventImage = await EventImage.findByPk(imageId, {
+      include: {
+        model: Event.scope("minimal"),
+        include: {
+          model: Group.scope({ method: ["includeAuthorization", userId] })
         }
-      ]
-    }))[0];
+      }
+    });
 
-    // return res.json(group);
-
-    if (!group)
+    if (!eventImage)
       return buildMissingResourceError(next, "Image");
 
-
+    const group = eventImage["Event"]["Group"];
     const isNotAuthorized = (
       group.organizerId != userId && !group["Members"][0]
     );
     if (isNotAuthorized) return buildAuthorzationErrorResponce(next);
 
-    const image = group["Events"][0]["EventImages"][0];
-    await image.destroy();
+    await eventImage.destroy();
     return res.json({ message: "Successfully deleted" });
   }
 );
