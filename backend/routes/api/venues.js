@@ -14,13 +14,7 @@ router.put("/:venueId",
 
 		const venue = await Venue.findByPk(venueId, {
 			include: {
-				model: Group, attributes: ["organizerId"],
-				include: {
-					model: User, as: "Members",
-					through: { attributes: ["status"], where: { "status": "co-host" } },
-					required: false,
-					where: { "id": userId }
-				}
+				model: Group.scope({ method: ["includeAuthorization", userId] })
 			}
 		});
 
@@ -36,8 +30,8 @@ router.put("/:venueId",
 
 		venue.set({ address, city, state, lat, lng });
 		await venue.save();
-		delete venue.dataValues["Group"];
 
+		delete venue.dataValues["Group"];
 		return res.json(venue);
 	}
 );
