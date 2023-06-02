@@ -1,0 +1,27 @@
+nav {
+  border: 1px solid red;
+  padding: 1rem;
+  margin: 0px;
+}
+
+nav * {
+  margin: 0px;
+}
+
+nav>ul {
+  margin: 0px;
+  padding: 0px;
+  border: 1px solid red;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+}
+
+.profile-dropdown {
+  background-color: beige;
+  border: 1px dashed black;
+}
+
+.hidden {
+  display: none;
+}
