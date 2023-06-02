@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { Group, Membership, User, Venue, GroupImage, Event } = require("../../db/models");
 const { Op } = require("sequelize");
-const { requireAuth, buildAuthorzationErrorResponce } = require("../../utils/auth");
+const { requireAuth, buildAuthorzationErrorResponce, verifyAuthorization } = require("../../utils/auth");
 const { getEventsInfo } = require("../api/events");
 const { buildMissingResourceError } = require("../../utils/helpers");
 const { check } = require("express-validator");
@@ -20,6 +20,23 @@ const validateMembershipRequestInput = [
 //#endregion
 
 //#region               GET requests
+
+//#region								GET queries
+const getVenuesByGroupIdQuery = async (req, res, next) => {
+	const userId = req.user.id;
+	const groupId = req.params.groupId;
+
+	const options = { groupIds: groupId, auth: userId, venues: true }
+	const group = (await getGroupsInfo(options))[0];
+
+	if (!group) return buildMissingResourceError(next, "Group");
+
+	req.sqlQuery = group;
+	req.authPath = "";
+	return next();
+}
+//#endregion
+
 router.get("/",
 	async (req, res, next) => {
 		const options = {};
@@ -51,27 +68,10 @@ router.get("/:groupId",
 
 router.get("/:groupId/venues",
 	requireAuth,
+	getVenuesByGroupIdQuery,
+	verifyAuthorization,
 	async (req, res, next) => {
-		const userId = req.user.id;
-		const groupId = req.params.groupId;
-
-		const group = await Group
-			.scope([
-				"includeVenues",
-				{ method: ["includeAuthorization", userId] }
-			])
-			.findByPk(groupId);
-
-		if (!group)
-			return buildMissingResourceError(next, "Group");
-
-		const isNotAuthorized = (
-			group.organizerId != userId && !group["Members"][0]
-		);
-		if (isNotAuthorized)
-			return buildAuthorzationErrorResponce(next);
-
-		return res.json({ "Venues": group["Venues"] });
+		return res.json({ "Venues": req.sqlQuery["Venues"] });
 	}
 );
 
@@ -95,11 +95,8 @@ router.get("/:groupId/members",
 	async (req, res, next) => {
 		const groupId = req.params.groupId;
 		const userId = req.user.id;
-		const group = await Group
-			.scope([
-				{ method: ["includeAuthorization", userId] }
-			])
-			.findByPk(groupId);
+		const options = { groupIds: groupId, auth: userId }
+		const group = (await getGroupsInfo(options))[0];
 
 		if (!group)
 			return buildMissingResourceError(next, "Group");
@@ -130,6 +127,24 @@ router.get("/:groupId/members",
 );
 //#endregion
 
+//#region 							POST queries
+const postVenueByGroupIdQuery = async (req, res, next) => {
+	const userId = req.user.id;
+	const groupId = req.params.groupId;
+
+	const group = await Group.scope([
+		{ method: ["includeAuthorization", userId] }
+	]).findByPk(groupId);
+
+	if (!group)
+		return buildMissingResourceError(next, "Group");
+
+	req.sqlQuery = group;
+	req.authPath = "";
+	return next();
+}
+//#endregion
+
 //#region               POST requests
 router.post("/",
 	requireAuth,
@@ -145,29 +160,15 @@ router.post("/",
 
 router.post("/:groupId/venues",
 	requireAuth,
+	postVenueByGroupIdQuery,
+	verifyAuthorization,
 	async (req, res, next) => {
-		const userId = req.user.id;
-		const groupId = req.params.groupId;
-		const { address, city, state, lat, lng } = req.body;
-
-		const group = await Group.scope([
-			{ method: ["includeAuthorization", userId] }
-		]).findByPk(groupId);
-
-		if (!group)
-			return buildMissingResourceError(next, "Group");
-
-		const isNotAuthorized = (
-			group.organizerId != userId && !group["Members"][0]
-		);
-		if (isNotAuthorized)
-			return buildAuthorzationErrorResponce(next);
-
+		const { sqlQuery: group } = req;
 		const venue = await Venue.create({
-			groupId, address, city, state, lat, lng
+			groupId: req.params.id,
+			address, city, state, lat, lng
 		});
 		await group.addVenue(venue);
-
 		return res.json(venue);
 	}
 );
@@ -436,13 +437,24 @@ async function countGroupMembers(group) {
 }
 
 async function getGroupsInfo(options) {
-	const { userIds, hostIds, groupIds, details } = options;
+	const {
+		userIds,
+		hostIds,
+		groupIds,
+		details,
+		auth,
+		venues,
+	} = options;
+
 	const scopes = [];
 	if (details) scopes.push("details")
 	else scopes.push("getPreviewImage");
+	if (venues) scopes.push("includeVenues")
+
 	if (userIds) scopes.push({ method: ["filterByMembers", userIds] });
 	if (hostIds) scopes.push({ method: ["filterByHosts", hostIds] });
 	if (groupIds) scopes.push({ method: ["filterByGroups", groupIds] });
+	if (auth) scopes.push({ method: ["includeAuthorization", auth] })
 
 	const groups = await Group.scope(scopes).findAll();
 
