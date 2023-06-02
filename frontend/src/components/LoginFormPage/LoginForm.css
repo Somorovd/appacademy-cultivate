@@ -1,0 +1,28 @@
+h1,
+p {
+  text-align: center;
+}
+
+form {
+  width: 400px;
+  margin: auto;
+  border: 1px black solid;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+input {
+  border: 2px solid black;
+  font-size: 1rem;
+}
+
+button {
+  font-size: 1rem;
+  padding: 1rem
+}
+
+.error {
+  color: red;
+  font-size: 1rem;
+}
