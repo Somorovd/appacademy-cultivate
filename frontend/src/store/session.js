@@ -65,7 +65,6 @@ export const thunkDeleteSession = () => async dispatch => {
 }
 
 export const thunkCreateUser = (user) => async dispatch => {
-  console.log("Start of thunkCreateUser");
   const response = await csrfFetch("/api/users", {
     method: "post",
     headers: {
@@ -73,12 +72,10 @@ export const thunkCreateUser = (user) => async dispatch => {
     },
     body: JSON.stringify(user)
   });
-  console.log("Response", response);
   const resBody = await response.json();
 
 
   if (response.ok) dispatch(actionCreateSession(resBody.user));
-  else console.log("Error: Could not create user");
   return resBody;
 }
 
