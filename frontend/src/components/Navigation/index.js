@@ -8,15 +8,16 @@ function Navigation({ isLoaded }) {
   const sessionUser = useSelector(state => state.session.user);
 
   let sessionLinks;
+  let sessionClassName = "session-li";
   if (sessionUser) {
     sessionLinks = (
-      <li>
+      <li className={sessionClassName}>
         <ProfileButton user={sessionUser} />
       </li>
     );
   } else {
     sessionLinks = (
-      <li>
+      <li className={sessionClassName}>
         <NavLink to="/login">Log In</NavLink>
         <NavLink to="/signup">Sign Up</NavLink>
       </li>
