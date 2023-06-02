@@ -4,8 +4,6 @@ const { User } = require("../db/models");
 
 const { secret, expiresIn } = jwtConfig;
 
-
-
 const setTokenCookie = (res, user) => {
   // Create the token
   const safeUser = {
@@ -64,6 +62,25 @@ const requireAuth = (req, res, next) => {
   return next(err);
 }
 
+const verifyAuthorization = (req, res, next) => {
+  const { sqlQuery, authPath } = req;
+  const { userId } = req.user;
+
+  let group = sqlQuery;
+  if (authPath) {
+    const keys = authPath.split("/");
+    for (let key in keys) group = group[key];
+  }
+
+  const isNotAuthorized = (
+    group.organizerId != userId && !group["Members"][0]
+  );
+  if (isNotAuthorized)
+    return buildAuthorzationErrorResponce(next);
+
+  return next();
+};
+
 const buildAuthorzationErrorResponce = (next) => {
   const err = new Error("Forbidden");
   err.title = "Not Authorized";
@@ -75,5 +92,6 @@ module.exports = {
   setTokenCookie,
   restoreUser,
   requireAuth,
-  buildAuthorzationErrorResponce
+  buildAuthorzationErrorResponce,
+  verifyAuthorization
 };
