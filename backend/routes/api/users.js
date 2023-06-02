@@ -7,7 +7,7 @@ const {
   buildValidationErrorResponce
 } = require("../../utils/validation");
 
-const { setTokenCookie, requireAuth } = require("../../utils/auth");
+const { setTokenCookie } = require("../../utils/auth");
 const { User } = require("../../db/models");
 
 const { makeSafeUser } = require("../../utils/helpers");

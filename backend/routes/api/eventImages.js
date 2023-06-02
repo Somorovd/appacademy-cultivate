@@ -1,6 +1,6 @@
 const express = require("express");
 const { requireAuth, buildAuthorzationErrorResponce } = require("../../utils/auth");
-const { EventImage, Event, Group, User } = require("../../db/models");
+const { EventImage, Event, Group } = require("../../db/models");
 const { buildMissingResourceError } = require("../../utils/helpers");
 const router = express.Router();
 
@@ -27,7 +27,8 @@ router.delete("/:imageId",
     const isNotAuthorized = (
       group.organizerId != userId && !group["Members"][0]
     );
-    if (isNotAuthorized) return buildAuthorzationErrorResponce(next);
+    if (isNotAuthorized)
+      return buildAuthorzationErrorResponce(next);
 
     await eventImage.destroy();
     return res.json({ message: "Successfully deleted" });

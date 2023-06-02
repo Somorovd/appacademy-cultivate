@@ -184,7 +184,7 @@ router.post("/:eventId/attendance",
 	requireAuth,
 	async (req, res, next) => {
 		const eventId = req.params.eventId;
-		const userId = req.user.id;
+		const userId = req.user.id; 
 
 		const event = await Event.findByPk(eventId, {
 			attributes: ["id"],
