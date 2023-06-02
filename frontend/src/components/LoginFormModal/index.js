@@ -2,15 +2,17 @@ import React, { useState, useEffect } from "react";
 import * as sessionActions from "../../store/session";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
+import { useModal } from "../../context/Modal";
 import "./LoginForm.css";
 
-function LoginFormPage() {
+const LoginFormModal = () => {
   const dispatch = useDispatch();
   const sessionUser = useSelector((state) => state.session.user);
   const [credential, setCredential] = useState("");
   const [password, setPassword] = useState("");
   const [validationErrors, setValidationErrors] = useState({});
   const [isEnabled, setIsEnabled] = useState(false);
+  const { closeModal } = useModal();
 
   useEffect(() => {
     setIsEnabled(
@@ -25,6 +27,7 @@ function LoginFormPage() {
     e.preventDefault();
     setValidationErrors({});
     return dispatch(sessionActions.thunkCreateSession({ credential, password }))
+      .then(closeModal)
       .catch(async (res) => {
         const data = await res.json();
         if (data && data.errors) setValidationErrors(data.errors);
@@ -59,4 +62,4 @@ function LoginFormPage() {
   );
 }
 
-export default LoginFormPage;
+export default LoginFormModal;
