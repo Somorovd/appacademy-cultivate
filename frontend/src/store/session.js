@@ -54,6 +54,16 @@ export const thunkGetSession = () => async dispatch => {
   return resBody;
 }
 
+export const thunkDeleteSession = () => async dispatch => {
+  const response = await csrfFetch("/api/session", {
+    method: "delete",
+  });
+  const resBody = await response.json();
+
+  if (response.ok) dispatch(actionDeleteSession());
+  return resBody;
+}
+
 export const thunkCreateUser = (user) => async dispatch => {
   console.log("Start of thunkCreateUser");
   const response = await csrfFetch("/api/users", {
@@ -85,8 +95,8 @@ const sessionReducer = (state = initialState, action) => {
       return { ...state, user: action.user }
     }
     case DELETE_SESSION: {
-
-    } break;
+      return { ...initialState };
+    }
     default:
       return state
   }
