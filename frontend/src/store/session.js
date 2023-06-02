@@ -1,8 +1,9 @@
 import { csrfFetch } from "./csrf";
 
-const CREATE_SESSION = "session/POST";
-const GET_SESSION = "session/GET"
-const DELETE_SESSION = "session/DELETE";
+const CREATE_SESSION = "session/POST_SESSION";
+const GET_SESSION = "session/GET_SESSION"
+const DELETE_SESSION = "session/DELETE_SESSION";
+const CREATE_USER = "session/POST_USER";
 
 const actionCreateSession = (user) => {
   return {
@@ -24,6 +25,13 @@ const actionDeleteSession = () => {
   };
 }
 
+const actionCreateUser = (user) => {
+  return {
+    type: CREATE_USER,
+    user,
+  };
+}
+
 export const thunkCreateSession = (user) => async dispatch => {
   const response = await csrfFetch("/api/session", {
     method: "post",
@@ -39,12 +47,32 @@ export const thunkCreateSession = (user) => async dispatch => {
 }
 
 export const thunkGetSession = () => async dispatch => {
-  const response = await csrfFetch("/api/session");
+  const response = await fetch("/api/session");
   const resBody = await response.json();
 
   if (response.ok) dispatch(actionGetSession(resBody.user));
   return resBody;
 }
+
+export const thunkCreateUser = (user) => async dispatch => {
+  console.log("Start of thunkCreateUser");
+  const response = await csrfFetch("/api/users", {
+    method: "post",
+    headers: {
+      "content-type": "application/json"
+    },
+    body: JSON.stringify(user)
+  });
+  console.log("Response", response);
+  const resBody = await response.json();
+
+
+  if (response.ok) dispatch(actionCreateSession(resBody.user));
+  else console.log("Error: Could not create user");
+  return resBody;
+}
+
+// REDUCER
 
 const initialState = { user: null }
 
