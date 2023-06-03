@@ -1,0 +1,73 @@
+.landing-wrapper {
+  border: 1px solid blue;
+  font-size: 1rem;
+  margin: 1rem 20%;
+}
+
+.landing-wrapper>* {
+  margin-bottom: 1rem;
+}
+
+.landing-intro {
+  border: 1px solid blue;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  align-items: center;
+  justify-items: center;
+}
+
+.landing-intro__text>* {
+  text-align: left;
+}
+
+.landing-intro__title {
+  font-size: 2.5rem;
+}
+
+.landing-intro__image {
+  width: 400px;
+  aspect-ratio: 1;
+  background-color: pink;
+}
+
+.landing-about {
+  border: 1px solid black;
+  text-align: center;
+}
+
+.landing-about>p {
+  margin: 0 20%;
+}
+
+.landing-nav {
+  border: 1px solid red;
+}
+
+.landing-nav-list {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 0 10%;
+}
+
+.landing-nav-card {
+  flex: 1 1 0;
+  border: 1px solid green;
+}
+
+.landing-nav-card__title {
+  text-align: center;
+  font-size: 1rem;
+}
+
+.landing-nav-card__image {
+  width: 100%;
+  aspect-ratio: 1;
+  background-color: aquamarine;
+}
+
+.landing-join {
+  text-align: center;
+}
