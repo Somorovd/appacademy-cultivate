@@ -22,7 +22,7 @@ nav>ul {
 
 .session-li {
   display: flex;
-  flex-direction: column;
+  position: relative;
 }
 
 .profile-button {
@@ -33,6 +33,9 @@ nav>ul {
 .profile-dropdown {
   background-color: beige;
   border: 1px dashed black;
+  position: absolute;
+  top: 100%;
+  right: 0%;
 }
 
 .hidden {
