@@ -1,8 +1,14 @@
 import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 import "./LandingPage.css";
 
 const LandingPage = () => {
   const history = useHistory();
+  const session = useSelector((state) => state.session);
+
+  const startGroupClassName = "landing-nav-card__title " + (
+    session && session.user ? "" : "disabled-link"
+  );
 
   return (
     <>
@@ -64,7 +70,7 @@ const LandingPage = () => {
             <li className="landing-nav-card">
               <img src="" alt="" className="landing-nav-card__image" />
               <h2
-                className="landing-nav-card__title"
+                className={startGroupClassName}
                 onClick={() => { history.push("/groups/new") }}
               >
                 Start a new group

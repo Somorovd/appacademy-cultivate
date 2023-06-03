@@ -60,10 +60,17 @@
 .landing-nav-card__title {
   text-align: center;
   font-size: 1rem;
+  color: teal;
+}
+
+.disabled-link {
+  pointer-events: none;
+  color: grey;
 }
 
 .landing-nav-card__title:hover {
-  color: teal;
+  text-decoration: 2px solid underline;
+  cursor: pointer;
 }
 
 .landing-nav-card__image {
