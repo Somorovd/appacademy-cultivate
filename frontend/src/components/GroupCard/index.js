@@ -1,8 +1,17 @@
-
+import { useHistory } from "react-router-dom";
 
 const GroupCard = ({ group }) => {
+  const history = useHistory();
+
+  const onClick = () => {
+    history.push(`/groups/${group.id}`);
+  }
+
   return (
-    <article className="group-card">
+    <article
+      className="group-card"
+      onClick={onClick}
+    >
       <img src={group.previewImage} className="group-card__image" />
       <header className="group-card__header">
         <h2 className="group-card__title">

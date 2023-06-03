@@ -6,6 +6,7 @@ import * as sessionActions from "./store/session";
 import Navigation from "./components/Navigation";
 import LandingPage from "./components/LandingPage";
 import BrowseGroupsPage from "./components/BrowseGroupsPage";
+import GroupPage from "./components/GroupPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -26,6 +27,9 @@ function App() {
           </Route>
           <Route exact path="/groups">
             <BrowseGroupsPage />
+          </Route>
+          <Route path="/groups/:groupId">
+            <GroupPage />
           </Route>
         </Switch>
       }
