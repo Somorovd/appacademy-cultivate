@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
-import * as groupActions from "../../store/groups";
 import { useEffect } from "react";
+import GroupCard from "../GroupCard";
+import * as groupActions from "../../store/groups";
 
 const BrowseGroupsPage = () => {
   const dispatch = useDispatch();
@@ -16,7 +17,7 @@ const BrowseGroupsPage = () => {
       <ul>
         {allGroups && allGroups.map(group => (
           <li key={group.id}>
-            {group.name}
+            <GroupCard group={group} />
           </li>
         ))}
       </ul>
