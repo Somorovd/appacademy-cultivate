@@ -5,6 +5,7 @@ import ProfileButton from './ProfileButton';
 import OpenModalButton from "../OpenModalButton";
 import LoginFormModal from "../LoginFormModal";
 import SignupFormModal from "../SignupFormModal";
+import DemoUserLoginButton from '../DemoUserLoginButton';
 import './Navigation.css';
 
 function Navigation({ isLoaded }) {
@@ -21,6 +22,7 @@ function Navigation({ isLoaded }) {
   } else {
     sessionLinks = (
       <li className={sessionClassName}>
+        <DemoUserLoginButton />
         <OpenModalButton
           buttonText="Log In"
           modalComponent={<LoginFormModal />}
