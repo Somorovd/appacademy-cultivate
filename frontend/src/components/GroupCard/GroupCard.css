@@ -1,0 +1,51 @@
+.group-card {
+  --image-size: 175px;
+  display: grid;
+  grid-template-areas:
+    "image header"
+    "image about"
+    "image footer"
+  ;
+  grid-template-columns: var(--image-size) 1fr;
+  height: var(--image-size);
+  gap: 1rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.group-card:not(:last-of-type) {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #CCC;
+}
+
+.group-card * {
+  text-align: left;
+  margin: 0px;
+}
+
+.group-card__image {
+  width: var(--image-size);
+  grid-area: image;
+  background-color: coral;
+}
+
+.group-card__header {
+  grid-area: header;
+}
+
+.group-card__title {}
+
+.group-card__location {
+  text-transform: uppercase;
+}
+
+.group-card__about {
+  grid-area: about;
+}
+
+.group-card__footer {
+  grid-area: footer;
+  display: flex;
+  gap: 0.5rem;
+}

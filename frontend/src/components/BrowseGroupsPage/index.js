@@ -13,14 +13,12 @@ const BrowseGroupsPage = () => {
 
   return (
     <>
-      <h2>Groups</h2>
-      <ul>
+      <h2>Groups In {"<site here>"}</h2>
+      <div className="group-card-list">
         {allGroups && allGroups.map(group => (
-          <li key={group.id}>
-            <GroupCard group={group} />
-          </li>
+          <GroupCard key={group.id} group={group} />
         ))}
-      </ul>
+      </div>
     </>
   )
 }

@@ -1,4 +1,5 @@
 import { useHistory } from "react-router-dom";
+import "./GroupCard.css";
 
 const GroupCard = ({ group }) => {
   const history = useHistory();
@@ -12,13 +13,15 @@ const GroupCard = ({ group }) => {
       className="group-card"
       onClick={onClick}
     >
-      <img src={group.previewImage} className="group-card__image" />
+      <div className="group-card__image">
+        <img src={group.previewImage} />
+      </div>
       <header className="group-card__header">
         <h2 className="group-card__title">
           {group.name}
         </h2>
         <p className="group-card__location">
-          {group.city}
+          {group.city}, {group.state}
         </p>
       </header>
       <p className="group-card__about">
@@ -26,8 +29,9 @@ const GroupCard = ({ group }) => {
       </p>
       <footer className="group-card__footer">
         <p>
-          {group.numMembers} members
+          ## Events
         </p>
+        <p>&bull;</p>
         <p>
           {group.private ? "Private" : "Public"}
         </p>
