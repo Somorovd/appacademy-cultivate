@@ -1,6 +1,9 @@
+import { useHistory } from "react-router-dom";
 import "./LandingPage.css";
 
 const LandingPage = () => {
+  const history = useHistory();
+
   return (
     <>
       <div className="landing-wrapper">
@@ -32,23 +35,32 @@ const LandingPage = () => {
         </article>
         <article className="landing-nav">
           <ul className="landing-nav-list">
-            <li className="landing-nav-card">
+            < li className="landing-nav-card">
               <img src="" alt="" className="landing-nav-card__image" />
-              <h2 className="landing-nav-card__title">
+              <h2
+                className="landing-nav-card__title"
+                onClick={() => { history.push("/groups") }}
+              >
                 See all groups
               </h2>
               <p className="landing-nav-card__about"></p>
             </li>
             <li className="landing-nav-card">
               <img src="" alt="" className="landing-nav-card__image" />
-              <h2 className="landing-nav-card__title">
+              <h2
+                className="landing-nav-card__title"
+                onClick={() => { history.push("/events") }}
+              >
                 Find an event
               </h2>
               <p className="landing-nav-card__about"></p>
             </li>
             <li className="landing-nav-card">
               <img src="" alt="" className="landing-nav-card__image" />
-              <h2 className="landing-nav-card__title">
+              <h2
+                className="landing-nav-card__title"
+                onClick={() => { history.push("/groups/new") }}
+              >
                 Start a new group
               </h2>
               <p className="landing-nav-card__about"></p>
@@ -60,7 +72,7 @@ const LandingPage = () => {
             Join Us
           </button>
         </div>
-      </div>
+      </div >
     </>
   )
 }

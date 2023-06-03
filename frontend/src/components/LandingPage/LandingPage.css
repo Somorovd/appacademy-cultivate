@@ -26,7 +26,8 @@
 }
 
 .landing-intro__image {
-  width: 400px;
+  width: 100%;
+  max-width: 400px;
   aspect-ratio: 1;
   background-color: pink;
 }
@@ -60,6 +61,10 @@
 .landing-nav-card__title {
   text-align: center;
   font-size: 1rem;
+}
+
+.landing-nav-card__title:hover {
+  color: teal;
 }
 
 .landing-nav-card__image {
