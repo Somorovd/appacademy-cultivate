@@ -49,8 +49,7 @@
   list-style: none;
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  margin: 0 10%;
+  gap: 7%;
 }
 
 .landing-nav-card {

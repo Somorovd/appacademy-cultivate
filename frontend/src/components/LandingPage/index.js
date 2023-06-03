@@ -43,7 +43,10 @@ const LandingPage = () => {
               >
                 See all groups
               </h2>
-              <p className="landing-nav-card__about"></p>
+              <p className="landing-nav-card__about">
+                Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
+                consectetur, adipisci velit
+              </p>
             </li>
             <li className="landing-nav-card">
               <img src="" alt="" className="landing-nav-card__image" />
@@ -53,7 +56,10 @@ const LandingPage = () => {
               >
                 Find an event
               </h2>
-              <p className="landing-nav-card__about"></p>
+              <p className="landing-nav-card__about">
+                Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
+                consectetur, adipisci velit
+              </p>
             </li>
             <li className="landing-nav-card">
               <img src="" alt="" className="landing-nav-card__image" />
@@ -63,7 +69,10 @@ const LandingPage = () => {
               >
                 Start a new group
               </h2>
-              <p className="landing-nav-card__about"></p>
+              <p className="landing-nav-card__about">
+                Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
+                consectetur, adipisci velit
+              </p>
             </li>
           </ul>
         </article>
