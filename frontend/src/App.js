@@ -8,6 +8,7 @@ import LandingPage from "./components/LandingPage";
 import BrowseGroupsPage from "./components/BrowseGroupsPage";
 import GroupPage from "./components/GroupPage";
 import BrowseEventsPage from "./components/BrowseEventsPage";
+import EventPage from "./components/EventPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -34,6 +35,9 @@ function App() {
           </Route>
           <Route exact path="/events">
             <BrowseEventsPage />
+          </Route>
+          <Route path="/events/:eventId">
+            <EventPage />
           </Route>
         </Switch>
       }
