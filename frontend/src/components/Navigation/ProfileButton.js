@@ -10,15 +10,17 @@ const ProfileButton = ({ user }) => {
   const openMenu = (e) => {
     e.stopPropagation();
     if (!showMenu) setShowMenu(true);
+    else closeMenu(e);
+  }
+
+  const closeMenu = (e) => {
+    // close menu on click,
+    // unless the menu is what was clicked
+    if (menuRef.current.contains(e.target)) return;
+    else setShowMenu(false);
   }
 
   useEffect(() => {
-    const closeMenu = (e) => {
-      // close menu on click,
-      // unless the menu is what was clicked
-      if (menuRef.current.contains(e.target)) return;
-      else setShowMenu(false);
-    }
     document.addEventListener('click', closeMenu);
     return () => document.removeEventListener("click", closeMenu);
   }, []);
