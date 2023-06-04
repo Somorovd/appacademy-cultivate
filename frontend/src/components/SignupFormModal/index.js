@@ -95,7 +95,7 @@ function SignupFormModal() {
           type="text"
           placeholder="Username"
           value={username}
-          onChange={(e) => setUsername(e.target.value.trim())}
+          onChange={(e) => setUsername(e.target.value)}
           onBlur={(e) => validateUsername()}
           required
         />
