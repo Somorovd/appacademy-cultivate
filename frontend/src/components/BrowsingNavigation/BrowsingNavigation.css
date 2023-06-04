@@ -1,0 +1,22 @@
+.browsing-nav {
+  margin-top: 1rem;
+}
+
+.browsing-nav a,
+.browsing-nav a:visited {
+  display: inline-block;
+  text-decoration: none;
+  font-size: 1.5rem;
+  color: black;
+  padding: 0.6rem 1.5rem;
+}
+
+.browsing-nav .active {
+  border: 1px solid black;
+  border-radius: 2rem;
+  background-color: lightblue;
+}
+
+.browsing-nav__list {
+  display: flex;
+}

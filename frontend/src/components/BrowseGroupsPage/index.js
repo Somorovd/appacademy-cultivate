@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import GroupCard from "../GroupCard";
 import * as groupActions from "../../store/groups";
+import BrowsingNavigation from "../BrowsingNavigation";
 
 const BrowseGroupsPage = () => {
   const dispatch = useDispatch();
@@ -13,6 +14,7 @@ const BrowseGroupsPage = () => {
 
   return (
     <>
+      <BrowsingNavigation />
       <h2>Groups In {"<site here>"}</h2>
       <div className="group-card-list">
         {allGroups && allGroups.map(group => (
