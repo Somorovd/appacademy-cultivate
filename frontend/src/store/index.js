@@ -7,10 +7,12 @@ import {
 import thunk from "redux-thunk";
 import sessionReducer from "./session.js";
 import groupsReducer from "./groups.js";
+import eventsReducer from "./events.js";
 
 const rootReducer = combineReducers({
   session: sessionReducer,
   groups: groupsReducer,
+  events: eventsReducer
 });
 
 let enhancer;

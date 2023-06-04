@@ -1,0 +1,50 @@
+.event-card {
+  --image-size: 175px;
+  display: grid;
+  grid-template-areas:
+    "image header"
+    "about about"
+  ;
+  grid-template-columns: var(--image-size) 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.event-card:not(:last-of-type) {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #CCC;
+}
+
+.event-card * {
+  text-align: left;
+  margin: 0px;
+}
+
+.event-card__image {
+  width: var(--image-size);
+  aspect-ratio: 16/10;
+  grid-area: image;
+  background-color: coral;
+}
+
+.event-card__header {
+  grid-area: header;
+}
+
+.event-card__title {}
+
+.event-card__location {
+  text-transform: uppercase;
+}
+
+.event-card__about {
+  grid-area: about;
+}
+
+.event-card__footer {
+  grid-area: footer;
+  display: flex;
+  gap: 0.5rem;
+}
