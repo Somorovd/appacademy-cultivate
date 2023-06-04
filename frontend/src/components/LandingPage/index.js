@@ -16,7 +16,7 @@ const LandingPage = () => {
         <article className="landing-intro">
           <div className="landing-intro__text">
             <h1 className="landing-intro__title">
-              Welcome to this incredible ... uh ... yeah
+              The cultist platform <span className="no-space">---</span> Where prayers become nightmares
             </h1>
             <p>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit,
@@ -32,7 +32,7 @@ const LandingPage = () => {
           <img src="" className="landing-intro__image" />
         </article>
         <article className="landing-about">
-          <h2>How $#*! works</h2>
+          <h2>How to Cultivate</h2>
           <p>
             Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
             consectetur, adipisci velit, sed quia non numquam eius modi tempora
@@ -47,7 +47,7 @@ const LandingPage = () => {
                 className="landing-nav-card__title"
                 onClick={() => { history.push("/groups") }}
               >
-                See all groups
+                See all cults
               </h2>
               <p className="landing-nav-card__about">
                 Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
@@ -60,7 +60,7 @@ const LandingPage = () => {
                 className="landing-nav-card__title"
                 onClick={() => { history.push("/events") }}
               >
-                Find an event
+                Find a ritual
               </h2>
               <p className="landing-nav-card__about">
                 Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
@@ -73,7 +73,7 @@ const LandingPage = () => {
                 className={startGroupClassName}
                 onClick={() => { history.push("/groups/new") }}
               >
-                Start a new group
+                Start a new cult
               </h2>
               <p className="landing-nav-card__about">
                 Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,

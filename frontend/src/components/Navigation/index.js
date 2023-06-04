@@ -38,8 +38,10 @@ function Navigation({ isLoaded }) {
   return (
     <nav className="main-nav">
       <ul>
-        <li>
-          <NavLink exact to="/">Home</NavLink>
+        <li className="nav-logo">
+          <NavLink exact to="/">
+            Cultivate
+          </NavLink>
         </li>
         {isLoaded && sessionLinks}
       </ul>

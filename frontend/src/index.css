@@ -1,5 +1,19 @@
 /* TODO Add site wide styles */
 
+@font-face {
+  font-family: "BestChristmas";
+  src: url("/public/Best_Christmas.otf");
+}
+
+
 * {
   font-family: 'Times New Roman', Times, serif
+}
+
+button {
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border: 1px solid #CCC;
+  border-radius: 3rem;
 }

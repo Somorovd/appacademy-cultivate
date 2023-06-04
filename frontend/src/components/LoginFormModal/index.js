@@ -64,8 +64,8 @@ const LoginFormModal = () => {
         >
           Log In
         </button>
+        <DemoUserLoginButton onClick={closeModal} />
       </form>
-      <DemoUserLoginButton onClick={closeModal} />
     </div>
   );
 }

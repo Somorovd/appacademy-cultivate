@@ -1,3 +1,7 @@
+.no-space {
+  letter-spacing: -0.2rem;
+}
+
 .landing-wrapper {
   border: 1px solid blue;
   font-size: 1rem;
@@ -22,7 +26,7 @@
 }
 
 .landing-intro__title {
-  font-size: 2.5rem;
+  font-size: 3rem;
 }
 
 .landing-intro__image {
@@ -37,6 +41,11 @@
   text-align: center;
 }
 
+.landing-about>h2 {
+  margin: 1rem;
+  font-size: 2rem;
+}
+
 .landing-about>p {
   margin: 0 20%;
 }
@@ -49,17 +58,20 @@
   list-style: none;
   display: flex;
   justify-content: center;
-  gap: 7%;
+  gap: 5%;
 }
 
 .landing-nav-card {
   flex: 1 1 0;
   border: 1px solid green;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .landing-nav-card__title {
   text-align: center;
-  font-size: 1rem;
+  font-size: 1.5rem;
   color: teal;
 }
 
@@ -74,7 +86,7 @@
 }
 
 .landing-nav-card__image {
-  width: 100%;
+  width: 150px;
   aspect-ratio: 1;
   background-color: aquamarine;
 }
