@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import * as sessionActions from "../../store/session";
 
-const DemoUserLoginButton = () => {
+const DemoUserLoginButton = ({ onClick }) => {
   const dispatch = useDispatch();
 
   const loginDemoUser = () => {
@@ -9,11 +9,12 @@ const DemoUserLoginButton = () => {
       credential: "User1",
       password: "user1 password"
     }));
+    if (onClick) onClick();
   }
 
   return (
-    <button onClick={loginDemoUser}>
-      Demo User
+    <button type="submit" onClick={loginDemoUser}>
+      Log In as Demo User
     </button>
   )
 }

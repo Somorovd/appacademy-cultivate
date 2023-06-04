@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { useModal } from "../../context/Modal";
 import "./LoginForm.css";
+import DemoUserLoginButton from "../DemoUserLoginButton";
 
 const LoginFormModal = () => {
   const dispatch = useDispatch();
@@ -26,16 +27,19 @@ const LoginFormModal = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setValidationErrors({});
+    closeModal();
+  };
+
+  const logIn = () => {
     return dispatch(sessionActions.thunkCreateSession({ credential, password }))
-      .then(closeModal)
       .catch(async (res) => {
         const data = await res.json();
         if (data && data.errors) setValidationErrors(data.errors);
       });
-  };
+  }
 
   return (
-    <>
+    <div className="login-modal">
       <h1>Log In</h1>
       {validationErrors.credential && <p className="error">{validationErrors.credential}</p>}
       <form onSubmit={handleSubmit}>
@@ -56,9 +60,13 @@ const LoginFormModal = () => {
         <button
           type="submit"
           disabled={!isEnabled}
-        >Log In</button>
+          onClick={logIn}
+        >
+          Log In
+        </button>
       </form>
-    </>
+      <DemoUserLoginButton onClick={closeModal} />
+    </div>
   );
 }
 
