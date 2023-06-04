@@ -27,11 +27,11 @@ const LoginFormModal = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setValidationErrors({});
-    closeModal();
   };
 
   const logIn = () => {
     return dispatch(sessionActions.thunkCreateSession({ credential, password }))
+      .then(closeModal)
       .catch(async (res) => {
         const data = await res.json();
         if (data && data.errors) setValidationErrors(data.errors);
