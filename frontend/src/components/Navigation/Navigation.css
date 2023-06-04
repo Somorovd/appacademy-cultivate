@@ -1,10 +1,10 @@
-nav {
+.main-nav {
   border: 1px solid red;
   padding: 1rem;
   margin: 0px;
 }
 
-nav * {
+.main-nav * {
   margin: 0px;
 }
 
@@ -14,15 +14,24 @@ ul {
   padding: 0px;
 }
 
-nav>ul {
-  border: 1px solid red;
+.main-nav>ul {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+
+.main-nav button {
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 3rem;
 }
 
 .session-li {
   display: flex;
   position: relative;
+  gap: 0.6rem;
 }
 
 .profile-button {
