@@ -7,8 +7,7 @@
     "image footer"
   ;
   grid-template-columns: var(--image-size) 1fr;
-  height: var(--image-size);
-  gap: 1rem;
+  gap: 0rem 1rem;
   margin-bottom: 1rem;
   font-size: 1rem;
   cursor: pointer;
@@ -26,6 +25,7 @@
 
 .group-card__image {
   width: var(--image-size);
+  aspect-ratio: 16/10;
   grid-area: image;
   background-color: coral;
 }
