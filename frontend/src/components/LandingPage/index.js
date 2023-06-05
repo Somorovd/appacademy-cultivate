@@ -82,11 +82,13 @@ const LandingPage = () => {
             </li>
           </ul>
         </article>
-        <div className="landing-join">
-          <button>
-            Join Us
-          </button>
-        </div>
+        {!session.user &&
+          <div className="landing-join">
+            <button>
+              Join Us
+            </button>
+          </div>
+        }
       </div >
     </>
   )
