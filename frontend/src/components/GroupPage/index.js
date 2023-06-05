@@ -12,6 +12,7 @@ const GroupPage = () => {
   const history = useHistory();
   const group = useSelector((state) => state.groups.singleGroup);
   const events = useSelector((state) => state.events.allEvents);
+  const user = useSelector((state) => state.session.user);
 
   useEffect(() => {
     dispatch(groupActions.thunkGetOneGroup(groupId));
@@ -20,6 +21,10 @@ const GroupPage = () => {
 
   const returnToGroups = () => {
     history.push("/groups");
+  }
+
+  const onClickJoin = () => {
+    alert("Feature coming soon!");
   }
 
   return (
@@ -58,9 +63,15 @@ const GroupPage = () => {
               </span>
             </p>
           </div>
-          <button className="group-details__join">
-            Join this cult
-          </button>
+          {
+            user && user.id !== group["Organizer"].id &&
+            <button
+              className="group-details__join"
+              onClick={onClickJoin}
+            >
+              Join this cult
+            </button>
+          }
         </section>
         <section className="group-details-body">
           <div className="details-body__organizer">
