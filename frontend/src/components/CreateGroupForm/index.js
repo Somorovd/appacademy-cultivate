@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import * as groupActions from "../../store/groups";
+import "./CreateGroupForm.css";
 
 const CreateGroupForm = () => {
   const dispatch = useDispatch();
@@ -67,8 +68,8 @@ const CreateGroupForm = () => {
   }
 
   return (
-    <div className="create-group">
-      <form onSubmit={onSubmit}>
+    <div>
+      <form className="create-group-form" onSubmit={onSubmit}>
         <section>
           <p>Become and Organizer</p>
           <p>Become and Organizer</p>
@@ -79,20 +80,26 @@ const CreateGroupForm = () => {
             Cultivate cults meet locally, in person and online. We'll connect you with people in your area,
             and more will join you online.
           </p>
-          <input
-            value={city}
-            type="text"
-            placeholder="City"
-            onChange={(e) => setCity(e.target.value)}
-          />
-          {validationErrors.city && <p className="error">{validationErrors.city}</p>}
-          <input
-            value={state}
-            type="text"
-            placeholder="STATE"
-            onChange={(e) => setState(e.target.value)}
-          />
-          {validationErrors.state && <p className="error">{validationErrors.state}</p>}
+          <div className="location-inputs">
+            <div>
+              <input
+                value={city}
+                type="text"
+                placeholder="City"
+                onChange={(e) => setCity(e.target.value)}
+              />
+              {validationErrors.city && <p className="error">{validationErrors.city}</p>}
+            </div>
+            <div>
+              <input
+                value={state}
+                type="text"
+                placeholder="STATE"
+                onChange={(e) => setState(e.target.value)}
+              />
+              {validationErrors.state && <p className="error">{validationErrors.state}</p>}
+            </div>
+          </div>
         </section>
         <section>
           <h3>What is the name of your cult?</h3>
@@ -119,8 +126,7 @@ const CreateGroupForm = () => {
             <li>Who should join - preferred blood-type, zodiac sign, greatest fears, etc?</li>
             <li>What are some of your standard ritual practices?</li>
             <li>What is the expected value and frequency of voluntary donations?</li>
-            <li>What are the consequences of attempting abandoning your cult?</li>
-            <li>How many resources will be brought to bear on any members abandoning your cult?</li>
+            <li>What are the consequences of attempting to abandon your cult?</li>
           </ol>
           <textarea
             value={about}

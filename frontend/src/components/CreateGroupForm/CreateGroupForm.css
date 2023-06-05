@@ -1,0 +1,58 @@
+.create-group-form {
+  margin: auto;
+  width: 80%;
+  max-width: 800px;
+  background-color: aliceblue;
+}
+
+.create-group-form * {
+  font-size: 1.1rem;
+}
+
+.create-group-form .error {
+  color: maroon;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.location-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.create-group-form h3 {
+  font-size: 1.5rem;
+  margin: 0px;
+}
+
+.create-group-form section {
+  width: 100%;
+  text-align: left;
+}
+
+.create-group-form section:not(:last-of-type) {
+  border-bottom: 2px solid #CCC;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.create-group-form textarea,
+.create-group-form input {
+  margin-right: 1rem;
+  padding: 0.5rem;
+  border: 2px solid black;
+}
+
+.create-group-form input {
+  width: 300px;
+}
+
+.create-group-form textarea {
+  width: 500px;
+}
+
+.create-group-form button {
+  text-align: center;
+  margin: auto;
+
+}
