@@ -27,10 +27,37 @@ const GroupPage = () => {
     alert("Feature coming soon!");
   }
 
+  let availableButtons;
+  if (user && group) {
+    if (Number(user.id) === Number(group["Organizer"].id)) {
+      availableButtons = [
+        <button key={1} className="create-event">
+          Create Ritual
+        </button>,
+        <button key={2} className="edit-group">
+          Edit Cult
+        </button>,
+        <button key={3} className="delete-group">
+          Delete Cult
+        </button>
+      ];
+    }
+    else {
+      availableButtons = [
+        <button key={1}
+          className="group-details__join"
+          onClick={onClickJoin}
+        >
+          Join this cult
+        </button>
+      ];
+    }
+  }
+
   return (
     group && <>
       <div className="group-details-page">
-        <div class="return-nav">
+        <div className="return-nav">
           <button
             className="return-button"
             onClick={returnToGroups}
@@ -63,15 +90,9 @@ const GroupPage = () => {
               </span>
             </p>
           </div>
-          {
-            user && user.id !== group["Organizer"].id &&
-            <button
-              className="group-details__join"
-              onClick={onClickJoin}
-            >
-              Join this cult
-            </button>
-          }
+          <div className="group-details__actions">
+            {availableButtons}
+          </div>
         </section>
         <section className="group-details-body">
           <div className="details-body__organizer">

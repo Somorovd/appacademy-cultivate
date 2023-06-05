@@ -14,7 +14,7 @@
   grid-template-areas:
     "image info"
     "image ."
-    "image join"
+    "image actions"
   ;
   grid-template-rows: 2fr 100px 1fr;
   grid-template-columns: fit-content 1fr;
@@ -55,11 +55,22 @@
   gap: 0.5rem;
 }
 
-.group-details__join {
-  grid-area: join;
-  width: fit-content;
-  height: fit-content;
-  align-self: end;
+.group-details__actions {
+  grid-area: actions;
+  display: flex;
+  justify-content: start;
+  align-items: end;
+  gap: 1rem;
+}
+
+.delete-group {
+  justify-self: end;
+}
+
+.delete-group:hover {
+  border-color: maroon;
+  background-color: maroon;
+  color: white;
 }
 
 .group-details-body {
