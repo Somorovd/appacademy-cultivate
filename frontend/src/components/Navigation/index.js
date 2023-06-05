@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton';
 import OpenModalButton from "../OpenModalButton";
@@ -10,12 +10,20 @@ import './Navigation.css';
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector(state => state.session.user);
+  const history = useHistory();
+
+  const clickNewGroup = () => {
+    history.push("/groups/new")
+  }
 
   let sessionLinks;
   let sessionClassName = "session-li";
   if (sessionUser) {
     sessionLinks = (
       <li className={sessionClassName}>
+        <button onClick={clickNewGroup}        >
+          Start a Cult
+        </button>
         <ProfileButton user={sessionUser} />
       </li>
     );

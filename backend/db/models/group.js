@@ -48,11 +48,17 @@ module.exports = (sequelize, DataTypes) => {
     },
     city: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        len: [1]
+      }
     },
     state: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        len: [1]
+      }
     },
   }, {
     sequelize,
