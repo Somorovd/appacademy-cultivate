@@ -1,0 +1,67 @@
+.return-nav {
+  margin: 1rem 0px;
+}
+
+.group-details-page {
+  width: 1200px;
+  margin: auto;
+}
+
+.group-details-header {
+  border: 1px solid red;
+  border-bottom: 3px solid black;
+  display: grid;
+  grid-template-areas:
+    "image info"
+    "image ."
+    "image join"
+  ;
+  grid-template-rows: 2fr 100px 1fr;
+  grid-template-columns: fit-content 1fr;
+  gap: 1rem;
+  font-size: 1rem;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.group-details-header * {
+  margin: 0px;
+}
+
+.group-details__image {
+  grid-area: image;
+  background-color: darkcyan;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 16/10;
+  align-self: center;
+}
+
+.group-details__name {
+  font-size: 2rem;
+}
+
+.group-details__general-info {
+  font-size: 1.2rem;
+  grid-area: info;
+}
+
+.group-details__general-info>* {
+  margin-bottom: 1rem;
+}
+
+.group-details__membership {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.group-details__join {
+  grid-area: join;
+  width: fit-content;
+  height: fit-content;
+  align-self: end;
+}
+
+.group-details-body {
+  border: 1px solid red;
+}
