@@ -66,7 +66,7 @@ const GroupPage = () => {
           </button>
         </div>
         <section className="group-details-header">
-          <img src={group.previewImage} className="group-details__image" />
+          <img src={group["GroupImages"].find((img) => img.preview)?.url} className="group-details__image" />
           <div className="group-details__general-info">
             <h2 className="group-details__name">
               {group.name}

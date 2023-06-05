@@ -3,6 +3,7 @@ import { csrfFetch } from "./csrf";
 const GET_ALL_GROUPS = "groups/GET_ALL_GROUPS";
 const GET_ONE_GROUP = "groups/GET_ONE_GROUP";
 const CREATE_GROUP = "groups/CREATE_GROUP";
+const ADD_GROUP_IMAGE = "groups/ADD_GROUP_IMAGE";
 
 const actionGetAllGroups = (groups) => {
   return {
@@ -25,6 +26,14 @@ const actionCreateGroup = (group) => {
   }
 }
 
+const actionAddGroupImage = (groupImage, groupId) => {
+  return {
+    type: ADD_GROUP_IMAGE,
+    groupImage,
+    groupId
+  }
+}
+
 export const thunkGetAllGroups = () => async dispatch => {
   const response = await fetch("/api/groups");
   const resBody = await response.json();
@@ -39,7 +48,7 @@ export const thunkGetOneGroup = (groupId) => async dispatch => {
   return resBody;
 }
 
-export const thunkCreateGroup = (group) => async dispatch => {
+export const thunkCreateGroup = (group, groupImage) => async dispatch => {
   const response = await csrfFetch("/api/groups", {
     method: "post",
     headers: {
@@ -52,8 +61,20 @@ export const thunkCreateGroup = (group) => async dispatch => {
   return resBody;
 }
 
+export const thunkAddGroupImage = (groupImage, groupId) => async dispatch => {
+  const response = await csrfFetch(`/api/groups/${groupId}/images`, {
+    method: "post",
+    headers: {
+      "content-type": "application/json"
+    },
+    body: JSON.stringify(groupImage)
+  });
+  const resBody = await response.json();
+  if (response.ok) dispatch(actionAddGroupImage(groupImage, groupId));
+  return resBody;
+}
+
 const groupsReducer = (state = {}, action) => {
-  console.log("REDUCER:", state);
   switch (action.type) {
     case GET_ALL_GROUPS: {
       return { ...state, allGroups: action.groups };
@@ -62,7 +83,11 @@ const groupsReducer = (state = {}, action) => {
       return { ...state, singleGroup: action.group };
     }
     case CREATE_GROUP: {
-      return { ...state };    
+      const groups = { ...state };
+      if (!groups.allGroups)
+        groups.allGroups = [action.group]
+      else groups.allGroups.push(action.group);
+      return groups;
     }
     default:
       return state;

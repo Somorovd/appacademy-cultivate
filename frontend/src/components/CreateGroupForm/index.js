@@ -52,19 +52,24 @@ const CreateGroupForm = () => {
 
     if (!validateInput()) return;
 
-    const group = {
+    const groupData = {
       name, city, state, about, type, private: isPrivate
     };
 
-    return dispatch(groupActions.thunkCreateGroup(group))
-      .then((group) => {
-        console.log("HERE");
-        history.push(`/groups/${group.id}`);
+    const groupImage = {
+      url, preview: true
+    };
+
+    return dispatch(groupActions.thunkCreateGroup(groupData))
+      .then(group => {
+        dispatch(groupActions.thunkAddGroupImage(groupImage, group.id))
+        history.push(`/groups/${group.id}`)
       })
       .catch(async (res) => {
         const resBody = await res.json();
         setValidationErrors(resBody.errors);
       });
+
   }
 
   return (
