@@ -40,7 +40,6 @@ const CreateGroupForm = ({ group, isEditting }) => {
       isPrivate !== true && isPrivate !== false &&
       isPrivate !== "true" && isPrivate !== "false"
     ) {
-      console.log("privacy required", isPrivate)
       errors["private"] = "Privacy is required";
     }
     if (!url)
