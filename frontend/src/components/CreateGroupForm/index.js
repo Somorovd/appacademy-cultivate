@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import * as groupActions from "../../store/groups";
 import "./CreateGroupForm.css";
 
-const CreateGroupForm = ({ group }) => {
+const CreateGroupForm = ({ group, isEditting }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [city, setCity] = useState(group?.city || "");
@@ -17,8 +17,6 @@ const CreateGroupForm = ({ group }) => {
   const [url, setUrl] = useState(image?.url || "");
 
   const [validationErrors, setValidationErrors] = useState({});
-
-  const isEditting = group !== null;
 
   const validateInput = () => {
     const errors = {};

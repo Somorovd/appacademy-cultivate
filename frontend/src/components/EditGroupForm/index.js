@@ -21,7 +21,7 @@ const EditGroupForm = () => {
     <>
       {
         isAuthorized
-          ? isCurrentGroup && <CreateGroupForm group={group} />
+          ? isCurrentGroup && <CreateGroupForm group={group} isEditting={true} />
           : <h2>Not Authorized</h2>
       }
     </>
