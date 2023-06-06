@@ -19,6 +19,15 @@ const GroupPage = () => {
     dispatch(eventActions.thunkGetGroupEvents(groupId));
   }, [dispatch]);
 
+  if (!group) return null;
+
+  const images = group?.GroupImages;
+  const previewImageUrl =
+    Number(groupId) === Number(group.id)
+      ? images?.find((img) => img.preview)?.url
+      : "";
+
+
   const returnToGroups = () => {
     history.push("/groups");
   }
@@ -66,7 +75,7 @@ const GroupPage = () => {
           </button>
         </div>
         <section className="group-details-header">
-          <img src={group["GroupImages"].find((img) => img.preview)?.url} className="group-details__image" />
+          <img src={previewImageUrl} className="group-details__image" />
           <div className="group-details__general-info">
             <h2 className="group-details__name">
               {group.name}

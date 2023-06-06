@@ -70,7 +70,10 @@ export const thunkAddGroupImage = (groupImage, groupId) => async dispatch => {
     body: JSON.stringify(groupImage)
   });
   const resBody = await response.json();
-  if (response.ok) dispatch(actionAddGroupImage(groupImage, groupId));
+  if (response.ok) {
+    dispatch(actionAddGroupImage(groupImage, groupId));
+    dispatch(thunkGetOneGroup(groupId));
+  }
   return resBody;
 }
 
@@ -88,6 +91,9 @@ const groupsReducer = (state = {}, action) => {
         groups.allGroups = [action.group]
       else groups.allGroups.push(action.group);
       return groups;
+    }
+    case ADD_GROUP_IMAGE: {
+      return { ...state.allGroups };
     }
     default:
       return state;

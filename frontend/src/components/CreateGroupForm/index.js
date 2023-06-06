@@ -62,8 +62,8 @@ const CreateGroupForm = () => {
 
     return dispatch(groupActions.thunkCreateGroup(groupData))
       .then(group => {
-        dispatch(groupActions.thunkAddGroupImage(groupImage, group.id))
-        history.push(`/groups/${group.id}`)
+        dispatch(groupActions.thunkAddGroupImage(groupImage, group.id));
+        history.push(`/groups/${group.id}`);
       })
       .catch(async (res) => {
         const resBody = await res.json();
