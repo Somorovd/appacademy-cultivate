@@ -20,6 +20,10 @@ const actionGetOneEvent = (event) => {
 export const thunkGetAllEvents = () => async dispatch => {
   const response = await fetch("/api/events");
   const resBody = await response.json();
+
+  const events = {};
+  resBody["Events"].forEach((event) => events[event.id] = event);
+
   if (response.ok) dispatch(actionGetAllEvents(resBody["Events"]));
   return resBody;
 }
@@ -38,7 +42,9 @@ export const thunkGetGroupEvents = (groupId) => async dispatch => {
   return resBody;
 }
 
-const eventsReducer = (state = {}, action) => {
+const initialState = { allEvents: {}, singleEvent: {} };
+
+const eventsReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_ALL_EVENTS: {
       return { ...state, allEvents: action.events };

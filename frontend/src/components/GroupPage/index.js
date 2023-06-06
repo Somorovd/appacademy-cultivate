@@ -10,9 +10,10 @@ const GroupPage = () => {
   const { groupId } = useParams();
   const dispatch = useDispatch();
   const history = useHistory();
-  const group = useSelector((state) => state.groups.singleGroup);
-  const events = useSelector((state) => state.events.allEvents);
   const user = useSelector((state) => state.session.user);
+  const group = useSelector((state) => state.groups.singleGroup);
+  const eventsState = useSelector((state) => state.events.allEvents);
+  const events = Object.values(eventsState);
 
   useEffect(() => {
     dispatch(groupActions.thunkGetOneGroup(groupId));

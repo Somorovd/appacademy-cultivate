@@ -6,7 +6,8 @@ import BrowsingNavigation from "../BrowsingNavigation";
 
 const BrowseEventsPage = () => {
   const dispatch = useDispatch();
-  const allEvents = useSelector((state) => state.events.allEvents);
+  const allEventsState = useSelector((state) => state.events.allEvents);
+  const allEvents = Object.values(allEventsState);
 
   useEffect(() => {
     dispatch(eventActions.thunkGetAllEvents());
