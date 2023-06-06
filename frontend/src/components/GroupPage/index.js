@@ -43,7 +43,10 @@ const GroupPage = () => {
         <button key={1} className="create-event">
           Create Ritual
         </button>,
-        <button key={2} className="edit-group">
+        <button key={2}
+          className="edit-group"
+          onClick={() => history.push(`/groups/${groupId}/edit`)}
+        >
           Edit Cult
         </button>,
         <button key={3} className="delete-group">

@@ -4,17 +4,21 @@ import { useHistory } from "react-router-dom";
 import * as groupActions from "../../store/groups";
 import "./CreateGroupForm.css";
 
-const CreateGroupForm = () => {
+const CreateGroupForm = ({ group }) => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [name, setName] = useState("");
-  const [about, setAbout] = useState("");
-  const [type, setType] = useState("");
-  const [isPrivate, setIsPrivate] = useState("");
-  const [url, setUrl] = useState("");
+  const [city, setCity] = useState(group?.city || "");
+  const [state, setState] = useState(group?.state || "");
+  const [name, setName] = useState(group?.name || "");
+  const [about, setAbout] = useState(group?.about || "");
+  const [type, setType] = useState(group?.type || "");
+  const [isPrivate, setIsPrivate] = useState(group ? group.private : "");
+  const image = group?.GroupImages?.find((img) => img.preview);
+  const [url, setUrl] = useState(image?.url || "");
+
   const [validationErrors, setValidationErrors] = useState({});
+
+  const isEditting = group !== null;
 
   const validateInput = () => {
     const errors = {};
@@ -33,7 +37,7 @@ const CreateGroupForm = () => {
       errors["name"] = "Name is required";
     if (!type)
       errors["type"] = "Type is required";
-    if (!isPrivate)
+    if (isPrivate !== true && isPrivate !== false)
       errors["private"] = "Privacy is required";
     if (!url)
       errors["url"] = "Preview image url is required";
@@ -54,20 +58,29 @@ const CreateGroupForm = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-
     if (!validateInput()) return;
 
     const groupData = {
-      name, city, state, about, type, private: isPrivate
+      id: isEditting ? group.id : undefined,
+      name, city, state, about, type, previewImage: url, private: isPrivate
     };
-
     const groupImage = {
+      id: isEditting ? image?.id : undefined,
       url, preview: true
     };
 
-    return dispatch(groupActions.thunkCreateGroup(groupData))
+    dispatch(
+      isEditting
+        ? groupActions.thunkUpdateGroup(groupData)
+        : groupActions.thunkCreateGroup(groupData)
+    )
       .then(async group => {
-        await dispatch(groupActions.thunkAddGroupImage(groupImage, group.id));
+        if (url !== image?.url)
+          await dispatch(
+            isEditting
+              ? groupActions.thunkUpdateGroupImage(groupImage, group.id)
+              : groupActions.thunkAddGroupImage(groupImage, group.id)
+          );
         history.push(`/groups/${group.id}`);
       })
       .catch(async (res) => {
@@ -179,7 +192,7 @@ const CreateGroupForm = () => {
         </section>
         <section>
           <button type="submit">
-            Create Cult
+            {(isEditting ? "Update" : "Create") + " Cult"}
           </button>
         </section>
       </form>

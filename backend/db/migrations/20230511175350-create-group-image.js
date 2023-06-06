@@ -41,11 +41,9 @@ module.exports = {
 			}
 		}, options);
 		options.tableName = "GroupImages";
-		await queryInterface.addIndex(options, ["groupId", "url"], { unique: true });
 	},
 	async down(queryInterface, Sequelize) {
 		options.tableName = "GroupImages";
 		await queryInterface.dropTable(options);
-		await queryInterface.removeIndex(options, ["groupId", "url"]);
 	}
 };
