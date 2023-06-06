@@ -37,7 +37,7 @@ const CreateGroupForm = ({ group }) => {
       errors["name"] = "Name is required";
     if (!type)
       errors["type"] = "Type is required";
-    if (isPrivate !== true && isPrivate !== false)
+    if (!isPrivate)
       errors["private"] = "Privacy is required";
     if (!url)
       errors["url"] = "Preview image url is required";
@@ -177,8 +177,8 @@ const CreateGroupForm = ({ group }) => {
             onChange={(e) => setIsPrivate(e.target.value)}
           >
             <option value={""} hidden disabled>(Select One)</option>
-            <option value={false}>Public</option>
-            <option value={true}>Private</option>
+            <option value={"false"}>Public</option>
+            <option value={"true"}>Private</option>
           </select>
           {validationErrors.private && <p className="error">{validationErrors.private}</p>}
           <p>Please add an image url for your group</p>

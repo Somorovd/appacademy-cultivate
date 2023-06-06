@@ -36,6 +36,15 @@ const GroupPage = () => {
     alert("Feature coming soon!");
   }
 
+  const onClickEdit = () => {
+    history.push(`/groups/${groupId}/edit`);
+  }
+
+  const onClickDelete = () => {
+    dispatch(groupActions.thunkDeleteGroup(groupId));
+    history.push("/groups");
+  }
+
   let availableButtons;
   if (user && group) {
     if (Number(user.id) === Number(group["Organizer"].id)) {
@@ -45,11 +54,14 @@ const GroupPage = () => {
         </button>,
         <button key={2}
           className="edit-group"
-          onClick={() => history.push(`/groups/${groupId}/edit`)}
+          onClick={onClickEdit}
         >
           Edit Cult
         </button>,
-        <button key={3} className="delete-group">
+        <button key={3}
+          className="delete-group"
+          onClick={onClickDelete}
+        >
           Delete Cult
         </button>
       ];
