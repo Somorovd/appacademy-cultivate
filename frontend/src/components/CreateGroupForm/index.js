@@ -12,7 +12,8 @@ const CreateGroupForm = ({ group, isEditting }) => {
   const [name, setName] = useState(group?.name || "");
   const [about, setAbout] = useState(group?.about || "");
   const [type, setType] = useState(group?.type || "");
-  const [isPrivate, setIsPrivate] = useState(group ? group.private : "");
+  const [isPrivate, setIsPrivate] = useState(isEditting ? group.private : "");
+  console.log(group, isPrivate);
   const image = group?.GroupImages?.find((img) => img.preview);
   const [url, setUrl] = useState(image?.url || "");
 
@@ -35,8 +36,13 @@ const CreateGroupForm = ({ group, isEditting }) => {
       errors["name"] = "Name is required";
     if (!type)
       errors["type"] = "Type is required";
-    if (!isPrivate)
+    if (
+      isPrivate !== true && isPrivate !== false &&
+      isPrivate !== "true" && isPrivate !== "false"
+    ) {
+      console.log("privacy required", isPrivate)
       errors["private"] = "Privacy is required";
+    }
     if (!url)
       errors["url"] = "Preview image url is required";
 
@@ -175,8 +181,8 @@ const CreateGroupForm = ({ group, isEditting }) => {
             onChange={(e) => setIsPrivate(e.target.value)}
           >
             <option value={""} hidden disabled>(Select One)</option>
-            <option value={"false"}>Public</option>
-            <option value={"true"}>Private</option>
+            <option value={false}>Public</option>
+            <option value={true}>Private</option>
           </select>
           {validationErrors.private && <p className="error">{validationErrors.private}</p>}
           <p>Please add an image url for your group</p>
