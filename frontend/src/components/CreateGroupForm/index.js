@@ -11,8 +11,8 @@ const CreateGroupForm = () => {
   const [state, setState] = useState("");
   const [name, setName] = useState("");
   const [about, setAbout] = useState("");
-  const [type, setType] = useState("In Person");
-  const [isPrivate, setIsPrivate] = useState(false);
+  const [type, setType] = useState(null);
+  const [isPrivate, setIsPrivate] = useState(null);
   const [url, setUrl] = useState("");
   const [validationErrors, setValidationErrors] = useState({});
 
@@ -31,14 +31,19 @@ const CreateGroupForm = () => {
       errors["state"] = "State is required";
     if (!name)
       errors["name"] = "Name is required";
+    if (!type)
+      errors["type"] = "Type is required";
+    if (!isPrivate)
+      errors["private"] = "Privacy is required";
+    if (!url)
+      errors["url"] = "Preview image url is required";
+
     if (name && name.length > 60)
       errors["name"] = "Name cannot exceed 60 characters";
     if (!about || about.length < 30)
       errors["about"] = "About length must be at least 30 characters"
     if (about & about.length > 1000)
       errors["about"] = "About cannot exceed 1000 characters";
-    if (!url)
-      errors["url"] = "Preview image url is required";
     if (!url.match(/(\.png|\.jpg|\.jpeg)\s*$/))
       errors["url"] = "Preview image url must end with .png, .jpg, or .jpeg";
 
@@ -149,6 +154,7 @@ const CreateGroupForm = () => {
             value={type}
             onChange={(e) => setType(e.target.value)}
           >
+            <option value={null} hidden disabled selected>(Select One)</option>
             <option value="In Person">In Person</option>
             <option value="Online">Online</option>
           </select>
@@ -158,6 +164,7 @@ const CreateGroupForm = () => {
             value={isPrivate}
             onChange={(e) => setIsPrivate(e.target.value)}
           >
+            <option value={null} hidden disabled selected>(Select One)</option>
             <option value={false}>Public</option>
             <option value={true}>Private</option>
           </select>
