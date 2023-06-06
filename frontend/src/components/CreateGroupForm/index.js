@@ -11,8 +11,8 @@ const CreateGroupForm = () => {
   const [state, setState] = useState("");
   const [name, setName] = useState("");
   const [about, setAbout] = useState("");
-  const [type, setType] = useState(null);
-  const [isPrivate, setIsPrivate] = useState(null);
+  const [type, setType] = useState("");
+  const [isPrivate, setIsPrivate] = useState("");
   const [url, setUrl] = useState("");
   const [validationErrors, setValidationErrors] = useState({});
 
@@ -66,15 +66,14 @@ const CreateGroupForm = () => {
     };
 
     return dispatch(groupActions.thunkCreateGroup(groupData))
-      .then(group => {
-        dispatch(groupActions.thunkAddGroupImage(groupImage, group.id));
+      .then(async group => {
+        await dispatch(groupActions.thunkAddGroupImage(groupImage, group.id));
         history.push(`/groups/${group.id}`);
       })
       .catch(async (res) => {
         const resBody = await res.json();
         setValidationErrors(resBody.errors);
       });
-
   }
 
   return (
@@ -154,7 +153,7 @@ const CreateGroupForm = () => {
             value={type}
             onChange={(e) => setType(e.target.value)}
           >
-            <option value={null} hidden disabled selected>(Select One)</option>
+            <option value={""} hidden disabled>(Select One)</option>
             <option value="In Person">In Person</option>
             <option value="Online">Online</option>
           </select>
@@ -164,7 +163,7 @@ const CreateGroupForm = () => {
             value={isPrivate}
             onChange={(e) => setIsPrivate(e.target.value)}
           >
-            <option value={null} hidden disabled selected>(Select One)</option>
+            <option value={""} hidden disabled>(Select One)</option>
             <option value={false}>Public</option>
             <option value={true}>Private</option>
           </select>

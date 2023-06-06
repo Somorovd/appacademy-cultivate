@@ -26,18 +26,21 @@ const actionCreateGroup = (group) => {
   }
 }
 
-const actionAddGroupImage = (groupImage, groupId) => {
+const actionAddGroupImage = (groupImage) => {
   return {
     type: ADD_GROUP_IMAGE,
-    groupImage,
-    groupId
+    groupImage
   }
 }
 
 export const thunkGetAllGroups = () => async dispatch => {
   const response = await fetch("/api/groups");
   const resBody = await response.json();
-  if (response.ok) dispatch(actionGetAllGroups(resBody["Groups"]));
+
+  const groups = {};
+  resBody["Groups"].forEach((group) => groups[group.id] = group);
+
+  if (response.ok) dispatch(actionGetAllGroups(groups));
   return resBody;
 }
 
@@ -48,7 +51,7 @@ export const thunkGetOneGroup = (groupId) => async dispatch => {
   return resBody;
 }
 
-export const thunkCreateGroup = (group, groupImage) => async dispatch => {
+export const thunkCreateGroup = (group) => async dispatch => {
   const response = await csrfFetch("/api/groups", {
     method: "post",
     headers: {
@@ -70,14 +73,14 @@ export const thunkAddGroupImage = (groupImage, groupId) => async dispatch => {
     body: JSON.stringify(groupImage)
   });
   const resBody = await response.json();
-  if (response.ok) {
-    dispatch(actionAddGroupImage(groupImage, groupId));
-    dispatch(thunkGetOneGroup(groupId));
-  }
+  if (response.ok)
+    dispatch(actionAddGroupImage(groupImage));
   return resBody;
 }
 
-const groupsReducer = (state = {}, action) => {
+const initialState = { allGroups: {}, singleGroup: {} }
+
+const groupsReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_ALL_GROUPS: {
       return { ...state, allGroups: action.groups };
@@ -86,14 +89,22 @@ const groupsReducer = (state = {}, action) => {
       return { ...state, singleGroup: action.group };
     }
     case CREATE_GROUP: {
-      const groups = { ...state };
-      if (!groups.allGroups)
-        groups.allGroups = [action.group]
-      else groups.allGroups.push(action.group);
-      return groups;
+      const allGroups = {
+        ...state.allGroups,
+        [action.group.id]: action.group
+      };
+      const singleGroup = {
+        ...action.group,
+        "Organizer": { "id": action.group.organizerId }
+      }
+      return { ...state, allGroups, singleGroup }
     }
     case ADD_GROUP_IMAGE: {
-      return { ...state.allGroups };
+      const singleGroup = {
+        ...state.singleGroup,
+        "GroupImages": [action.groupImage]
+      };
+      return { ...state, singleGroup };
     }
     default:
       return state;

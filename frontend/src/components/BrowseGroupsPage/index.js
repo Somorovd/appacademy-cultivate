@@ -6,7 +6,8 @@ import BrowsingNavigation from "../BrowsingNavigation";
 
 const BrowseGroupsPage = () => {
   const dispatch = useDispatch();
-  const allGroups = useSelector((state) => state.groups.allGroups);
+  const allGroupsState = useSelector((state) => state.groups.allGroups);
+  const allGroups = Object.values(allGroupsState);
 
   useEffect(() => {
     dispatch(groupActions.thunkGetAllGroups());

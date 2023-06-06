@@ -19,14 +19,13 @@ const GroupPage = () => {
     dispatch(eventActions.thunkGetGroupEvents(groupId));
   }, [dispatch]);
 
-  if (!group) return null;
+  if (
+    !group.id ||
+    Number(group.id) !== Number(groupId)
+  ) return null;
 
-  const images = group?.GroupImages;
-  const previewImageUrl =
-    Number(groupId) === Number(group.id)
-      ? images?.find((img) => img.preview)?.url
-      : "";
-
+  const images = group["GroupImages"];
+  const previewImageUrl = images.find((img) => img.preview)?.url;
 
   const returnToGroups = () => {
     history.push("/groups");
