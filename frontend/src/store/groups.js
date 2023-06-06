@@ -60,7 +60,6 @@ export const thunkGetOneGroup = (groupId) => async dispatch => {
 }
 
 export const thunkCreateGroup = (group) => async dispatch => {
-  console.log("CREATING");
   const response = await csrfFetch("/api/groups", {
     method: "post",
     headers: {
@@ -74,7 +73,6 @@ export const thunkCreateGroup = (group) => async dispatch => {
 }
 
 export const thunkUpdateGroup = (group) => async dispatch => {
-  console.log("UPDATING")
   const response = await csrfFetch(`/api/groups/${group.id}`, {
     method: "put",
     headers: {
