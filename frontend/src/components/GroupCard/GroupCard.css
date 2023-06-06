@@ -23,7 +23,7 @@
   margin: 0px;
 }
 
-img,
+.group-card img,
 .group-card__image {
   width: var(--image-size);
   aspect-ratio: 16/10;
