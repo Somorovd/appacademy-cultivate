@@ -1,7 +1,7 @@
 import { useHistory } from "react-router-dom";
 import "./EventCard.css";
 
-const EventCard = ({ event }) => {
+const EventCard = ({ event, group }) => {
   const history = useHistory();
 
   const onClick = () => {
@@ -26,7 +26,16 @@ const EventCard = ({ event }) => {
         <p className="event-card__location">
           {
             event.type === "In Person"
-              ? `${event["Venue"]?.city || "<city missing>"}, ${event["Venue"]?.state || "<state missing>"}`
+              ? (
+                `${event["Venue"]?.city ||
+                group?.city ||
+                "<city missing>"
+                }, 
+                ${event["Venue"]?.state ||
+                group?.state ||
+                "<state missing>"
+                }`
+              )
               : "Online"
           }
         </p>

@@ -141,12 +141,12 @@ const GroupPage = () => {
           </div>
           <div className="details-body__events">
             <h3>
-              Upcoming Events (#)
+              Upcoming Events ({events.length})
             </h3>
             <div className="details-body__events-list">
               {
                 events && events.map((event) => (
-                  <EventCard key={event.id} event={event} />
+                  <EventCard key={event.id} event={event} group={group} />
                 ))
               }
             </div>
