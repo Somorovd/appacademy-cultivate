@@ -3,6 +3,7 @@ import { csrfFetch } from "./csrf";
 const GET_ALL_EVENTS = "events/GET_ALL_EVENTS";
 const GET_ONE_EVENT = "events/GET_ONE_EVENT";
 const CREATE_EVENT = "groups/CREATE_EVENT";
+const ADD_EVENT_IMAGE = "groups/ADD_EVENT_IMAGE";
 
 
 const actionGetAllEvents = (events) => {
@@ -23,6 +24,13 @@ const actionCreateEvent = (event) => {
   return {
     type: CREATE_EVENT,
     event
+  }
+}
+
+const actionAddEventImage = (eventImage) => {
+  return {
+    type: ADD_EVENT_IMAGE,
+    groupImage: eventImage
   }
 }
 
@@ -64,6 +72,20 @@ export const thunkCreateEvent = (event, groupId) => async dispatch => {
   return resBody;
 }
 
+export const thunkAddEventImage = (eventImage, eventId) => async dispatch => {
+  const response = await csrfFetch(`/api/events/${eventId}/images`, {
+    method: "post",
+    headers: {
+      "content-type": "application/json"
+    },
+    body: JSON.stringify(eventImage)
+  });
+  const resBody = await response.json();
+  if (response.ok)
+    dispatch(actionAddEventImage(eventImage));
+  return resBody;
+}
+
 const initialState = { allEvents: {}, singleEvent: {} };
 
 const eventsReducer = (state = initialState, action) => {
@@ -84,6 +106,13 @@ const eventsReducer = (state = initialState, action) => {
         "EventImages": []
       };
       return { ...state, allEvents, singleEvent };
+    }
+    case ADD_EVENT_IMAGE: {
+      const singleEvent = {
+        ...state.singleEvent,
+        "EventImages": [action.eventImage]
+      };
+      return { ...state, singleEvent };
     }
     default:
       return state;

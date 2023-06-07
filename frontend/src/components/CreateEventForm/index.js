@@ -79,8 +79,10 @@ const CreateEventForm = () => {
     dispatch(
       eventActions.thunkCreateEvent(eventData, groupId)
     )
-      .then(async group => {
-        // await dispatch();
+      .then(async event => {
+        dispatch(
+          eventActions.thunkAddEventImage(eventImage, event.id)
+        );
         history.push(`/groups/${groupId}`);
       })
       .catch(async (res) => {
