@@ -2,6 +2,8 @@ import { useParams, Link, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import EventCard from "../EventCard";
+import ConfirmDeleteModal from "../ConfirmDeleteModal";
+import OpenModalButton from "../OpenModalButton";
 import * as groupActions from "../../store/groups";
 import * as eventActions from "../../store/events";
 import "./GroupPage.css";
@@ -44,11 +46,6 @@ const GroupPage = () => {
     history.push(`/groups/${groupId}/edit`);
   }
 
-  const onClickDelete = () => {
-    dispatch(groupActions.thunkDeleteGroup(groupId));
-    history.push("/groups");
-  }
-
   let availableButtons;
   if (user && group) {
     if (Number(user.id) === Number(group["Organizer"].id)) {
@@ -65,12 +62,10 @@ const GroupPage = () => {
         >
           Edit Cult
         </button>,
-        <button key={3}
-          className="delete-group"
-          onClick={onClickDelete}
-        >
-          Delete Cult
-        </button>
+        <OpenModalButton
+          buttonText="Delete Cult"
+          modalComponent={<ConfirmDeleteModal groupId={groupId} />}
+        />
       ];
     }
     else {
