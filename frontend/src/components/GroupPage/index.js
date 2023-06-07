@@ -64,7 +64,7 @@ const GroupPage = () => {
         </button>,
         <OpenModalButton
           buttonText="Delete Cult"
-          modalComponent={<ConfirmDeleteModal groupId={groupId} />}
+          modalComponent={<ConfirmDeleteModal group={group} />}
         />
       ];
     }
