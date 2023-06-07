@@ -23,7 +23,11 @@ const EventPage = () => {
     })();
   }, [dispatch]);
 
-  if (!event.id || !group.id) return null;
+  if (
+    !event.id ||
+    !group.id ||
+    Number(event.id) !== Number(eventId)
+  ) return null;
 
   const eventPreviewImageUrl = event["EventImages"].find((img) => img.preview)?.url;
   const groupPreviewImageUrl = group["GroupImages"].find((img) => img.preview)?.url;
