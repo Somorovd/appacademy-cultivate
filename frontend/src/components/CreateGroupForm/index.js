@@ -13,7 +13,6 @@ const CreateGroupForm = ({ group, isEditting }) => {
   const [about, setAbout] = useState(group?.about || "");
   const [type, setType] = useState(group?.type || "");
   const [isPrivate, setIsPrivate] = useState(isEditting ? group.private : "");
-  console.log(group, isPrivate);
   const image = group?.GroupImages?.find((img) => img.preview);
   const [url, setUrl] = useState(image?.url || "");
 

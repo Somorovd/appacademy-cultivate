@@ -36,6 +36,10 @@ const GroupPage = () => {
     alert("Feature coming soon!");
   }
 
+  const onClickCreate = () => {
+    history.push(`/groups/${groupId}/events/new`);
+  }
+
   const onClickEdit = () => {
     history.push(`/groups/${groupId}/edit`);
   }
@@ -49,7 +53,10 @@ const GroupPage = () => {
   if (user && group) {
     if (Number(user.id) === Number(group["Organizer"].id)) {
       availableButtons = [
-        <button key={1} className="create-event">
+        <button key={1}
+          className="create-event"
+          onClick={onClickCreate}
+        >
           Create Ritual
         </button>,
         <button key={2}

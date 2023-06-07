@@ -1,0 +1,64 @@
+.create-event-form {
+  margin: auto;
+  width: 80%;
+  max-width: 800px;
+  background-color: aliceblue;
+}
+
+.create-event-form * {
+  font-size: 1.1rem;
+}
+
+.create-event-form h2 {
+  font-size: 2rem;
+  margin: 0px;
+}
+
+
+.create-event-form .error {
+  color: maroon;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.create-event-form p {
+  font-size: 1.5rem;
+  margin: 0px;
+}
+
+.create-event-form p:not(:first-of-type) {
+  margin-top: 1rem;
+}
+
+.create-event-form section {
+  width: 100%;
+  text-align: left;
+}
+
+.create-event-form section:not(:last-of-type) {
+  border-bottom: 2px solid #CCC;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.create-event-form textarea,
+.create-event-form input {
+  display: block;
+  margin: 0.5rem 0px;
+  margin-right: 1rem;
+  padding: 0.5rem;
+  border: 2px solid black;
+}
+
+.create-event-form input {
+  width: 300px;
+}
+
+.create-event-form textarea {
+  width: 500px;
+}
+
+.create-event-form button {
+  text-align: center;
+  margin: auto;
+}
