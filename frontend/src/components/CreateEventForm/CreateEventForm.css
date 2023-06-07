@@ -14,11 +14,11 @@
   margin: 0px;
 }
 
-
 .create-event-form .error {
   color: maroon;
   font-weight: bold;
   margin-bottom: 1rem;
+  font-size: inherit;
 }
 
 .create-event-form p {

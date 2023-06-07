@@ -26,7 +26,7 @@ const EventCard = ({ event }) => {
         <p className="event-card__location">
           {
             event.type === "In Person"
-              ? `${event["Venue"].city}, ${event["Venue"].state}`
+              ? `${event["Venue"]?.city || "<city missing>"}, ${event["Venue"]?.state || "<state missing>"}`
               : "Online"
           }
         </p>
