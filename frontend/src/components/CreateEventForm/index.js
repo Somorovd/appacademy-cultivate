@@ -89,10 +89,22 @@ const CreateEventForm = () => {
       });
   }
 
+  const returnToGroup = () => {
+    history.push(`/groups/${groupId}`);
+  }
+
   if (!group) return null;
 
   return (
-    <div>
+    <div className="create-event-page">
+      <div className="return-nav">
+        <button
+          className="return-button"
+          onClick={returnToGroup}
+        >
+          Return to Cult
+        </button>
+      </div>
       <form className="create-event-form" onSubmit={onSubmit}>
 
         <section>
@@ -138,10 +150,11 @@ const CreateEventForm = () => {
 
           <p>What is required value of donations for this ritual?</p>
           <input
-            type="number"
+            type="text"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             placeholder="0"
+            className="price-input"
           />
           {validationErrors.price && <p className="error">{validationErrors.price}</p>}
         </section>
@@ -150,7 +163,7 @@ const CreateEventForm = () => {
         <section>
           <p>When will this ritual be initiated?</p>
           <input
-            type="date"
+            type="datetime-local"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
           />
@@ -158,7 +171,7 @@ const CreateEventForm = () => {
 
           <p>When will this ritual be complete?</p>
           <input
-            type="date"
+            type="datetime-local"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
           />

@@ -1,8 +1,12 @@
-.create-event-form {
+.create-event-page {
   margin: auto;
   width: 80%;
   max-width: 800px;
+}
+
+.create-event-form {
   background-color: aliceblue;
+  width: 100%;
 }
 
 .create-event-form * {
@@ -61,4 +65,13 @@
 .create-event-form button {
   text-align: center;
   margin: auto;
+}
+
+.price-input {
+  text-align: right;
+  width: 100px !important;
+}
+
+.price-input::before {
+  content: "$";
 }
