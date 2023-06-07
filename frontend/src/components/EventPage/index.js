@@ -13,6 +13,7 @@ const EventPage = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const user = useSelector((state) => state.session.user);
   const event = useSelector((state) => state.events.singleEvent);
   const group = useSelector((state) => state.groups.singleGroup);
 
@@ -32,6 +33,33 @@ const EventPage = () => {
   const eventPreviewImageUrl = event["EventImages"].find((img) => img.preview)?.url;
   const groupPreviewImageUrl = group["GroupImages"].find((img) => img.preview)?.url;
 
+  const onClickEdit = () => {
+    history.push(`/events/${eventId}/edit`)
+  }
+
+  let actionButtons;
+
+  if (user && user.id === group.organizerId) {
+    actionButtons = [
+      <button
+        className="edit-event"
+        onClick={onClickEdit}
+      >
+        Update Ritual
+      </button>,
+      <OpenModalButton
+        buttonText="Delete Ritual"
+        modalComponent={
+          <ConfirmDeleteModal
+            type="event"
+            what={event}
+            path={`/groups/${group.id}`}
+          />
+        }
+      />
+    ]
+  }
+
   const returnToEvents = () => {
     history.push("/events");
   }
@@ -44,7 +72,7 @@ const EventPage = () => {
             className="return-button"
             onClick={returnToEvents}
           >
-            Return to All Events
+            Return to All Rituals
           </button>
         </div>
         <h2 className="event-details__name">
@@ -89,16 +117,7 @@ const EventPage = () => {
             <div className="event-details__type">
               {event.type}
             </div>
-            <OpenModalButton
-              buttonText="Delete Cult"
-              modalComponent={
-                <ConfirmDeleteModal
-                  type="event"
-                  what={event}
-                  path="/events"
-                />
-              }
-            />
+            {actionButtons}
           </div>
         </section>
         <section className="event-details__about">

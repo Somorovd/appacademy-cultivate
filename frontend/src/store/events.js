@@ -88,6 +88,19 @@ export const thunkDeleteEvent = (eventId) => async dispatch => {
   return resBody;
 }
 
+export const thunkUpdateEvent = (event) => async dispatch => {
+  const response = await csrfFetch(`/api/events/${event.id}`, {
+    method: "put",
+    headers: {
+      "content-type": "application/json"
+    },
+    body: JSON.stringify(event)
+  });
+  const resBody = await response.json();
+  if (response.ok) dispatch(actionCreateEvent(resBody));
+  return resBody;
+}
+
 export const thunkAddEventImage = (eventImage, eventId) => async dispatch => {
   const response = await csrfFetch(`/api/events/${eventId}/images`, {
     method: "post",

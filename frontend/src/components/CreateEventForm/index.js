@@ -5,27 +5,33 @@ import * as groupActions from "../../store/groups";
 import * as eventActions from "../../store/events";
 import "./CreateEventForm.css";
 
-const CreateEventForm = () => {
+const CreateEventForm = ({ event, isEditting }) => {
   const { groupId } = useParams();
   const dispatch = useDispatch();
   const history = useHistory();
 
   const group = useSelector((state) => state.groups.singleGroup);
-  const [name, setName] = useState("");
-  const [type, setType] = useState("");
-  const [price, setPrice] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+
+  const [name, setName] = useState(event?.name || "");
+  const [type, setType] = useState(event?.type || "");
+  const [price, setPrice] = useState(event?.price.toString() || "");
+  const [startDate, setStartDate] = useState(event?.startDate || "");
+  const [endDate, setEndDate] = useState(event?.endDate || "");
   const [url, setUrl] = useState("");
-  const [about, setAbout] = useState("");
-  const [isPrivate, setIsPrivate] = useState("");
+  const [about, setAbout] = useState(event?.description || "");
+  const [isPrivate, setIsPrivate] = useState(isEditting ? group.private : "");
 
   const [validationErrors, setValidationErrors] = useState({});
 
   useEffect(() => {
-    if (group && Number(group.id) === Number(groupId)) return;
-    dispatch(groupActions.thunkGetOneGroup(groupId));
+    if (
+      (isEditting && group && Number(group.id) === Number(event["Group"].id)) ||
+      (group && Number(group.id) === Number(groupId))
+    ) return;
+    dispatch(groupActions.thunkGetOneGroup(groupId || event["Group"].id));
   }, [dispatch]);
+
+  if (!group.id) return null;
 
   const validateInput = () => {
     const errors = {};
@@ -49,7 +55,7 @@ const CreateEventForm = () => {
       errors["startDate"] = "Start date is required";
     if (!endDate)
       errors["endDate"] = "End date is required";
-    if (!url.match(/(\.png|\.jpg|\.jpeg)\s*$/))
+    if (!isEditting && !url.match(/(\.png|\.jpg|\.jpeg)\s*$/))
       errors["url"] = "Preview image url must end with .png, .jpg, or .jpeg";
     if (!about || about.length < 30)
       errors["about"] = "About length must be at least 30 characters"
@@ -57,6 +63,7 @@ const CreateEventForm = () => {
       errors["about"] = "About cannot exceed 1000 characters";
 
     setValidationErrors(errors);
+
 
     return Object.keys(errors).length === 0;
   }
@@ -66,6 +73,7 @@ const CreateEventForm = () => {
     if (!validateInput()) return;
 
     const eventData = {
+      id: isEditting ? event.id : undefined,
       name, type, price, startDate, endDate,
       description: about,
       private: isPrivate,
@@ -77,12 +85,15 @@ const CreateEventForm = () => {
     };
 
     dispatch(
-      eventActions.thunkCreateEvent(eventData, groupId)
+      isEditting
+        ? eventActions.thunkUpdateEvent(eventData)
+        : eventActions.thunkCreateEvent(eventData, group.id)
     )
       .then(async event => {
-        dispatch(
-          eventActions.thunkAddEventImage(eventImage, event.id)
-        );
+        if (!isEditting)
+          dispatch(
+            eventActions.thunkAddEventImage(eventImage, event.id)
+          );
         history.push(`/events/${event.id}`);
       })
       .catch(async (res) => {
@@ -92,7 +103,11 @@ const CreateEventForm = () => {
   }
 
   const returnToGroup = () => {
-    history.push(`/groups/${groupId}`);
+    history.push(`/groups/${group.id}`);
+  }
+
+  const returnToEvent = () => {
+    history.push(`/events/${event.id}`);
   }
 
   if (!group) return null;
@@ -102,9 +117,9 @@ const CreateEventForm = () => {
       <div className="return-nav">
         <button
           className="return-button"
-          onClick={returnToGroup}
+          onClick={isEditting ? returnToEvent : returnToGroup}
         >
-          Return to Cult
+          Return to {isEditting ? "Ritual" : "Cult"}
         </button>
       </div>
       <form className="create-event-form" onSubmit={onSubmit}>
@@ -182,16 +197,20 @@ const CreateEventForm = () => {
 
 
         <section>
-          <p>
-            Please add an image url for this ritual:
-          </p>
-          <input
-            type="text"
-            value={url}
-            placeholder="Image URL"
-            onChange={(e) => setUrl(e.target.value)}
-          />
-          {validationErrors.url && <p className="error">{validationErrors.url}</p>}
+          {!isEditting &&
+            <>
+              <p>
+                Please add an image url for this ritual:
+              </p>
+              <input
+                type="text"
+                value={url}
+                placeholder="Image URL"
+                onChange={(e) => setUrl(e.target.value)}
+              />
+              {validationErrors.url && <p className="error">{validationErrors.url}</p>}
+            </>
+          }
 
           <p>Please discribe this event</p>
           <textarea
@@ -204,7 +223,11 @@ const CreateEventForm = () => {
           {validationErrors.about && <p className="error">{validationErrors.about}</p>}
 
           <button type="submit">
-            Create Ritual
+            {
+              isEditting
+                ? "Update Ritual"
+                : "Create Ritual"
+            }
           </button>
         </section>
       </form>

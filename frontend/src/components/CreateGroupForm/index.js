@@ -7,6 +7,7 @@ import "./CreateGroupForm.css";
 const CreateGroupForm = ({ group, isEditting }) => {
   const dispatch = useDispatch();
   const history = useHistory();
+
   const [city, setCity] = useState(group?.city || "");
   const [state, setState] = useState(group?.state || "");
   const [name, setName] = useState(group?.name || "");
