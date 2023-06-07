@@ -2,9 +2,9 @@ import { csrfFetch } from "./csrf";
 
 const GET_ALL_EVENTS = "events/GET_ALL_EVENTS";
 const GET_ONE_EVENT = "events/GET_ONE_EVENT";
-const CREATE_EVENT = "groups/CREATE_EVENT";
-const ADD_EVENT_IMAGE = "groups/ADD_EVENT_IMAGE";
-
+const CREATE_EVENT = "events/CREATE_EVENT";
+const DELETE_EVENT = "events/DELETE_EVENT";
+const ADD_EVENT_IMAGE = "events/ADD_EVENT_IMAGE";
 
 const actionGetAllEvents = (events) => {
   return {
@@ -25,6 +25,13 @@ const actionCreateEvent = (event) => {
     type: CREATE_EVENT,
     event
   }
+}
+
+const actionDeleteEvent = (eventId) => {
+  return {
+    type: DELETE_EVENT,
+    eventId
+  };
 }
 
 const actionAddEventImage = (eventImage) => {
@@ -69,6 +76,15 @@ export const thunkCreateEvent = (event, groupId) => async dispatch => {
   });
   const resBody = await response.json();
   if (response.ok) dispatch(actionCreateEvent(resBody));
+  return resBody;
+}
+
+export const thunkDeleteEvent = (eventId) => async dispatch => {
+  const response = await csrfFetch(`/api/events/${eventId}`, {
+    method: "delete"
+  });
+  const resBody = await response.json();
+  if (response.ok) dispatch(actionDeleteEvent(eventId));
   return resBody;
 }
 

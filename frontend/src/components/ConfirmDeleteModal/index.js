@@ -2,24 +2,36 @@ import { useParams, useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import * as groupActions from "../../store/groups";
+import * as eventActions from "../../store/events";
 import "./ConfirmDeleteModal.css";
 
-const ConfirmDeleteModal = ({ group }) => {
+const ConfirmDeleteModal = ({ what, type, path }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { closeModal } = useModal();
 
+  let deleteThunk;
+  switch (type) {
+    case "group":
+      deleteThunk = groupActions.thunkDeleteGroup;
+      break;
+    case "event":
+      deleteThunk = eventActions.thunkDeleteEvent;
+      break;
+    default: break;
+  }
+
   const onClickDelete = () => {
-    dispatch(groupActions.thunkDeleteGroup(group.id));
+    dispatch(deleteThunk(what.id));
     closeModal();
-    history.push("/groups");
+    history.push(path);
   }
 
   return (
     <div className="confirm-delete-modal">
       <h2>Are you sure you want to delete&nbsp;
         <span className="deleted-name">
-          {group.name}
+          {what.name}
         </span>
         ?</h2>
       <button

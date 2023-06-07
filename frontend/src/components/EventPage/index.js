@@ -2,6 +2,8 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import ConfirmDeleteModal from "../ConfirmDeleteModal";
+import OpenModalButton from "../OpenModalButton";
 import * as eventActions from "../../store/events";
 import * as groupActions from "../../store/groups";
 import "./EventPage.css";
@@ -83,9 +85,16 @@ const EventPage = () => {
             <div className="event-details__type">
               {event.type}
             </div>
-            <button className="delete-event">
-              Delete
-            </button>
+            <OpenModalButton
+              buttonText="Delete Cult"
+              modalComponent={
+                <ConfirmDeleteModal
+                  type="event"
+                  what={event}
+                  path="/events"
+                />
+              }
+            />
           </div>
         </section>
         <section className="event-details__about">
