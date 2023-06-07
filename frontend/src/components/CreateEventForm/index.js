@@ -83,7 +83,7 @@ const CreateEventForm = () => {
         dispatch(
           eventActions.thunkAddEventImage(eventImage, event.id)
         );
-        history.push(`/groups/${groupId}`);
+        history.push(`/events/${event.id}`);
       })
       .catch(async (res) => {
         const resBody = await res.json();
