@@ -1,11 +1,11 @@
 import { useParams, Link, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import EventCard from "../EventCard";
-import ConfirmDeleteModal from "../ConfirmDeleteModal";
-import OpenModalButton from "../OpenModalButton";
-import * as groupActions from "../../store/groups";
-import * as eventActions from "../../store/events";
+import EventCard from "../../EventCard";
+import ConfirmDeleteModal from "../../ConfirmDeleteModal";
+import OpenModalButton from "../../OpenModalButton";
+import * as groupActions from "../../../store/groups";
+import * as eventActions from "../../../store/events";
 import "./GroupPage.css";
 
 const GroupPage = () => {
@@ -88,7 +88,7 @@ const GroupPage = () => {
 
   return (
     group && <>
-      <div className="group-details-page">
+      <div className="page-wrapper">
         <div className="return-nav">
           <button
             className="return-button"

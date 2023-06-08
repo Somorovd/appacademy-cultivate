@@ -2,11 +2,6 @@
   margin: 1rem 0px;
 }
 
-.group-details-page {
-  width: 1200px;
-  margin: auto;
-}
-
 .group-details-header {
   border: 1px solid red;
   border-bottom: 3px solid black;

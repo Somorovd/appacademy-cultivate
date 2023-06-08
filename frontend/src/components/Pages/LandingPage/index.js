@@ -12,7 +12,7 @@ const LandingPage = () => {
 
   return (
     <>
-      <div className="landing-wrapper">
+      <div className="page-wrapper">
         <article className="landing-intro">
           <div className="landing-intro__text">
             <h1 className="landing-intro__title">

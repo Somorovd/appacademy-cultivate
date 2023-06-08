@@ -2,16 +2,7 @@
   margin: 1rem 0px;
 }
 
-.event-details-page {
-  width: 1200px;
-  margin: auto;
-}
-
-.event-details-page * {
-  font-size: 1rem;
-}
-
-.event-details-page h2 {
+.event-details__name {
   font-size: 2rem;
   margin: 0px;
 }

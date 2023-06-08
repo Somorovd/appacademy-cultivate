@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import * as groupActions from "../../store/groups";
+import * as groupActions from "../../../store/groups";
 import "./CreateGroupForm.css";
 
 const CreateGroupForm = ({ group, isEditting }) => {
@@ -93,7 +93,7 @@ const CreateGroupForm = ({ group, isEditting }) => {
   }
 
   return (
-    <div>
+    <div className="page-wrapper">
       <form className="create-group-form" onSubmit={onSubmit}>
         <section>
           <p>Become and Organizer</p>

@@ -40,9 +40,12 @@ const LoginFormModal = () => {
 
   return (
     <div className="login-modal">
-      <h1>Log In</h1>
-      {validationErrors.credential && <p className="error">{validationErrors.credential}</p>}
-      <form onSubmit={handleSubmit}>
+      <form
+        className="modal-form"
+        onSubmit={handleSubmit}
+      >
+        <h1>Log In</h1>
+        {validationErrors.credential && <p className="error">{validationErrors.credential}</p>}
         <input
           type="text"
           placeholder="Username or Email"

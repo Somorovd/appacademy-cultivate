@@ -4,14 +4,14 @@ import { useDispatch } from "react-redux";
 import * as sessionActions from "./store/session";
 
 import Navigation from "./components/Navigation";
-import LandingPage from "./components/LandingPage";
-import BrowseGroupsPage from "./components/BrowseGroupsPage";
-import GroupPage from "./components/GroupPage";
-import BrowseEventsPage from "./components/BrowseEventsPage";
-import EventPage from "./components/EventPage";
-import CreateGroupForm from "./components/CreateGroupForm";
+import LandingPage from "./components/Pages/LandingPage";
+import BrowseGroupsPage from "./components/Pages/BrowseGroupsPage";
+import GroupPage from "./components/Pages/GroupPage";
+import BrowseEventsPage from "./components/Pages/BrowseEventsPage";
+import EventPage from "./components/Pages/EventPage";
+import CreateGroupForm from "./components/Pages/CreateGroupForm";
+import CreateEventForm from "./components/Pages/CreateEventForm";
 import EditGroupForm from "./components/EditGroupForm";
-import CreateEventForm from "./components/CreateEventForm";
 import EditEventForm from "./components/EditEventForm";
 
 function App() {

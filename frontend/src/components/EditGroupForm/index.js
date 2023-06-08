@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
-import CreateGroupForm from "../CreateGroupForm";
+import CreateGroupForm from "../Pages/CreateGroupForm";
 import { useDispatch, useSelector } from "react-redux";
 import * as groupActions from "../../store/groups";
 

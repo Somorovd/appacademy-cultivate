@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useHistory } from "react-router-dom";
-import * as groupActions from "../../store/groups";
-import * as eventActions from "../../store/events";
+import * as groupActions from "../../../store/groups";
+import * as eventActions from "../../../store/events";
 import "./CreateEventForm.css";
 
 const formatDate = (d) => {
@@ -127,7 +127,7 @@ const CreateEventForm = ({ event, isEditting }) => {
   if (!group) return null;
 
   return (
-    <div className="create-event-page">
+    <div className="page-wrapper">
       <div className="return-nav">
         <button
           className="return-button"
@@ -136,8 +136,8 @@ const CreateEventForm = ({ event, isEditting }) => {
           Return to {isEditting ? "Ritual" : "Cult"}
         </button>
       </div>
-      <form className="create-event-form" onSubmit={onSubmit}>
 
+      <form className="create-event-form" onSubmit={onSubmit}>
         <section>
           <h2 className="event-form__title">
             Initiate a ritual for {group.name}

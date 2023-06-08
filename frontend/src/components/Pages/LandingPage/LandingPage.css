@@ -2,10 +2,11 @@
   letter-spacing: -0.2rem;
 }
 
-.landing-wrapper {
+.page-wrapper {
   border: 1px solid blue;
   font-size: 1rem;
-  margin: 1rem 20%;
+  margin: auto;
+  max-width: 1024px;
 }
 
 .landing-wrapper>* {

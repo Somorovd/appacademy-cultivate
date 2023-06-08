@@ -2,10 +2,10 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import ConfirmDeleteModal from "../ConfirmDeleteModal";
-import OpenModalButton from "../OpenModalButton";
-import * as eventActions from "../../store/events";
-import * as groupActions from "../../store/groups";
+import ConfirmDeleteModal from "../../ConfirmDeleteModal";
+import OpenModalButton from "../../OpenModalButton";
+import * as eventActions from "../../../store/events";
+import * as groupActions from "../../../store/groups";
 import "./EventPage.css";
 
 const formatDate = (d) => {
@@ -75,7 +75,7 @@ const EventPage = () => {
 
   return (
     event && <>
-      <div className="event-details-page">
+      <div className="page-wrapper">
         <div className="return-nav">
           <button
             className="return-button"
