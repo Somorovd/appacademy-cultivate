@@ -94,7 +94,7 @@ const GroupPage = () => {
             className="return-button"
             onClick={returnToGroups}
           >
-            Return to All Groups
+            Return to Cults
           </button>
         </div>
         <section className="group-details-header">
@@ -116,7 +116,7 @@ const GroupPage = () => {
               </p>
             </div>
             <p>
-              Organized by&nbsp;
+              Organized by:&nbsp;
               <span className="organizer">
                 {group["Organizer"].firstName} {group["Organizer"].lastName}
               </span>

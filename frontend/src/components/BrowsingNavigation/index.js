@@ -7,12 +7,12 @@ const BrowsingNavigation = () => {
       <ul className="browsing-nav__list">
         <li>
           <NavLink to="/events">
-            Events
+            Rituals
           </NavLink>
         </li>
         <li>
           <NavLink to="/groups">
-            Groups
+            Cults
           </NavLink>
         </li>
       </ul>

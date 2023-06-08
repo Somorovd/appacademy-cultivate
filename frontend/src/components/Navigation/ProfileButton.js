@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import * as sessionActions from '../../store/session';
 
@@ -15,10 +15,10 @@ const ProfileButton = ({ user }) => {
     else closeMenu(e);
   }
 
-  const closeMenu = (e) => {
+  const closeMenu = (e, force = false) => {
     // close menu on click,
     // unless the menu is what was clicked
-    if (menuRef.current.contains(e.target)) return;
+    if (!force && menuRef.current.contains(e.target)) return;
     else setShowMenu(false);
   }
 
@@ -44,13 +44,28 @@ const ProfileButton = ({ user }) => {
         <i className="fas fa-user-circle" />
       </button>
       <ul className={ulClassName} ref={menuRef}>
-        <li>{user.username}</li>
-        <li>{user.firstName} {user.lastName}</li>
+        <li>Hello, {user.username}</li>
         <li>{user.email}</li>
+        <li
+          onClick={(e) => closeMenu(e, true)}
+          style={{ width: "fit-content" }}
+        >
+          <Link to="/groups">
+            View Cults
+          </Link>
+        </li>
+        <li
+          onClick={(e) => closeMenu(e, true)}
+          style={{ width: "fit-content" }}
+        >
+          <Link to="/events">
+            View Rituals
+          </Link>
+        </li>
         <li>
           <button onClick={logout}>Log Out</button>
         </li>
-      </ul>
+      </ul >
     </>
   );
 }

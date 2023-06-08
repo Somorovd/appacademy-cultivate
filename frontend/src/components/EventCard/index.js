@@ -6,7 +6,8 @@ const formatDate = (d) => {
   let raw = new Date(d);
   let date = raw.toLocaleDateString('it-IT');
   let [month, day, year] = date.split("/");
-  return `${year}-${day.padStart(2, '0')}-${month.padStart(2, '0')}`;
+  let time = raw.toLocaleTimeString('en-US').split(/(:| )/);
+  return `${year}-${day.padStart(2, '0')}-${month.padStart(2, '0')} \u2022 ${time[0]}:${time[2]} ${time[6]}`;
 }
 
 const EventCard = ({ event, group }) => {

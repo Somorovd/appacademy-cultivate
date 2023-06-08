@@ -17,8 +17,8 @@ const LoginFormModal = () => {
 
   useEffect(() => {
     setIsEnabled(
-      (credential && credential.length >= 4) &&
-      (password && password.length >= 6)
+      (credential.length >= 4) &&
+      (password.length >= 6)
     );
   }, [credential, password])
 
@@ -62,14 +62,14 @@ const LoginFormModal = () => {
         />
         <button
           type="submit"
-          disabled={!isEnabled}
           onClick={logIn}
+          disabled={!isEnabled}
         >
           Log In
         </button>
         <DemoUserLoginButton onClick={closeModal} />
       </form>
-    </div>
+    </div >
   );
 }
 

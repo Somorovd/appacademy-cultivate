@@ -17,7 +17,7 @@ const BrowseGroupsPage = () => {
     <>
       <div className="page-wrapper">
         <BrowsingNavigation />
-        <h2>Groups In {"<site here>"}</h2>
+        <h2>Cultivated Cults</h2>
         <div className="group-card-list">
           {allGroups && allGroups.map(group => (
             <GroupCard key={group.id} group={group} />

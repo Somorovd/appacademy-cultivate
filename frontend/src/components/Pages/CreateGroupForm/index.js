@@ -92,12 +92,28 @@ const CreateGroupForm = ({ group, isEditting }) => {
       });
   }
 
+  const header = isEditting
+    ? (
+      <>
+        <h2>
+          Update your Cult's Page
+        </h2>
+      </>
+    )
+    : (
+      <>
+        <h3>Become a leader</h3>
+        <h2>
+          Form a new Cult
+        </h2>
+      </>
+    )
+
   return (
     <div className="page-wrapper">
       <form className="create-group-form" onSubmit={onSubmit}>
         <section>
-          <p>Become and Organizer</p>
-          <p>Become and Organizer</p>
+          {header}
         </section>
         <section>
           <h3>First, set your cult's location.</h3>

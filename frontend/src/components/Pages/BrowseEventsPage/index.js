@@ -17,7 +17,7 @@ const BrowseEventsPage = () => {
     <>
       <div className="page-wrapper">
         <BrowsingNavigation />
-        <h2>Events In {"<site here>"}</h2>
+        <h2>Cultivated Rituals</h2>
         <div className="Event-card-list">
           {allEvents && allEvents.map(event => (
             <EventCard key={event.id} event={event} />

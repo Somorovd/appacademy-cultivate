@@ -117,6 +117,7 @@ module.exports = (sequelize, DataTypes) => {
 						{ model: Group, attributes: ["id", "name", "city", "state"] },
 						{ model: Venue, attributes: ["id", "city", "state"] }
 					],
+					order: [["startDate"]]
 				}
 			},
 			details() {
