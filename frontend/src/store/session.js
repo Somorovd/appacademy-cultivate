@@ -41,7 +41,6 @@ export const thunkCreateSession = (user) => async dispatch => {
     body: JSON.stringify(user)
   });
   const resBody = await response.json();
-  console.log("CREATE SESSION", resBody);
 
   if (response.ok) dispatch(actionCreateSession(resBody.user));
   return resBody;
