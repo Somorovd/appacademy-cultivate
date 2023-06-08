@@ -48,7 +48,7 @@ export const thunkGetAllEvents = () => async dispatch => {
   const events = {};
   resBody["Events"].forEach((event) => events[event.id] = event);
 
-  if (response.ok) dispatch(actionGetAllEvents(resBody["Events"]));
+  if (response.ok) dispatch(actionGetAllEvents(events));
   return resBody;
 }
 
@@ -142,6 +142,11 @@ const eventsReducer = (state = initialState, action) => {
         "EventImages": [action.eventImage]
       };
       return { ...state, singleEvent };
+    }
+    case DELETE_EVENT: {
+      const allEvents = { ...state.allEvents };
+      delete allEvents[action.eventId];
+      return { allEvents, singleEvent: {} }
     }
     default:
       return state;
