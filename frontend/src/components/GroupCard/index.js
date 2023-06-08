@@ -29,7 +29,7 @@ const GroupCard = ({ group }) => {
       </p>
       <footer className="group-card__footer">
         <p>
-          ## Events
+          {group.numMembers} Members
         </p>
         <p>&bull;</p>
         <p>

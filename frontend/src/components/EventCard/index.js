@@ -49,11 +49,7 @@ const EventCard = ({ event, group }) => {
         </p>
       </header>
       <p className="event-card__about">
-        {/* {event.description} */}
-        Nisi quis eleifend quam adipiscing vitae proin. Fames ac turpis egestas
-        integer eget aliquet. Diam in arcu cursus euismod quis viverra nibh.
-        Enim diam vulputate ut pharetra. Tristique risus nec feugiat in
-        fermentum posuere urna nec.
+        {event.description}
       </p>
     </article>
   )

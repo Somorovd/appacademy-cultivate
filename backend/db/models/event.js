@@ -112,7 +112,7 @@ module.exports = (sequelize, DataTypes) => {
 			general() {
 				const { Group, Venue } = require("../models");
 				return {
-					attributes: ["id", "name", "type", "groupId", "venueId", "startDate", "endDate"],
+					attributes: ["id", "name", "type", "groupId", "venueId", "startDate", "endDate", "description"],
 					include: [
 						{ model: Group, attributes: ["id", "name", "city", "state"] },
 						{ model: Venue, attributes: ["id", "city", "state"] }
