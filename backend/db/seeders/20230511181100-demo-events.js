@@ -18,8 +18,8 @@ module.exports = {
         type: "In Person",
         capacity: 50,
         price: 20,
-        startDate: "2025-10-01",
-        endDate: "2025-10-01"
+        startDate: "2025-10-01T00:00",
+        endDate: "2025-10-01T00:00"
       },
       {
         venueId: 1,
@@ -29,8 +29,8 @@ module.exports = {
         type: "In Person",
         capacity: 25,
         price: 0,
-        startDate: "2025-10-01",
-        endDate: "2025-10-01"
+        startDate: "2025-10-01T00:00",
+        endDate: "2025-10-01T00:00"
       },
       {
         venueId: 2,
@@ -40,8 +40,8 @@ module.exports = {
         type: "In Person",
         capacity: 30,
         price: 45,
-        startDate: "2025-08-15",
-        endDate: "2025-08-15"
+        startDate: "2025-08-15T00:00",
+        endDate: "2025-08-15T00:00"
       },
       {
         venueId: null,
@@ -51,8 +51,8 @@ module.exports = {
         type: "Online",
         capacity: 200,
         price: 0,
-        startDate: "2025-07-21",
-        endDate: "2025-07-27"
+        startDate: "2025-07-21T00:00",
+        endDate: "2025-07-27T00:00"
       },
     ], {});
   },

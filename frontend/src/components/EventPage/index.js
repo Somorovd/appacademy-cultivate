@@ -8,6 +8,15 @@ import * as eventActions from "../../store/events";
 import * as groupActions from "../../store/groups";
 import "./EventPage.css";
 
+const formatDate = (d) => {
+  if (!d) return null;
+  let raw = new Date(d);
+  let date = raw.toLocaleDateString('it-IT');
+  let [month, day, year] = date.split("/");
+  let time = raw.toLocaleTimeString('en-US').split(/(:| )/);
+  return `${year}-${day.padStart(2, '0')}-${month.padStart(2, '0')} ${time[0]}:${time[2]} ${time[6]}`;
+}
+
 const EventPage = () => {
   const { eventId } = useParams();
   const dispatch = useDispatch();
@@ -107,9 +116,9 @@ const EventPage = () => {
           <div className="event-details__event-info">
             <div className="event-details__date">
               <p>START</p>
-              <p>{event.startDate}</p>
+              <p>{formatDate(event.startDate)}</p>
               <p>END</p>
-              <p>{event.endDate}</p>
+              <p>{formatDate(event.endDate)}</p>
             </div>
             <div className="event-details__price">
               {event.price > 0 ? event.price : "FREE"}

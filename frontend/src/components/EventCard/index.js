@@ -1,6 +1,14 @@
 import { useHistory } from "react-router-dom";
 import "./EventCard.css";
 
+const formatDate = (d) => {
+  if (!d) return null;
+  let raw = new Date(d);
+  let date = raw.toLocaleDateString('it-IT');
+  let [month, day, year] = date.split("/");
+  return `${year}-${day.padStart(2, '0')}-${month.padStart(2, '0')}`;
+}
+
 const EventCard = ({ event, group }) => {
   const history = useHistory();
 
@@ -18,7 +26,7 @@ const EventCard = ({ event, group }) => {
       </div>
       <header className="event-card__header">
         <p className="event-card__date">
-          {event.startDate}
+          {formatDate(event.startDate)}
         </p>
         <h2 className="event-card__title">
           {event.name}

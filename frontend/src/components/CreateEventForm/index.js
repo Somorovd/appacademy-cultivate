@@ -5,6 +5,15 @@ import * as groupActions from "../../store/groups";
 import * as eventActions from "../../store/events";
 import "./CreateEventForm.css";
 
+const formatDate = (d) => {
+  if (!d) return null;
+  let raw = new Date(d);
+  let date = raw.toLocaleDateString('it-IT');
+  let [month, day, year] = date.split("/");
+  let time = raw.toLocaleTimeString('it-IT').slice(0, 5);
+  return `${year}-${day.padStart(2, '0')}-${month.padStart(2, '0')}T${time}`;
+}
+
 const CreateEventForm = ({ event, isEditting }) => {
   const { groupId } = useParams();
   const dispatch = useDispatch();
@@ -15,8 +24,12 @@ const CreateEventForm = ({ event, isEditting }) => {
   const [name, setName] = useState(event?.name || "");
   const [type, setType] = useState(event?.type || "");
   const [price, setPrice] = useState(event?.price.toString() || "");
-  const [startDate, setStartDate] = useState(event?.startDate || "");
-  const [endDate, setEndDate] = useState(event?.endDate || "");
+  const [startDate, setStartDate] = useState(
+    formatDate(event?.startDate) || ""
+  );
+  const [endDate, setEndDate] = useState(
+    formatDate(event?.endDate) || ""
+  );
   const [url, setUrl] = useState("");
   const [about, setAbout] = useState(event?.description || "");
   const [isPrivate, setIsPrivate] = useState(isEditting ? group.private : "");
@@ -190,7 +203,11 @@ const CreateEventForm = ({ event, isEditting }) => {
           <input
             type="datetime-local"
             value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
+            onChange={(e) => {
+              const date = e.target.value;
+              formatDate(date);
+              setEndDate(e.target.value)
+            }}
           />
           {validationErrors.endDate && <p className="error">{validationErrors.endDate}</p>}
         </section>
