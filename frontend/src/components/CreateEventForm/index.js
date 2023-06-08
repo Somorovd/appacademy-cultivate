@@ -23,6 +23,8 @@ const CreateEventForm = ({ event, isEditting }) => {
 
   const [validationErrors, setValidationErrors] = useState({});
 
+  console.log(startDate);
+
   useEffect(() => {
     if (
       (isEditting && group && Number(group.id) === Number(event["Group"].id)) ||
