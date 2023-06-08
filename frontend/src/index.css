@@ -5,8 +5,14 @@
   src: url("/public/Best_Christmas.otf");
 }
 
+@font-face {
+  font-family: "Montserrat";
+  src: url("/public/Montserrat.ttf");
+}
+
 * {
-  font-family: 'Times New Roman', Times, serif;
+  /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif */
+  font-family: "Montserrat"
 }
 
 html {
@@ -15,9 +21,9 @@ html {
 
 .page-wrapper {
   border: 1px solid blue;
-  font-size: 1rem;
   margin: auto;
   max-width: 1024px;
+  padding: 0px 0.5rem;
 }
 
 #modal-content {
