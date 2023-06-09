@@ -1,5 +1,6 @@
 import { useHistory } from "react-router-dom";
 import "./EventCard.css";
+import { useSelector } from "react-redux";
 
 const formatDate = (d) => {
   if (!d) return null;
@@ -12,6 +13,8 @@ const formatDate = (d) => {
 
 const EventCard = ({ event, group }) => {
   const history = useHistory();
+  const groups = useSelector((state) => state.groups.allGroups);
+  if (!group) group = groups[event.groupId];
 
   const onClick = () => {
     history.push(`/events/${event.id}`);

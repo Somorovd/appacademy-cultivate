@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import EventCard from "../../EventCard";
 import * as eventActions from "../../../store/events";
+import * as groupActions from "../../../store/groups";
 import BrowsingNavigation from "../../BrowsingNavigation";
 
 const BrowseEventsPage = () => {
@@ -11,6 +12,8 @@ const BrowseEventsPage = () => {
 
   useEffect(() => {
     dispatch(eventActions.thunkGetAllEvents());
+    // event cards need to have all the groups
+    dispatch(groupActions.thunkGetAllGroups());
   }, [dispatch])
 
   return (

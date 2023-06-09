@@ -92,7 +92,6 @@ const CreateEventForm = ({ event, isEditting }) => {
       private: isPrivate,
       previewImage: url,
       capacity: 100,
-      venueId: group["Venues"][0].id
     };
     const eventImage = {
       url, preview: true

@@ -37,7 +37,7 @@ const actionDeleteEvent = (eventId) => {
 const actionAddEventImage = (eventImage) => {
   return {
     type: ADD_EVENT_IMAGE,
-    groupImage: eventImage
+    eventImage
   }
 }
 
