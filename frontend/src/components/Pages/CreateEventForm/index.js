@@ -104,7 +104,7 @@ const CreateEventForm = ({ event, isEditting }) => {
     )
       .then(async event => {
         if (!isEditting)
-          dispatch(
+          await dispatch(
             eventActions.thunkAddEventImage(eventImage, event.id)
           );
         history.push(`/events/${event.id}`);
