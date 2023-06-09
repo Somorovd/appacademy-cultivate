@@ -11,6 +11,7 @@
   margin-bottom: 1rem;
   font-size: 1rem;
   cursor: pointer;
+  height: 145px;
 }
 
 .group-card:not(:last-of-type) {
@@ -60,6 +61,11 @@
 
 .group-card__about {
   grid-area: about;
+  height: 3.5rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 
 .group-card__footer {

@@ -28,14 +28,6 @@ ul {
   align-items: center;
 }
 
-/* .main-nav button {
-  padding: 0.6rem 1.5rem;
-  font-size: 1rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 3rem;
-} */
-
 .session-li {
   display: flex;
   position: relative;
@@ -49,6 +41,7 @@ ul {
 }
 
 .profile-dropdown {
+  color: var(--dark-purple);
   padding: 1rem;
   background-color: var(--light-purple);
   border: 2px solid black;
@@ -63,6 +56,18 @@ ul {
 .profile-dropdown button {
   display: inline-block;
   align-self: center;
+}
+
+.profile-dropdown a {
+  color: var(--dark-purple);
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.profile-dropdown a:hover {
+  color: var(--blue);
+  text-decoration: 1px solid underline;
+
 }
 
 .hidden {
