@@ -98,7 +98,11 @@ const GroupPage = () => {
           </button>
         </div>
         <section className="group-details-header">
-          <img src={previewImageUrl} className="group-details__image" />
+          <img
+            src={previewImageUrl}
+            className="group-details__image"
+            alt="group"
+          />
           <div className="group-details__general-info">
             <h2 className="group-details__name">
               {group.name}
