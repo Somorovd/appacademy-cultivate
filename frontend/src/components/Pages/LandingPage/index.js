@@ -20,9 +20,9 @@ const LandingPage = () => {
                 The cultist platform 	&mdash; Where prayers become nightmares
               </h1>
               <p className="landing-intro__p">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore magna
-                aliqua.
+                Embrace the darkness. Join a congregation of devoted believers
+                and explore a world of horrors, where every moment unravels
+                into an abyss of chilling experiences.
               </p>
             </div>
             <img src="" className="landing-intro__image" />
@@ -30,8 +30,9 @@ const LandingPage = () => {
           <article className="landing-about">
             <h2>How to Cultivate</h2>
             <p>
-              Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
-              consectetur, adipisci velit
+              Become a charasmatic leader or a clueless follower and
+              perform hallowed rituals for our ancient masters.
+              Accounts are free so join us now!
             </p>
           </article>
           <article className="landing-nav">
@@ -45,8 +46,8 @@ const LandingPage = () => {
                   See all cults
                 </h2>
                 <p className="landing-nav-card__about">
-                  Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
-                  consectetur, adipisci velit
+                  Answer the Call. Discover a community that shares your deepest
+                  fears. This is your life now.
                 </p>
               </li>
               <li className="landing-nav-card">
@@ -58,8 +59,8 @@ const LandingPage = () => {
                   Find a ritual
                 </h2>
                 <p className="landing-nav-card__about">
-                  Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
-                  consectetur, adipisci velit
+                  Perform rituals among leaders and followers alike.
+                  You may even become the central attraction!
                 </p>
               </li>
               <li className="landing-nav-card">
@@ -71,8 +72,8 @@ const LandingPage = () => {
                   Start a new cult
                 </h2>
                 <p className="landing-nav-card__about">
-                  Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
-                  consectetur, adipisci velit
+                  Have you heard the whiphers yourself? Its time to rise up!
+                  Let everyone know theres a new player in town.
                 </p>
               </li>
             </ul>
