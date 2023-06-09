@@ -44,9 +44,7 @@ const ConfirmDeleteModal = ({ what, type, path }) => {
         className="cancel-delete-button"
         onClick={closeModal}
       >
-        <span>
-          Cancel
-        </span>
+        Cancel
       </button>
     </div>
   )

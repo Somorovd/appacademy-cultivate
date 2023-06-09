@@ -51,15 +51,14 @@ const EventPage = () => {
   if (user && user.id === group.organizerId) {
     actionButtons = [
       <button
-        className="edit-event skew short"
+        className="edit-event round purple"
         onClick={onClickEdit}
       >
-        <span>
-          Update Ritual
-        </span>
+        Update Ritual
       </button>,
       <OpenModalButton
         buttonText="Delete Ritual"
+        isDelete={true}
         modalComponent={
           <ConfirmDeleteModal
             type="event"

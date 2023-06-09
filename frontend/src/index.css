@@ -36,7 +36,8 @@ html {
 }
 
 #modal-content {
-  border-radius: 0.5rem;
+  border-radius: 1rem;
+  border: 2px solid black;
   overflow: hidden;
 }
 
@@ -44,7 +45,6 @@ html {
   background-color: var(--light-purple);
   width: 300px;
   padding: 1rem 3rem;
-  border: 1px black solid;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -61,24 +61,17 @@ button:hover {
   padding: 0.6rem 1.5rem;
   font-size: 1rem;
   font-weight: bold;
-  border: none;
-  background-color: var(--light-purple);
-  color: var(--blue);
 }
 
 button[disabled] {
-  color: var(--gray);
+  color: var(--gray) !important;
+  border-color: var(--gray) !important;
   pointer-events: none;
 }
 
 button>span {
   display: inline-block;
   width: 100%;
-}
-
-button>span:hover {
-  border: none;
-  text-decoration: 2px solid underline;
 }
 
 .error {
@@ -88,52 +81,63 @@ button>span:hover {
   margin: 0px;
 }
 
-button.skew {
+.skew {
   transform: skew(-20deg);
   border: 1px solid black;
 }
 
-button.skew>span {
+.skew>* {
   display: inline-block;
   transform: skew(20deg);
-  color: var(--dark-purple);
 }
 
-button.skew-left {
+.skew-left {
   transform: skew(20deg);
 }
 
-button.skew-left>span {
+.skew-left>* {
+  display: inline-block;
   transform: skew(-20deg);
-}
-
-button.skew:hover {
-  border: 1px solid black;
-  background-color: var(--purple);
-  color: var(--dark-purple);
-}
-
-button.skew>span:hover {
-  text-decoration: none;
 }
 
 button.delete {
-  border-color: var(--red);
-  border-width: 2px;
-}
-
-button.delete>span {
+  border: 1px solid var(--red);
   color: var(--red);
 }
 
 button.delete:hover {
-  border-color: var(--red);
-  border-width: 2px;
+  border: 1px solid var(--red);
   background-color: var(--red);
+  color: var(--white);
 }
 
-button.delete:hover>span {
+button.round {
+  border-radius: 3rem;
+}
+
+button.round:hover {
+  border-radius: 3rem;
+}
+
+button.blue {
+  color: var(--blue);
+  border: 1px solid var(--blue);
+}
+
+button.blue:hover {
+  border: 1px solid var(--blue);
+  background-color: var(--blue);
   color: var(--white);
+}
+
+.purple {
+  border: 1px solid var(--dark-purple);
+  color: var(--dark-purple);
+}
+
+.purple:hover {
+  border: 1px solid var(--dark-purple);
+  background-color: var(--purple);
 }
 
 input {

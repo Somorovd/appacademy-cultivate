@@ -12,7 +12,7 @@
   font-size: inherit;
 }
 
-.create-group-form * {
+.create-event-form * {
   font-size: 1.1rem;
 }
 
@@ -59,4 +59,8 @@
 
 .price-input::before {
   content: "$";
+}
+
+.create-event-form button {
+  margin-top: 1rem;
 }

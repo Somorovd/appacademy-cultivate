@@ -120,7 +120,7 @@ const CreateGroupForm = ({ group, isEditting }) => {
     <div className="page-wrapper">
       <div className="return-nav">
         <button
-          className="return-button skew skew-left"
+          className="skew-left purple"
           onClick={isEditting ? returnToGroup : returnToGroups}
         >
           <span>
@@ -227,10 +227,8 @@ const CreateGroupForm = ({ group, isEditting }) => {
           {validationErrors.url && <p className="error">{validationErrors.url}</p>}
         </section>
         <section>
-          <button type="submit">
-            <span>
-              {(isEditting ? "Update" : "Create") + " Cult"}
-            </span>
+          <button type="submit" className="round blue">
+            {(isEditting ? "Update" : "Create") + " Cult"}
           </button>
         </section>
       </form>

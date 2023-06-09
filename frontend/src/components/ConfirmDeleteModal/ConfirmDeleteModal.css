@@ -32,3 +32,13 @@
   font-style: italic;
   text-decoration: underline;
 }
+
+.cancel-delete-button {
+  border: none;
+  background-color: var(--light-purple);
+  color: var(--blue);
+}
+
+.cancel-delete-button:hover {
+  text-decoration: 2px solid underline;
+}

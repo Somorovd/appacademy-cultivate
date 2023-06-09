@@ -1,4 +1,4 @@
-import { useParams, Link, useHistory } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import EventCard from "../../EventCard";
@@ -51,24 +51,20 @@ const GroupPage = () => {
     if (Number(user.id) === Number(group["Organizer"].id)) {
       availableButtons = [
         <button key={1}
-          className="create-event skew short"
+          className="create-event round purple"
           onClick={onClickCreate}
         >
-          <span>
-            Create Ritual
-          </span>
+          Create Ritual
         </button>,
         <button key={2}
-          className="edit-group skew short"
+          className="edit-group round purple"
           onClick={onClickEdit}
         >
-          <span>
-            Edit Cult
-          </span>
+          Edit Cult
         </button>,
         <OpenModalButton
-          isDelete={true}
           buttonText="Delete Cult"
+          buttonClasses="round delete"
           modalComponent={
             <ConfirmDeleteModal
               type="group"
@@ -82,12 +78,10 @@ const GroupPage = () => {
     else {
       availableButtons = [
         <button key={1}
-          className="group-details__join skew short"
+          className="group-details__join round blue"
           onClick={onClickJoin}
         >
-          <span>
-            Join this cult
-          </span>
+          Join this cult
         </button>
       ];
     }
@@ -98,11 +92,11 @@ const GroupPage = () => {
       <div className="page-wrapper">
         <div className="return-nav">
           <button
-            className="return-button skew skew-left"
+            className="skew-left purple"
             onClick={returnToGroups}
           >
             <span>
-              Return to Cults
+              Return to All Cults
             </span>
           </button>
         </div>

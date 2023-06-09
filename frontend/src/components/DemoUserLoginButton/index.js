@@ -16,7 +16,7 @@ const DemoUserLoginButton = ({ onClick }) => {
     <button
       type="submit"
       onClick={loginDemoUser}
-      className="skew"
+      className="skew purple"
     >
       <span>
         Log In as Demo User

@@ -129,7 +129,7 @@ const CreateEventForm = ({ event, isEditting }) => {
     <div className="page-wrapper">
       <div className="return-nav">
         <button
-          className="return-button skew skew-left"
+          className="skew-left purple"
           onClick={isEditting ? returnToEvent : returnToGroup}
         >
           <span>
@@ -241,14 +241,12 @@ const CreateEventForm = ({ event, isEditting }) => {
           />
           {validationErrors.about && <p className="error">{validationErrors.about}</p>}
 
-          <button type="submit">
-            <span>
-              {
-                isEditting
-                  ? "Update Ritual"
-                  : "Create Ritual"
-              }
-            </span>
+          <button type="submit" className="round blue">
+            {
+              isEditting
+                ? "Update Ritual"
+                : "Create Ritual"
+            }
           </button>
         </section>
       </form>

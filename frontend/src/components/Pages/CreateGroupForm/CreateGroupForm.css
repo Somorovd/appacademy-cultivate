@@ -6,6 +6,10 @@
   font-size: 1.1rem;
 }
 
+.create-group-form option {
+  font-family: "Montserrat";
+}
+
 .location-inputs {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -48,5 +52,5 @@
 
 .create-group-form button {
   text-align: center;
-  margin: auto;
+  margin-top: 1rem;
 }

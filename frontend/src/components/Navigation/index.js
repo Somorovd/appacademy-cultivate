@@ -21,7 +21,7 @@ function Navigation({ isLoaded }) {
   if (sessionUser) {
     sessionLinks = (
       <li className={sessionClassName}>
-        <button onClick={clickNewGroup} className="skew">
+        <button onClick={clickNewGroup} className="skew purple">
           <span>
             Start a Cult
           </span>
@@ -36,10 +36,12 @@ function Navigation({ isLoaded }) {
         <OpenModalButton
           buttonText="Log In"
           modalComponent={<LoginFormModal />}
+          buttonClasses="skew purple"
         />
         <OpenModalButton
           buttonText="Sign Up"
           modalComponent={<SignupFormModal />}
+          buttonClasses="skew purple"
         />
       </li>
     );

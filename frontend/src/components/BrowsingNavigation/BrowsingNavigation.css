@@ -12,11 +12,10 @@
 }
 
 .browsing-nav .active {
-  border: 1px solid black;
-  border-radius: 2rem;
-  background-color: lightblue;
+  background-color: var(--purple);
 }
 
 .browsing-nav__list {
   display: flex;
+  gap: 0.5rem;
 }

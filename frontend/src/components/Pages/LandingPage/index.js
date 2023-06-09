@@ -1,5 +1,7 @@
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
+import OpenModalButton from "../../OpenModalButton";
+import SignupFormModal from "../../SignupFormModal";
 import "./LandingPage.css";
 
 const LandingPage = () => {
@@ -80,11 +82,11 @@ const LandingPage = () => {
           </article>
           {!session.user &&
             <div className="landing-join">
-              <button className="skew">
-                <span>
-                  Join Us
-                </span>
-              </button>
+              <OpenModalButton
+                buttonText="Join Us"
+                modalComponent={<SignupFormModal />}
+                buttonClasses="round blue"
+              />
             </div>
           }
         </div >

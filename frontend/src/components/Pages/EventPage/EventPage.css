@@ -41,7 +41,7 @@
 }
 
 .event-details__group-info {
-  background-color: darkgray;
+  background-color: var(--purple);
   grid-area: group-info;
   display: grid;
   gap: 1rem;

@@ -3,7 +3,6 @@
 }
 
 .group-details-header {
-  border: 1px solid red;
   border-bottom: 3px solid black;
   display: grid;
   grid-template-areas:
@@ -59,20 +58,6 @@
   padding-left: 0.5rem;
 }
 
-.group-details__actions button.short {
-  padding: 0.6rem 0.6rem;
-}
-
-.delete-group {
-  justify-self: end;
-}
-
-.delete-group:hover {
-  border-color: maroon;
-  background-color: maroon;
-  color: white;
-}
-
-.group-details-body {
-  border: 1px solid red;
+.group-details__actions button {
+  padding: 0.6rem;
 }

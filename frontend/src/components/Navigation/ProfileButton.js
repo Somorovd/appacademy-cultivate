@@ -38,7 +38,7 @@ const ProfileButton = ({ user }) => {
   return (
     <>
       <button
-        className="profile-button skew"
+        className="profile-button skew purple"
         onClick={openMenu}
       >
         <span>
@@ -64,10 +64,8 @@ const ProfileButton = ({ user }) => {
             View Rituals
           </Link>
         </li>
-        <button onClick={logout} >
-          <span>
-            Log Out
-          </span>
+        <button onClick={logout} className="round blue">
+          Log Out
         </button>
       </ul >
     </>
