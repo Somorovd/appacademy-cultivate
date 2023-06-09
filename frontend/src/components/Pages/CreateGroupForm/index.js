@@ -92,6 +92,13 @@ const CreateGroupForm = ({ group, isEditting }) => {
       });
   }
 
+  const returnToGroup = () => {
+    history.push(`/groups/${group.id}`)
+  }
+  const returnToGroups = () => {
+    history.push("/groups")
+  }
+
   const header = isEditting
     ? (
       <>
@@ -111,6 +118,16 @@ const CreateGroupForm = ({ group, isEditting }) => {
 
   return (
     <div className="page-wrapper">
+      <div className="return-nav">
+        <button
+          className="return-button skew skew-left"
+          onClick={isEditting ? returnToGroup : returnToGroups}
+        >
+          <span>
+            Return to {isEditting ? "Cult" : "All Cults"}
+          </span>
+        </button>
+      </div>
       <form className="create-group-form" onSubmit={onSubmit}>
         <section>
           {header}
@@ -211,7 +228,9 @@ const CreateGroupForm = ({ group, isEditting }) => {
         </section>
         <section>
           <button type="submit">
-            {(isEditting ? "Update" : "Create") + " Cult"}
+            <span>
+              {(isEditting ? "Update" : "Create") + " Cult"}
+            </span>
           </button>
         </section>
       </form>

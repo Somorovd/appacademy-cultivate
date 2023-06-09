@@ -51,18 +51,23 @@ const GroupPage = () => {
     if (Number(user.id) === Number(group["Organizer"].id)) {
       availableButtons = [
         <button key={1}
-          className="create-event"
+          className="create-event skew short"
           onClick={onClickCreate}
         >
-          Create Ritual
+          <span>
+            Create Ritual
+          </span>
         </button>,
         <button key={2}
-          className="edit-group"
+          className="edit-group skew short"
           onClick={onClickEdit}
         >
-          Edit Cult
+          <span>
+            Edit Cult
+          </span>
         </button>,
         <OpenModalButton
+          isDelete={true}
           buttonText="Delete Cult"
           modalComponent={
             <ConfirmDeleteModal
@@ -77,10 +82,12 @@ const GroupPage = () => {
     else {
       availableButtons = [
         <button key={1}
-          className="group-details__join"
+          className="group-details__join skew short"
           onClick={onClickJoin}
         >
-          Join this cult
+          <span>
+            Join this cult
+          </span>
         </button>
       ];
     }
@@ -91,10 +98,12 @@ const GroupPage = () => {
       <div className="page-wrapper">
         <div className="return-nav">
           <button
-            className="return-button"
+            className="return-button skew skew-left"
             onClick={returnToGroups}
           >
-            Return to Cults
+            <span>
+              Return to Cults
+            </span>
           </button>
         </div>
         <section className="group-details-header">

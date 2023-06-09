@@ -82,6 +82,20 @@
   gap: 0.5rem 1rem;
 }
 
+.event-details__actions {
+  grid-area: actions;
+  display: flex;
+  justify-content: start;
+  align-items: end;
+  gap: 0.8rem;
+  padding-left: 0.5rem;
+}
+
+.event-details__actions button.short {
+  padding: 0.6rem 0.6rem;
+}
+
+
 .delete-event:hover {
   border-color: maroon;
   background-color: maroon;

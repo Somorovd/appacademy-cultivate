@@ -38,10 +38,12 @@ const ProfileButton = ({ user }) => {
   return (
     <>
       <button
-        className="profile-button"
+        className="profile-button skew"
         onClick={openMenu}
       >
-        <i className="fas fa-user-circle" />
+        <span>
+          <i className="fas fa-user-circle" />
+        </span>
       </button>
       <ul className={ulClassName} ref={menuRef}>
         <li>Hello, {user.username}</li>
@@ -62,9 +64,11 @@ const ProfileButton = ({ user }) => {
             View Rituals
           </Link>
         </li>
-        <li>
-          <button onClick={logout}>Log Out</button>
-        </li>
+        <button onClick={logout} >
+          <span>
+            Log Out
+          </span>
+        </button>
       </ul >
     </>
   );

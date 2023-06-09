@@ -65,7 +65,9 @@ const LoginFormModal = () => {
           onClick={logIn}
           disabled={!isEnabled}
         >
-          Log In
+          <span>
+            Log In
+          </span>
         </button>
         <DemoUserLoginButton onClick={closeModal} />
       </form>

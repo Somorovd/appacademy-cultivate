@@ -129,10 +129,12 @@ const CreateEventForm = ({ event, isEditting }) => {
     <div className="page-wrapper">
       <div className="return-nav">
         <button
-          className="return-button"
+          className="return-button skew skew-left"
           onClick={isEditting ? returnToEvent : returnToGroup}
         >
-          Return to {isEditting ? "Ritual" : "Cult"}
+          <span>
+            Return to {isEditting ? "Ritual" : "Cult"}
+          </span>
         </button>
       </div>
 
@@ -229,7 +231,7 @@ const CreateEventForm = ({ event, isEditting }) => {
             </>
           }
 
-          <p>Please discribe this event</p>
+          <p>Please describe this event</p>
           <textarea
             value={about}
             placeholder="About ritual..."
@@ -240,11 +242,13 @@ const CreateEventForm = ({ event, isEditting }) => {
           {validationErrors.about && <p className="error">{validationErrors.about}</p>}
 
           <button type="submit">
-            {
-              isEditting
-                ? "Update Ritual"
-                : "Create Ritual"
-            }
+            <span>
+              {
+                isEditting
+                  ? "Update Ritual"
+                  : "Create Ritual"
+              }
+            </span>
           </button>
         </section>
       </form>

@@ -21,8 +21,10 @@ function Navigation({ isLoaded }) {
   if (sessionUser) {
     sessionLinks = (
       <li className={sessionClassName}>
-        <button onClick={clickNewGroup}        >
-          Start a Cult
+        <button onClick={clickNewGroup} className="skew">
+          <span>
+            Start a Cult
+          </span>
         </button>
         <ProfileButton user={sessionUser} />
       </li>

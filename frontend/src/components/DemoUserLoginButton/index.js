@@ -13,8 +13,14 @@ const DemoUserLoginButton = ({ onClick }) => {
   }
 
   return (
-    <button type="submit" onClick={loginDemoUser}>
-      Log In as Demo User
+    <button
+      type="submit"
+      onClick={loginDemoUser}
+      className="skew"
+    >
+      <span>
+        Log In as Demo User
+      </span>
     </button>
   )
 }

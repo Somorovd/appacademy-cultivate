@@ -140,7 +140,11 @@ function SignupFormModal() {
         <button
           type="submit"
           disabled={!isEnabled}
-        >Sign Up</button>
+        >
+          <span>
+            Sign Up
+          </span>
+        </button>
       </form>
     </div>
 

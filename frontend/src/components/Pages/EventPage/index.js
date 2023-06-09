@@ -51,10 +51,12 @@ const EventPage = () => {
   if (user && user.id === group.organizerId) {
     actionButtons = [
       <button
-        className="edit-event"
+        className="edit-event skew short"
         onClick={onClickEdit}
       >
-        Update Ritual
+        <span>
+          Update Ritual
+        </span>
       </button>,
       <OpenModalButton
         buttonText="Delete Ritual"
@@ -78,10 +80,12 @@ const EventPage = () => {
       <div className="page-wrapper">
         <div className="return-nav">
           <button
-            className="return-button"
+            className="return-button skew skew-left"
             onClick={returnToEvents}
           >
-            Return to All Rituals
+            <span>
+              Return to All Rituals
+            </span>
           </button>
         </div>
         <h2 className="event-details__name">
@@ -126,7 +130,9 @@ const EventPage = () => {
             <div className="event-details__type">
               {event.type}
             </div>
-            {actionButtons}
+            <div className="event-details__actions">
+              {actionButtons}
+            </div>
           </div>
         </section>
         <section className="event-details__about">

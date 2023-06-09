@@ -1,0 +1,12 @@
+.login-modal button.skew {
+  border: none;
+  background-color: var(--light-purple);
+}
+
+.login-modal button.skew>span {
+  color: var(--blue);
+}
+
+.login-modal button.skew>span:hover {
+  text-decoration: 2px solid underline;
+}

@@ -1,26 +1,22 @@
 .create-event-form {
-  background-color: aliceblue;
   width: 100%;
-}
-
-.create-event-form * {
-  font-size: 1.1rem;
+  padding-bottom: 2rem;
 }
 
 .create-event-form h2 {
-  font-size: 2rem;
+  font-size: 1.5rem;
   margin: 0px;
 }
 
 .create-event-form .error {
-  color: maroon;
-  font-weight: bold;
-  margin-bottom: 1rem;
   font-size: inherit;
 }
 
+.create-group-form * {
+  font-size: 1.1rem;
+}
+
 .create-event-form p {
-  font-size: 1.5rem;
   margin: 0px;
 }
 
@@ -54,11 +50,6 @@
 
 .create-event-form textarea {
   width: 500px;
-}
-
-.create-event-form button {
-  text-align: center;
-  margin: auto;
 }
 
 .price-input {
