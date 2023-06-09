@@ -12,7 +12,11 @@
 
 * {
   /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif */
-  font-family: "Montserrat"
+  font-family: "Montserrat";
+  --blood-red: #6F1511;
+  --cool-gray: #8D99AE;
+  --anti-flash-white: #EDF2F4;
+  --gunmetal: #143642;
 }
 
 html {
@@ -65,8 +69,16 @@ button:hover {
   background-color: #AAA;
 }
 
+button[disabled] {
+  pointer-events: none;
+}
+
 input {
   width: 100%;
   border: 2px solid black;
   font-size: 1.5rem;
+}
+
+p {
+  overflow-wrap: break-word;
 }
