@@ -4,9 +4,11 @@ import CreateEventForm from "../Pages/CreateEventForm";
 import { useDispatch, useSelector } from "react-redux";
 import * as groupActions from "../../store/groups";
 import * as eventActions from "../../store/events";
+import { useHistory } from "react-router-dom";
 
 const EditEventForm = () => {
   const { eventId } = useParams();
+  const history = useHistory();
   const dispatch = useDispatch();
   const event = useSelector((state) => state.events.singleEvent);
   const group = useSelector((state) => state.groups.singleGroup);
@@ -28,6 +30,9 @@ const EditEventForm = () => {
   }, [dispatch])
 
   const isAuthorized = user.id === group.organizerId;
+
+  if (!isAuthorized)
+    history.push("/");
 
   return (
     <>
