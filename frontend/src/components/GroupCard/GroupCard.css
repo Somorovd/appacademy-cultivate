@@ -21,6 +21,7 @@
 .group-card * {
   text-align: left;
   margin: 0px;
+  color: var(--dark-purple);
 }
 
 .group-card img,
@@ -34,10 +35,27 @@
   grid-area: header;
 }
 
-.group-card__title {}
+.group-card:hover .group-card__title {
+  text-decoration: 2px solid underline;
+}
 
 .group-card__location {
   text-transform: uppercase;
+  color: var(--purple);
+}
+
+
+.group-card__members,
+.group-card__privacy,
+.group-card__location {
+  font-weight: bold;
+  color: var(--purple);
+}
+
+.group-card:hover .group-card__members,
+.group-card:hover .group-card__privacy,
+.group-card:hover .group-card__location {
+  color: var(--blue);
 }
 
 .group-card__about {

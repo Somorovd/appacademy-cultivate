@@ -6,14 +6,14 @@ const BrowsingNavigation = () => {
     <nav className="browsing-nav">
       <ul className="browsing-nav__list">
         <li>
-          <NavLink to="/events" className="skew-left purple">
+          <NavLink to="/events" className="skew-left blue">
             <span>
               Rituals
             </span>
           </NavLink>
         </li>
         <li>
-          <NavLink to="/groups" className="skew-left purple">
+          <NavLink to="/groups" className="skew-left blue">
             <span>
               Cults
             </span>

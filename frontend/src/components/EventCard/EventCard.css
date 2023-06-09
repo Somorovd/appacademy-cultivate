@@ -20,6 +20,7 @@
 .event-card * {
   text-align: left;
   margin: 0px;
+  color: var(--dark-purple);
 }
 
 .event-card__image {
@@ -37,10 +38,25 @@
   grid-area: header;
 }
 
-.event-card__title {}
+.event-card:hover .event-card__title {
+  text-decoration: 2px solid underline;
+}
 
 .event-card__location {
   text-transform: uppercase;
+}
+
+.event-card__location {
+  color: var(--purple);
+  font-weight: bold;
+}
+
+.event-card:hover .event-card__location {
+  color: var(--blue);
+}
+
+.event-card:hover .event-card__date {
+  font-weight: bold;
 }
 
 .event-card__about {

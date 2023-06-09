@@ -11,8 +11,10 @@
   font-weight: bold;
 }
 
-.browsing-nav .active {
-  background-color: var(--purple);
+.browsing-nav .active,
+.browsing-nav .active>* {
+  background-color: var(--blue);
+  color: var(--white);
 }
 
 .browsing-nav__list {

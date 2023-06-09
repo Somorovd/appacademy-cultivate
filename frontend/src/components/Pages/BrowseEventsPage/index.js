@@ -20,7 +20,7 @@ const BrowseEventsPage = () => {
     <>
       <div className="page-wrapper">
         <BrowsingNavigation />
-        <h2>Cultivated Rituals</h2>
+        <h2 className="browsing-header">Cultivated Rituals</h2>
         <div className="Event-card-list">
           {allEvents && allEvents.map(event => (
             <EventCard key={event.id} event={event} />

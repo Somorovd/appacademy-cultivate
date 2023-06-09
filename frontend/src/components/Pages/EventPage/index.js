@@ -79,7 +79,7 @@ const EventPage = () => {
       <div className="page-wrapper">
         <div className="return-nav">
           <button
-            className="return-button skew skew-left"
+            className="skew-left purple"
             onClick={returnToEvents}
           >
             <span>

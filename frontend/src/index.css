@@ -18,7 +18,7 @@
   --yellow: #ffbc42;
   --dull-yellow: #bfab25;
   --purple: #bfacc8;
-  --dark-purple: #605664;
+  --dark-purple: #48414b;
   --light-purple: #e2e1e9;
   --gray: #8D99AE;
   --white: #EDF2F4;
@@ -119,18 +119,23 @@ button.round:hover {
   border-radius: 3rem;
 }
 
-button.blue {
+.blue {
   color: var(--blue);
   border: 1px solid var(--blue);
 }
 
-button.blue:hover {
+.blue:hover {
   border: 1px solid var(--blue);
   background-color: var(--blue);
   color: var(--white);
 }
 
+.blue:hover>* {
+  color: var(--white);
+}
+
 .purple {
+  background-color: var(--light-purple);
   border: 1px solid var(--dark-purple);
   color: var(--dark-purple);
 }
@@ -148,4 +153,11 @@ input {
 
 p {
   overflow-wrap: break-word;
+}
+
+.browsing-header {
+  padding: 1rem;
+  border: 1px solid black;
+  background-color: var(--purple);
+  color: var(--dark-purple);
 }

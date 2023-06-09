@@ -29,10 +29,13 @@ const GroupCard = ({ group }) => {
       </p>
       <footer className="group-card__footer">
         <p>
-          {group.numMembers} Members
+          <span className="group-card__members">
+            {group.numMembers}
+          </span>
+          &nbsp;Members
         </p>
         <p>&bull;</p>
-        <p>
+        <p className="group-card__privacy">
           {group.private ? "Private" : "Public"}
         </p>
       </footer>
