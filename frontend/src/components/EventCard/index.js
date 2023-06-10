@@ -11,7 +11,7 @@ const formatDate = (d) => {
   return `${year}-${day.padStart(2, '0')}-${month.padStart(2, '0')} \u2022 ${time[0]}:${time[2]} ${time[6]}`;
 }
 
-const EventCard = ({ event, group }) => {
+const EventCard = ({ event, group, hasPassed }) => {
   const history = useHistory();
   const groups = useSelector((state) => state.groups.allGroups);
   if (!group) group = groups[event.groupId];
@@ -22,7 +22,7 @@ const EventCard = ({ event, group }) => {
 
   return (
     <article
-      className="event-card"
+      className={"event-card " + (hasPassed ? "passed-event" : "")}
       onClick={onClick}
     >
       <div className="event-card__image">

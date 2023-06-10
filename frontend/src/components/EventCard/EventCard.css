@@ -38,10 +38,6 @@
   grid-area: header;
 }
 
-.event-card:hover .event-card__title {
-  text-decoration: 2px solid underline;
-}
-
 .event-card__location {
   text-transform: uppercase;
 }
@@ -72,4 +68,12 @@
   grid-area: footer;
   display: flex;
   gap: 0.5rem;
+}
+
+.passed-event * {
+  color: var(--gray);
+}
+
+.passed-event:hover * {
+  color: var(--dark-purple);
 }

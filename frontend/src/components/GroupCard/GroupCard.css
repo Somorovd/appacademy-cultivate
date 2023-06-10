@@ -36,10 +36,6 @@
   grid-area: header;
 }
 
-.group-card:hover .group-card__title {
-  text-decoration: 2px solid underline;
-}
-
 .group-card__location {
   text-transform: uppercase;
   color: var(--purple);
