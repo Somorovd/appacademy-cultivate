@@ -9,13 +9,24 @@ import * as eventActions from "../../../store/events";
 import "./GroupPage.css";
 
 const GroupPage = () => {
+  const CURRENT_DATE = new Date().getTime();
   const { groupId } = useParams();
   const dispatch = useDispatch();
   const history = useHistory();
   const user = useSelector((state) => state.session.user);
   const group = useSelector((state) => state.groups.singleGroup);
   const eventsState = useSelector((state) => state.events.allEvents);
-  const events = Object.values(eventsState);
+  const events = Object.values(eventsState)
+    .sort((eventA, eventB) => {
+      let dateA = new Date(eventA.startDate).getTime();
+      let dateB = new Date(eventB.startDate).getTime();
+      if (dateA > CURRENT_DATE && dateB > CURRENT_DATE)
+        return dateA - dateB;
+      else if (dateA < CURRENT_DATE && dateB < CURRENT_DATE)
+        return dateB - dateA;
+      else if (dateA < CURRENT_DATE) return 1;
+      else return -1;
+    });
 
   useEffect(() => {
     dispatch(groupActions.thunkGetOneGroup(groupId));
@@ -106,28 +117,43 @@ const GroupPage = () => {
             className="group-details__image"
             alt="group"
           />
+          <h2 className="group-details__name">
+            {group.name}
+          </h2>
           <div className="group-details__general-info">
-            <h2 className="group-details__name">
-              {group.name}
-            </h2>
-            <p className="group-details__location">
-              {group.city}, {group.state}
-            </p>
-            <div className="group-details__membership">
-              <p>
-                {group.numMembers} Members
-              </p>
-              <p>&bull;</p>
-              <p>
-                {group.private ? "Private" : "Public"}
+            <div className="detail-row group-details__location">
+              <span>
+                <i class="fa-solid fa-map"></i>
+              </span>
+              <p >
+                {group.city}, {group.state}
               </p>
             </div>
-            <p>
-              Organized by:&nbsp;
-              <span className="organizer">
-                {group["Organizer"].firstName} {group["Organizer"].lastName}
+            <div className="detail-row">
+              <span>
+                <i class="fa-solid fa-street-view"></i>
               </span>
-            </p>
+              <div className="group-details__membership">
+                <p>
+                  {group.numMembers} Members
+                </p>
+                <p>&bull;</p>
+                <p>
+                  {group.private ? "Private" : "Public"}
+                </p>
+              </div>
+            </div>
+            <div className="detail-row">
+              <span>
+                <i class="fa-solid fa-crown"></i>
+              </span>
+              <p>
+                Organized by&nbsp;
+                <span className="organizer">
+                  {group["Organizer"].firstName} {group["Organizer"].lastName}
+                </span>
+              </p>
+            </div>
           </div>
           <div className="group-details__actions">
             {availableButtons}
@@ -159,7 +185,12 @@ const GroupPage = () => {
             <div className="details-body__events-list">
               {
                 events && events.map((event) => (
-                  <EventCard key={event.id} event={event} group={group} />
+                  <EventCard
+                    key={event.id}
+                    event={event}
+                    group={group}
+                    hasPassed={new Date(event.startDate).getTime() < CURRENT_DATE}
+                  />
                 ))
               }
             </div>

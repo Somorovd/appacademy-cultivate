@@ -91,7 +91,7 @@ const EventPage = () => {
           {event.name}
         </h2>
         <p className="event-details__host">
-          Hosted by:&nbsp;
+          Hosted by&nbsp;
           <span className="organizer">
             {group["Organizer"].firstName}&nbsp;
             {group["Organizer"].lastName}
@@ -117,23 +117,38 @@ const EventPage = () => {
             </div>
           </div>
           <div className="event-details__event-info">
-            <div className="event-details__date">
-              <p>START</p>
-              <p>{formatDate(event.startDate)}</p>
-              <p>END</p>
-              <p>{formatDate(event.endDate)}</p>
+            <div className="detail-row">
+              <span>
+                <i class="fa-regular fa-calendar"></i>
+              </span>
+              <div className="event-details__date">
+                <p>START</p>
+                <p>{formatDate(event.startDate)}</p>
+                <p>END</p>
+                <p>{formatDate(event.endDate)}</p>
+              </div>
             </div>
-            <div className="event-details__price">
-              {event.price > 0 ? event.price : "FREE"}
+            <div className="detail-row">
+              <span>
+                <i class="fa-solid fa-hand-holding-dollar"></i>
+              </span>
+              <div className="event-details__price">
+                {event.price > 0 ? "$" + event.price : "FREE"}
+              </div>
             </div>
-            <div className="event-details__type">
-              {event.type}
-            </div>
-            <div className="event-details__actions">
-              {actionButtons}
+            <div className="detail-row">
+              <span>
+                <i class="fa-solid fa-place-of-worship"></i>
+              </span>
+              <div className="event-details__type">
+                {event.type}
+              </div>
             </div>
           </div>
-        </section>
+          <div className="event-details__actions">
+            {actionButtons}
+          </div>
+        </section >
         <section className="event-details__about">
           <h2>
             Details
@@ -142,7 +157,7 @@ const EventPage = () => {
             {event.description}
           </p>
         </section>
-      </div>
+      </div >
     </>
   );
 }

@@ -6,16 +6,17 @@
   border-bottom: 3px solid black;
   display: grid;
   grid-template-areas:
+    "image title"
     "image info"
-    "image ."
     "image actions"
   ;
-  grid-template-columns: 3fr 2fr;
-  grid-template-rows: 2fr 100px 1fr;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto 1fr;
   gap: 1rem;
   font-size: 1rem;
   padding-bottom: 1.5rem;
   margin-bottom: 1.5rem;
+  padding-top: 5rem;
 }
 
 .group-details-header * {
@@ -32,15 +33,19 @@
 }
 
 .group-details__name {
+  grid-area: title;
   font-size: 2rem;
+  background-color: var(--purple);
+  padding: 1rem;
 }
 
 .group-details__general-info {
-  font-size: 1.2rem;
   grid-area: info;
+  border: 0.5rem solid var(--purple);
+  padding: 0.5rem;
 }
 
-.group-details__general-info>* {
+.group-details__general-info>*:not(:last-child) {
   margin-bottom: 1rem;
 }
 
