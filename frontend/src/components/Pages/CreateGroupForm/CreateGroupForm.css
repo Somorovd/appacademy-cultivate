@@ -11,8 +11,7 @@
 }
 
 .location-inputs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
 }
 
 .create-group-form h3 {

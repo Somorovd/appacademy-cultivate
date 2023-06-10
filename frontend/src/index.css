@@ -1,5 +1,3 @@
-/* TODO Add site wide styles */
-
 @font-face {
   font-family: "BestChristmas";
   src: url("/public/Best_Christmas.otf");
@@ -14,9 +12,8 @@
   /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif */
   font-family: "Montserrat";
   --red: #6F1511;
-  --blue: #3891a6;
+  --blue: #3a879b;
   --yellow: #ffbc42;
-  --dull-yellow: #bfab25;
   --purple: #bfacc8;
   --dark-purple: #48414b;
   --light-purple: #e2e1e9;
