@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: { len: [1, 60] }
     },
     about: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       validate: { len: [30] }
     },
     type: {

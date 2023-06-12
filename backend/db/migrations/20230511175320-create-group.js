@@ -26,7 +26,7 @@ module.exports = {
         unique: true
       },
       about: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
       },
       type: {
         type: Sequelize.ENUM("In Person", "Online"),
