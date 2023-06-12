@@ -12,53 +12,116 @@ module.exports = {
     options.tableName = "Users";
     await queryInterface.bulkInsert(options, [
       {
-        email: "firstUser@email.com",
-        username: "User1",
-        firstName: "John",
-        lastName: "Doe",
+        email: "jspends@email.com",
+        username: "CluelessJack84",
+        firstName: "Clueless",
+        lastName: "Jack",
         hashedPassword: bcrypt.hashSync("user1 password")
       },
       {
-        email: "secondUser@email.com",
-        username: "User2",
-        firstName: "Joe",
-        lastName: "Shmoe",
-        hashedPassword: bcrypt.hashSync("user2 password")
-      },
-      {
-        email: "thirdUser@email.com",
-        username: "User3",
-        firstName: "Kitty",
-        lastName: "Kat",
-        hashedPassword: bcrypt.hashSync("user3 password")
-      },
-      {
-        email: "fourthUser@email.com",
-        username: "User4",
-        firstName: "Jason",
-        lastName: "Bourne",
+        email: "preacherjeremiah@email.com",
+        username: "JPreach",
+        firstName: "Jeremiah",
+        lastName: "Shepherd",
         hashedPassword: bcrypt.hashSync("user4 password")
       },
       {
-        email: "fifthUser@email.com",
+        email: "wolfgang.sol@email.com",
+        username: "BrerWolf",
+        firstName: "Wolfgang",
+        lastName: "Sol",
+        hashedPassword: bcrypt.hashSync("user2 password")
+      },
+      {
+        email: "starryeyes@email.com",
+        username: "StarryEyesXO",
+        firstName: "Roxanne",
+        lastName: "Starling",
+        hashedPassword: bcrypt.hashSync("user3 password")
+      },
+      {
+        email: "demo-user@email.com",
+        username: "_demo_overlord_",
+        firstName: "Demo",
+        lastName: "Overlord",
+        hashedPassword: bcrypt.hashSync("demo password")
+      },
+      {
+        email: "user1@email.com",
+        username: "User1",
+        firstName: "User",
+        lastName: "Name",
+        hashedPassword: bcrypt.hashSync("password")
+      },
+      {
+        email: "user2@email.com",
+        username: "User2",
+        firstName: "User",
+        lastName: "Name",
+        hashedPassword: bcrypt.hashSync("password")
+      },
+      {
+        email: "user3@email.com",
+        username: "User3",
+        firstName: "User",
+        lastName: "Name",
+        hashedPassword: bcrypt.hashSync("password")
+      },
+      {
+        email: "user4@email.com",
+        username: "User4",
+        firstName: "User",
+        lastName: "Name",
+        hashedPassword: bcrypt.hashSync("password")
+      },
+      {
+        email: "user5@email.com",
         username: "User5",
-        firstName: "Spider",
-        lastName: "Man",
-        hashedPassword: bcrypt.hashSync("user5 password")
+        firstName: "User",
+        lastName: "Name",
+        hashedPassword: bcrypt.hashSync("password")
       },
       {
-        email: "sixthUser@email.com",
+        email: "user6@email.com",
         username: "User6",
-        firstName: "Johnny",
-        lastName: "Appleseed",
-        hashedPassword: bcrypt.hashSync("user6 password")
+        firstName: "User",
+        lastName: "Name",
+        hashedPassword: bcrypt.hashSync("password")
       },
       {
-        email: "seventhUser@email.com",
+        email: "user7@email.com",
         username: "User7",
-        firstName: "Mr",
-        lastName: "Seven",
-        hashedPassword: bcrypt.hashSync("user7 password")
+        firstName: "User",
+        lastName: "Name",
+        hashedPassword: bcrypt.hashSync("password")
+      },
+      {
+        email: "user8@email.com",
+        username: "User8",
+        firstName: "User",
+        lastName: "Name",
+        hashedPassword: bcrypt.hashSync("password")
+      },
+      {
+        email: "user9@email.com",
+        username: "User9",
+        firstName: "User",
+        lastName: "Name",
+        hashedPassword: bcrypt.hashSync("password")
+      },
+      {
+        email: "user10@email.com",
+        username: "User10",
+        firstName: "User",
+        lastName: "Name",
+        hashedPassword: bcrypt.hashSync("password")
+      },
+      {
+        email: "user11@email.com",
+        username: "User11",
+        firstName: "User",
+        lastName: "Name",
+        hashedPassword: bcrypt.hashSync("password")
       },
     ], {});
   },
@@ -67,7 +130,19 @@ module.exports = {
     options.tableName = "Users";
     const Op = Sequelize.Op;
     await queryInterface.bulkDelete(options, {
-      username: ["User1", "User2", "User3", "User4", "User5", "User6", "User7"]
+      username: ["CluelessJack84", "BrerWolf", "StarryEyesXO", "JPreach",
+        "User1",
+        "User2",
+        "User3",
+        "User4",
+        "User5",
+        "User6",
+        "User7",
+        "User8",
+        "User9",
+        "User10",
+        "User11",
+      ]
     });
   }
 };

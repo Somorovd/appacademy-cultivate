@@ -11,39 +11,19 @@ module.exports = {
     options.tableName = "Memberships";
     await queryInterface.bulkInsert(options, [
       {
-        userId: 1,
-        groupId: 1,
-        status: "co-host"
-      },
-      {
-        userId: 1,
-        groupId: 2,
-        status: "co-host"
-      },
-      {
-        userId: 1,
-        groupId: 3,
-        status: "pending"
-      },
-      {
         userId: 2,
-        groupId: 2,
+        groupId: 1,
         status: "co-host"
       },
       {
         userId: 3,
-        groupId: 3,
+        groupId: 2,
         status: "co-host"
       },
       {
         userId: 4,
         groupId: 2,
         status: "co-host"
-      },
-      {
-        userId: 4,
-        groupId: 1,
-        status: "member"
       },
       {
         userId: 5,
@@ -63,7 +43,7 @@ module.exports = {
       {
         userId: 6,
         groupId: 2,
-        status: "pending"
+        status: "member"
       },
       {
         userId: 6,
@@ -72,7 +52,102 @@ module.exports = {
       },
       {
         userId: 7,
+        groupId: 1,
+        status: "member"
+      },
+      {
+        userId: 7,
+        groupId: 2,
+        status: "member"
+      },
+      {
+        userId: 7,
         groupId: 3,
+        status: "member"
+      },
+      {
+        userId: 8,
+        groupId: 1,
+        status: "member"
+      },
+      {
+        userId: 8,
+        groupId: 2,
+        status: "member"
+      },
+      {
+        userId: 8,
+        groupId: 3,
+        status: "member"
+      },
+      {
+        userId: 9,
+        groupId: 1,
+        status: "member"
+      },
+      {
+        userId: 9,
+        groupId: 3,
+        status: "member"
+      },
+      {
+        userId: 10,
+        groupId: 1,
+        status: "member"
+      },
+      {
+        userId: 10,
+        groupId: 2,
+        status: "member"
+      },
+      {
+        userId: 10,
+        groupId: 3,
+        status: "member"
+      },
+      {
+        userId: 11,
+        groupId: 1,
+        status: "member"
+      },
+      {
+        userId: 12,
+        groupId: 1,
+        status: "member"
+      },
+      {
+        userId: 13,
+        groupId: 1,
+        status: "member"
+      },
+      {
+        userId: 14,
+        groupId: 1,
+        status: "member"
+      },
+      {
+        userId: 14,
+        groupId: 2,
+        status: "member"
+      },
+      {
+        userId: 15,
+        groupId: 1,
+        status: "member"
+      },
+      {
+        userId: 15,
+        groupId: 2,
+        status: "member"
+      },
+      {
+        userId: 16,
+        groupId: 1,
+        status: "member"
+      },
+      {
+        userId: 16,
+        groupId: 2,
         status: "member"
       },
     ], {});

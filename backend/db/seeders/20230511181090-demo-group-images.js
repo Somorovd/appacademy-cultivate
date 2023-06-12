@@ -11,29 +11,19 @@ module.exports = {
     options.tableName = "GroupImages";
     await queryInterface.bulkInsert(options, [
       {
-        groupId: 1,
-        url: "this is image 1 of group 1",
+        groupId: 1, // cult culture
+        url: "https://cdn.discordapp.com/attachments/723759214123679836/1117559987619778630/image.png",
         preview: true
       },
       {
-        groupId: 1,
-        url: "this is image 2 of group 1",
-        preview: false
-      },
-      {
-        groupId: 2,
-        url: "this is image 1 of group 2",
+        groupId: 2, // luun
+        url: "https://cdn.discordapp.com/attachments/723759214123679836/1117558931615654048/blood20moon20small.webp",
         preview: true
       },
       {
-        groupId: 2,
-        url: "this is image 2 of group 2",
-        preview: false
-      },
-      {
-        groupId: 2,
-        url: "this is image 3 of group 2",
-        preview: false
+        groupId: 3, // eggplant
+        url: "https://cdn.discordapp.com/attachments/723759214123679836/1117561062867349694/maxresdefault.jpg",
+        preview: true
       },
     ], {});
   },

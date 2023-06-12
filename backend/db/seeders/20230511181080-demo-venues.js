@@ -13,34 +13,26 @@ module.exports = {
       {
         groupId: 1,
         address: "1000 Farm Road",
-        city: "Boston",
+        city: "Salem",
         state: "MA",
-        lat: "42.3601",
-        lng: "71.0589"
+        lat: "42.519539",
+        lng: "-70.896713"
       },
       {
         groupId: 2,
-        address: "1000 Farm Road",
-        city: "Boston",
-        state: "MA",
-        lat: "42.3601",
-        lng: "71.0589"
-      },
-      {
-        groupId: 1,
-        address: "Super HipHop Bar",
-        city: "Boston",
-        state: "MA",
-        lat: "41.4645",
-        lng: "72.7654"
+        address: "The Old Pine Forest",
+        city: "Boulder",
+        state: "CO",
+        lat: "40.0150",
+        lng: "105.2705"
       },
       {
         groupId: 3,
-        address: "Rick's Bowling Club",
-        city: "Honolulu",
-        state: "HI",
-        lat: "21.7756",
-        lng: "157.1015"
+        address: "The Farm",
+        city: "Hollywood",
+        state: "CA",
+        lat: "34.0928",
+        lng: "118.3287"
       },
     ], {});
   },
