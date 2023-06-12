@@ -27,7 +27,9 @@ const LandingPage = () => {
                 into an abyss of chilling experiences.
               </p>
             </div>
-            <img src="" className="landing-intro__image" />
+            <img
+              src="https://cdn.discordapp.com/attachments/723759214123679836/1117661691019264120/flowers.png"
+              className="landing-intro__image" />
           </article>
           <article className="landing-about">
             <h2>How to Cultivate</h2>
@@ -40,7 +42,11 @@ const LandingPage = () => {
           <article className="landing-nav">
             <ul className="landing-nav-list">
               < li className="landing-nav-card">
-                <img src="" alt="" className="landing-nav-card__image" />
+                <img
+                  src="https://images.vexels.com/media/users/3/242393/isolated/lists/5448e03ce4b979fa216c768944761ce2-tarot-card-the-fool-filled-stroke.png"
+                  alt=""
+                  className="landing-nav-card__image"
+                />
                 <h2
                   className="landing-nav-card__title"
                   onClick={() => { history.push("/groups") }}
@@ -53,7 +59,11 @@ const LandingPage = () => {
                 </p>
               </li>
               <li className="landing-nav-card">
-                <img src="" alt="" className="landing-nav-card__image" />
+                <img
+                  src="https://images.vexels.com/media/users/3/242414/isolated/lists/a8e4a045e4de4ebad12d0af432f03817-tarot-card-the-wheel-filled-stroke.png"
+                  alt=""
+                  className="landing-nav-card__image"
+                />
                 <h2
                   className="landing-nav-card__title"
                   onClick={() => { history.push("/events") }}
@@ -66,7 +76,10 @@ const LandingPage = () => {
                 </p>
               </li>
               <li className="landing-nav-card">
-                <img src="" alt="" className="landing-nav-card__image" />
+                <img
+                  src="https://images.vexels.com/media/users/3/242394/isolated/lists/a5833ac6dc2e1bdfe54d9f8b20f95b43-tarot-card-the-emperor-stroke.png"
+                  alt=""
+                  className="landing-nav-card__image" />
                 <h2
                   className={startGroupClassName}
                   onClick={() => { history.push("/groups/new") }}

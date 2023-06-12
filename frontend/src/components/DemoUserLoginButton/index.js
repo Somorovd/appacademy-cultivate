@@ -6,8 +6,8 @@ const DemoUserLoginButton = ({ onClick }) => {
 
   const loginDemoUser = () => {
     dispatch(sessionActions.thunkCreateSession({
-      credential: "User1",
-      password: "user1 password"
+      credential: "_demo_overlord_",
+      password: "demo password"
     }));
     if (onClick) onClick();
   }

@@ -6,9 +6,9 @@ import * as groupActions from "../../../store/groups";
 import BrowsingNavigation from "../../BrowsingNavigation";
 
 const BrowseEventsPage = () => {
-  const CURRENT_DATE = new Date().getTime();
   const dispatch = useDispatch();
   const allEventsState = useSelector((state) => state.events.allEvents);
+  const CURRENT_DATE = new Date().getTime();
   const allEvents = Object.values(allEventsState)
     .sort((eventA, eventB) => {
       let dateA = new Date(eventA.startDate).getTime();
