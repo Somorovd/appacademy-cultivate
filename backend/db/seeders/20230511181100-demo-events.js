@@ -239,7 +239,7 @@ module.exports = {
       {
         venueId: 3,
         groupId: 3,
-        name: "Roxanne's Anthology 101",
+        name: "Botany 101 with Roxanne",
         description: `
         In this months anthology lession we will finally begin addressing 
         how to tend to our beautiful flowers. Our flowers come in all 
