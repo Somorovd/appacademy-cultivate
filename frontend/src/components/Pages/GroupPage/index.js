@@ -1,10 +1,12 @@
 import { useParams, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import { useModal } from "../../../context/Modal";
 import EventCard from "../../EventCard";
 import ConfirmDeleteModal from "../../ConfirmDeleteModal";
 import OpenModalButton from "../../OpenModalButton";
 import GroupImages from "./GroupImages";
+import GroupImagesModal from "./GroupImagesModal";
 import * as groupActions from "../../../store/groups";
 import * as eventActions from "../../../store/events";
 import "./GroupPage.css";
@@ -12,11 +14,13 @@ import "./GroupPage.css";
 const GroupPage = () => {
   const CURRENT_DATE = new Date().getTime();
   const { groupId } = useParams();
+  const { setModalContent, closeModal } = useModal();
   const dispatch = useDispatch();
   const history = useHistory();
   const user = useSelector((state) => state.session.user);
   const group = useSelector((state) => state.groups.singleGroup);
   const eventsState = useSelector((state) => state.events.allEvents);
+
   const events = Object.values(eventsState).sort((eventA, eventB) => {
     let dateA = new Date(eventA.startDate).getTime();
     let dateB = new Date(eventB.startDate).getTime();
@@ -50,7 +54,7 @@ const GroupPage = () => {
   };
 
   const onClickAddImage = () => {
-    alert("Add some images!");
+    setModalContent(<GroupImagesModal />);
   };
 
   let availableButtons;
