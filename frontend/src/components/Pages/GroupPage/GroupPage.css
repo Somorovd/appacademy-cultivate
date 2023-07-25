@@ -66,3 +66,7 @@
 .group-details__actions button {
   padding: 0.6rem;
 }
+
+.add-group-images i {
+  font-size: 1rem;
+}

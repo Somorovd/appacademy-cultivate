@@ -1,0 +1,37 @@
+.group-image-container {
+  position: relative;
+  grid-area: image;
+}
+
+.image-slider {
+  position: absolute;
+  top: 0px;
+  width: 70px;
+  height: 100%;
+  z-index: 2;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 20px;
+}
+
+.group-image-container:hover>.image-slider {
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
+}
+
+.image-slider:hover {
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+}
+
+.image-slider i {
+  color: white;
+}
+
+.image-slider--left {
+  left: 0px;
+}
+
+.image-slider--right {
+  right: 0px;
+  transform: scaleX(-1);
+}
