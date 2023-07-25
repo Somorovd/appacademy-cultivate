@@ -1,4 +1,35 @@
 .group-images-modal {
-  height: 100%;
+  height: 100vh;
   width: 1000px;
+  padding: 40px;
+  background-color: var(--light-purple);
+}
+
+.group-image-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+}
+
+.group-image-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  object-fit: contain;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+i.add-image {
+  font-size: 3rem;
+  border: none;
+  background: none;
+  color: var(--gray);
+}
+
+i.add-image:hover {
+  border: none;
+  background: none;
+  color: var(--blue);
 }
