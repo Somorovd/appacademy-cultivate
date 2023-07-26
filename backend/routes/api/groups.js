@@ -238,6 +238,7 @@ router.post(
   async (req, res, next) => {
     const groupId = req.params.groupId;
     const userId = req.user.id;
+    const { preview } = req.body;
 
     const group = await Group.scope([
       { method: ["includeAuthorization", userId] },
@@ -254,7 +255,7 @@ router.post(
         GroupImage.create({
           groupId,
           url,
-          preview: urls.length === 1,
+          preview: preview || false,
         })
       )
     );
