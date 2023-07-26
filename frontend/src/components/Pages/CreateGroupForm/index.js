@@ -90,7 +90,6 @@ const CreateGroupForm = ({ group, isEditting }) => {
         history.push(`/groups/${group.id}`);
       })
       .catch(async (res) => {
-        console.log("RES", res);
         const resBody = await res.json();
         setValidationErrors(resBody.errors || {});
         submitButtonRef.current.disabled = false;
