@@ -1,26 +1,41 @@
 .group-image-container {
   position: relative;
   grid-area: image;
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+.group-details__image {
+  grid-area: image;
+  background-color: darkcyan;
+  height: 100%;
+  align-self: center;
+
 }
 
 .image-slider {
   position: absolute;
-  top: 0px;
-  width: 70px;
-  height: 100%;
+  top: 75%;
+  height: 20px;
+  aspect-ratio: 1;
+  padding: 5px;
   z-index: 2;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding-left: 20px;
-}
-
-.image-slider:hover {
-  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+  background-color: var(--light-purple);
 }
 
 .image-slider i {
-  color: white;
+  color: var(--dark-purple);
+}
+
+.image-slider:hover i {
+  color: var(--purple);
 }
 
 .image-slider--left {
