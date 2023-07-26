@@ -15,9 +15,9 @@
   padding-left: 20px;
 }
 
-.group-image-container:hover>.image-slider {
+/* .group-image-container:hover>.image-slider {
   background-image: linear-gradient(to right, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
-}
+} */
 
 .image-slider:hover {
   background-image: linear-gradient(to right, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
