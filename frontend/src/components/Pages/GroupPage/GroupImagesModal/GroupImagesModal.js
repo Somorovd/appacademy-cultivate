@@ -42,6 +42,8 @@ function ImageCard({ image, addCard, groupId }) {
     dispatch(groupActions.thunkBulkAddGroupImages(e.target.files, groupId));
   };
 
+  const handleDelete = () => {};
+
   return (
     <div className="group-image-card">
       {addCard ? (
@@ -58,10 +60,18 @@ function ImageCard({ image, addCard, groupId }) {
           />
         </>
       ) : (
-        <img
-          src={image.url}
-          alt=""
-        />
+        <>
+          <img
+            src={image.url}
+            alt=""
+          />
+          <div className="group-image-card__actions">
+            <i
+              className="fa-regular fa-trash-can delete"
+              onClick={handleDelete}
+            ></i>
+          </div>
+        </>
       )}
     </div>
   );

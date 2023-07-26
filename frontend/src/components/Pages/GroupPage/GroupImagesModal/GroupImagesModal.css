@@ -8,16 +8,20 @@
 .group-image-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 5px;
+  gap: 10px;
 }
 
 .group-image-card {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
   width: 100%;
   aspect-ratio: 1;
+  padding: 5px;
+  border: 1px solid var(--gray);
+  box-sizing: border-box;
 }
 
 .group-image-card img {
@@ -39,4 +43,17 @@ i.add-image:hover {
 
 input#group-image-input {
   display: none;
+}
+
+.group-image-card__actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.group-image-card__actions i {
+  font-size: 1rem;
+  padding: 5px;
+  border-radius: 50%;
+  aspect-ratio: 1;
 }
