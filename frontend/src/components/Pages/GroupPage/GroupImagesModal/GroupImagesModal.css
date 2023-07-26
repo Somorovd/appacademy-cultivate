@@ -15,10 +15,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  object-fit: contain;
   overflow: hidden;
   width: 100%;
   aspect-ratio: 1;
+}
+
+.group-image-card img {
+  height: 100%;
 }
 
 i.add-image {
@@ -32,4 +35,8 @@ i.add-image:hover {
   border: none;
   background: none;
   color: var(--blue);
+}
+
+input#group-image-input {
+  display: none;
 }

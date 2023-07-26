@@ -1,4 +1,6 @@
-import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import * as groupActions from "../../../../store/groups";
 import "./GroupImagesModal.css";
 
 export default function GroupImagesModal() {
@@ -17,24 +19,44 @@ export default function GroupImagesModal() {
             image={image}
           />
         ))}
-        <ImageCard addCard={true} />
+        <ImageCard
+          addCard={true}
+          groupId={group.id}
+        />
       </section>
     </div>
   );
 }
 
-function ImageCard({ image, addCard }) {
-  const handleImageUpload = () => {
-    alert("add new image(s)");
+function ImageCard({ image, addCard, groupId }) {
+  const dispatch = useDispatch();
+  const [imageFiles, setImageFiles] = useState([]);
+
+  const updateFiles = (e) => {
+    const files = e.target.files;
+    setImageFiles(files);
+  };
+
+  const handleImageUpload = (e) => {
+    updateFiles(e);
+    dispatch(groupActions.thunkBulkAddGroupImages(e.target.files, groupId));
   };
 
   return (
     <div className="group-image-card">
       {addCard ? (
-        <i
-          className="add-image fa-solid fa-circle-plus blue"
-          onClick={handleImageUpload}
-        ></i>
+        <>
+          <label htmlFor="group-image-input">
+            <i className="add-image fa-solid fa-circle-plus blue"></i>
+          </label>
+          <input
+            id="group-image-input"
+            type="file"
+            multiple
+            accept=".jpg, .jpeg, .png"
+            onChange={handleImageUpload}
+          />
+        </>
       ) : (
         <img
           src={image.url}

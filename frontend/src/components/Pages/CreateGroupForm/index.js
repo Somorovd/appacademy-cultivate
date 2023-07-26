@@ -257,6 +257,7 @@ const CreateGroupForm = ({ group, isEditting }) => {
           <input
             type="file"
             onChange={updateFile}
+            accept=".jpg, .jpeg, .png"
           />
           {validationErrors.image && (
             <p className="error">{validationErrors.image}</p>

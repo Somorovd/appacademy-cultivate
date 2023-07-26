@@ -4,6 +4,8 @@ const {
   multipleFilesUpload,
   multipleMulterUpload,
   retrievePrivateFile,
+  singleFileUpload,
+  singleMulterUpload,
 } = require("../../awsS3");
 
 const {
@@ -27,7 +29,6 @@ const {
   handleInputValidationErrors,
   buildValidationErrorResponce,
 } = require("../../utils/validation");
-const { singleFileUpload, singleMulterUpload } = require("../../awsS3");
 
 //#region 							Express Middleware
 const validateMembershipRequestInput = [
@@ -233,16 +234,10 @@ router.post("/:groupId/events", requireAuth, async (req, res, next) => {
 router.post(
   "/:groupId/images",
   requireAuth,
-  singleMulterUpload("imageFile"),
+  multipleMulterUpload("imageFiles"),
   async (req, res, next) => {
     const groupId = req.params.groupId;
     const userId = req.user.id;
-    const { preview } = req.body;
-    const url = req.file
-      ? await singleFileUpload({ file: req.file, public: true })
-      : null;
-
-    console.log("\n\n\nSingle file upload", url, "\n\n\n");
 
     const group = await Group.scope([
       { method: ["includeAuthorization", userId] },
@@ -253,13 +248,20 @@ router.post(
     const isNotAuthorized = group.organizerId != userId;
     if (isNotAuthorized) return buildAuthorzationErrorResponce(next);
 
-    const image = await GroupImage.create({ groupId, url, preview });
-    await group.addGroupImage(image);
-    return res.json({
-      id: image.id,
-      url: image.url,
-      preview: image.preview,
-    });
+    const urls = await multipleFilesUpload({ files: req.files, public: true });
+    const images = await Promise.all(
+      urls.map((url) =>
+        GroupImage.create({
+          groupId,
+          url,
+          preview: false,
+        })
+      )
+    );
+
+    await group.addGroupImages(images);
+
+    return res.json({ GroupImages: images });
   }
 );
 

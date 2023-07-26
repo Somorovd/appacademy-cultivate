@@ -4,6 +4,7 @@ const GET_ALL_GROUPS = "groups/GET_ALL_GROUPS";
 const GET_ONE_GROUP = "groups/GET_ONE_GROUP";
 const CREATE_GROUP = "groups/CREATE_GROUP";
 const ADD_GROUP_IMAGE = "groups/ADD_GROUP_IMAGE";
+const BULK_ADD_GROUP_IMAGES = "groups/BULK_ADD_GROUP_IMAGES";
 const DELETE_GROUP = "groups/DELETE_GROUP";
 
 const actionGetAllGroups = (groups) => {
@@ -38,6 +39,13 @@ const actionAddGroupImage = (groupImage) => {
   return {
     type: ADD_GROUP_IMAGE,
     groupImage,
+  };
+};
+
+const actionBulkAddGroupImages = (groupImages) => {
+  return {
+    type: BULK_ADD_GROUP_IMAGES,
+    groupImages,
   };
 };
 
@@ -108,6 +116,22 @@ export const thunkAddGroupImage = (groupImage, groupId) => async (dispatch) => {
   return resBody;
 };
 
+export const thunkBulkAddGroupImages =
+  (groupImages, groupId) => async (dispatch) => {
+    const formData = new FormData();
+    Array.from(groupImages).forEach((image) =>
+      formData.append("imageFiles", image)
+    );
+
+    const response = await csrfFetch(`/api/groups/${groupId}/images`, {
+      method: "post",
+      body: formData,
+    });
+    const resBody = await response.json();
+    if (response.ok) dispatch(actionBulkAddGroupImages(resBody["GroupImages"]));
+    return resBody;
+  };
+
 export const thunkUpdateGroupImage =
   (groupImage, groupId) => async (dispatch) => {
     const deleted = await csrfFetch(`/api/group-images/${groupImage.id}`, {
@@ -163,6 +187,14 @@ const groupsReducer = (state = initialState, action) => {
         GroupImages: [action.groupImage],
       };
       return { ...state, singleGroup };
+    }
+    case BULK_ADD_GROUP_IMAGES: {
+      const newState = { ...state };
+      newState.singleGroup["GroupImages"] = [
+        ...newState.singleGroup["GroupImages"],
+        ...action.groupImages,
+      ];
+      return newState;
     }
     default:
       return state;
