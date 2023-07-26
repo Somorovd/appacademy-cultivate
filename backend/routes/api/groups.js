@@ -461,7 +461,6 @@ async function getGroupsInfo(options) {
 
     if (!details) {
       const image = groupData["GroupImages"][0]?.dataValues.url || null;
-      // const url = image && retrievePrivateFile(image.url);
       groupData.previewImage = image;
       delete groupData["GroupImages"];
     }

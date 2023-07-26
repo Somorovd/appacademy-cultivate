@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import * as groupActions from "../../../store/groups";
@@ -7,6 +7,7 @@ import "./CreateGroupForm.css";
 const CreateGroupForm = ({ group, isEditting }) => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const submitButtonRef = useRef();
 
   const [city, setCity] = useState(group?.city || "");
   const [state, setState] = useState(group?.state || "");
@@ -33,6 +34,7 @@ const CreateGroupForm = ({ group, isEditting }) => {
     if (!state) errors["state"] = "State is required";
     if (!name) errors["name"] = "Name is required";
     if (!type) errors["type"] = "Type is required";
+    if (!imageFile) errors["image"] = "Group image is required";
     if (
       isPrivate !== true &&
       isPrivate !== false &&
@@ -41,7 +43,6 @@ const CreateGroupForm = ({ group, isEditting }) => {
     ) {
       errors["private"] = "Privacy is required";
     }
-    // if (!url) errors["url"] = "Preview image url is required";
 
     if (name && name.length > 60)
       errors["name"] = "Name cannot exceed 60 characters";
@@ -49,17 +50,16 @@ const CreateGroupForm = ({ group, isEditting }) => {
       errors["about"] = "About length must be at least 30 characters";
     if (about & (about.length > 1000))
       errors["about"] = "About cannot exceed 1000 characters";
-    // if (!url.match(/(\.png|\.jpg|\.jpeg)\s*$/))
-    //   errors["url"] = "Preview image url must end with .png, .jpg, or .jpeg";
 
     setValidationErrors(errors);
-    console.log("validation errors", errors);
     return Object.keys(errors).length === 0;
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
     if (!validateInput()) return;
+
+    submitButtonRef.current.disabled = true;
 
     const groupData = {
       id: isEditting ? group.id : undefined,
@@ -82,17 +82,18 @@ const CreateGroupForm = ({ group, isEditting }) => {
         : groupActions.thunkCreateGroup(groupData)
     )
       .then(async (group) => {
-        if (url !== image?.url)
-          await dispatch(
-            isEditting
-              ? groupActions.thunkUpdateGroupImage(groupImage, group.id)
-              : groupActions.thunkAddGroupImage(groupImage, group.id)
-          );
+        await dispatch(
+          isEditting
+            ? groupActions.thunkUpdateGroupImage(groupImage, group.id)
+            : groupActions.thunkAddGroupImage(groupImage, group.id)
+        );
         history.push(`/groups/${group.id}`);
       })
       .catch(async (res) => {
+        console.log("RES", res);
         const resBody = await res.json();
         setValidationErrors(resBody.errors || {});
+        submitButtonRef.current.disabled = false;
       });
   };
 
@@ -253,24 +254,19 @@ const CreateGroupForm = ({ group, isEditting }) => {
             <p className="error">{validationErrors.private}</p>
           )}
           <p>Please add an image url for your group</p>
-          {/* <input
-            value={url}
-            type="text"
-            placeholder="image url"
-            onChange={(e) => setUrl(e.target.value)}
-          />
-          {validationErrors.url && (
-            <p className="error">{validationErrors.url}</p>
-          )} */}
           <input
             type="file"
             onChange={updateFile}
           />
+          {validationErrors.image && (
+            <p className="error">{validationErrors.image}</p>
+          )}
         </section>
         <section>
           <button
             type="submit"
             className="round blue"
+            ref={submitButtonRef}
           >
             {(isEditting ? "Update" : "Create") + " Cult"}
           </button>
