@@ -105,14 +105,14 @@ export const thunkDeleteGroup = (groupId) => async (dispatch) => {
 export const thunkAddGroupImage = (groupImage, groupId) => async (dispatch) => {
   const formData = new FormData();
   formData.append("preview", groupImage.preview);
-  formData.append("imageFile", groupImage.imageFile);
+  formData.append("imageFiles", groupImage.imageFile);
 
   const response = await csrfFetch(`/api/groups/${groupId}/images`, {
     method: "post",
     body: formData,
   });
   const resBody = await response.json();
-  if (response.ok) dispatch(actionAddGroupImage(groupImage));
+  if (response.ok) dispatch(actionAddGroupImage(resBody["GroupImages"][0]));
   return resBody;
 };
 

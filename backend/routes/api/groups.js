@@ -254,7 +254,7 @@ router.post(
         GroupImage.create({
           groupId,
           url,
-          preview: false,
+          preview: urls.length === 1,
         })
       )
     );
