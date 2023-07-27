@@ -1,0 +1,48 @@
+.group-image-container {
+  position: relative;
+  grid-area: image;
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+.group-details__image {
+  grid-area: image;
+  background-color: darkcyan;
+  height: 100%;
+  align-self: center;
+
+}
+
+.image-slider {
+  position: absolute;
+  top: 75%;
+  height: 20px;
+  aspect-ratio: 1;
+  padding: 5px;
+  z-index: 2;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: var(--light-purple);
+}
+
+.image-slider i {
+  color: var(--dark-purple);
+}
+
+.image-slider:hover i {
+  color: var(--purple);
+}
+
+.image-slider--left {
+  left: 0px;
+}
+
+.image-slider--right {
+  right: 0px;
+  transform: scaleX(-1);
+}

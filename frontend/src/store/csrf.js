@@ -4,10 +4,14 @@ export async function csrfFetch(url, options = {}) {
   options.method = options.method || "GET";
   options.headers = options.headers || {};
 
-  if (options.method.toUpperCase() !== 'GET') {
-    options.headers['content-type'] =
-      options.headers['content-type'] || 'application/json';
-    options.headers['XSRF-Token'] = Cookies.get('XSRF-TOKEN');
+  if (options.method.toUpperCase() !== "GET") {
+    if (
+      !options.headers["Content-Type"] &&
+      !(options.body instanceof FormData)
+    ) {
+      options.headers["Content-Type"] = "application/json";
+    }
+    options.headers["XSRF-Token"] = Cookies.get("XSRF-TOKEN");
   }
 
   const res = await window.fetch(url, options);
@@ -17,5 +21,5 @@ export async function csrfFetch(url, options = {}) {
 }
 
 export function restoreCSRF() {
-  return csrfFetch('/api/csrf/restore');
+  return csrfFetch("/api/csrf/restore");
 }

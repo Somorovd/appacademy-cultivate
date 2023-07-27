@@ -9,7 +9,6 @@
 }
 
 * {
-  /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif */
   font-family: "Montserrat";
   --red: #6F1511;
   --blue: #3a879b;
@@ -102,12 +101,13 @@ button>span {
   transform: skew(-20deg);
 }
 
-button.delete {
+.delete {
   border: 2px solid var(--red);
   color: var(--red);
+  background-color: var(--light-purple);
 }
 
-button.delete:hover {
+.delete:hover {
   border: 2px solid var(--red);
   background-color: var(--red);
   color: var(--white);
