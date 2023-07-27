@@ -17,6 +17,7 @@ export default function GroupImagesModal() {
           <ImageCard
             key={image.id}
             image={image}
+            single={images.length === 1}
           />
         ))}
         <ImageCard
@@ -28,7 +29,7 @@ export default function GroupImagesModal() {
   );
 }
 
-function ImageCard({ image, addCard, groupId }) {
+function ImageCard({ image, addCard, groupId, single }) {
   const dispatch = useDispatch();
   const deleteAction = useRef();
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -44,7 +45,11 @@ function ImageCard({ image, addCard, groupId }) {
   };
 
   const handleImageUpload = (e) => {
-    dispatch(groupActions.thunkBulkAddGroupImages(e.target.files, groupId));
+    const files = [];
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+    for (let file of e.target.files)
+      if (allowedTypes.includes(file.type)) files.push(file);
+    dispatch(groupActions.thunkBulkAddGroupImages(files, groupId));
   };
 
   const handleDelete = (e) => {
@@ -75,17 +80,19 @@ function ImageCard({ image, addCard, groupId }) {
             alt=""
           />
           <div className="group-image-card__actions">
-            <div
-              className="group-image-card__delete"
-              onClick={handleDelete}
-              ref={deleteAction}
-            >
-              {confirmDelete ? (
-                <i className="fa-regular fa-trash-can delete"></i>
-              ) : (
-                <i className="fa-solid fa-xmark delete"></i>
-              )}
-            </div>
+            {!single && (
+              <div
+                className="group-image-card__delete"
+                onClick={handleDelete}
+                ref={deleteAction}
+              >
+                {confirmDelete ? (
+                  <i className="fa-regular fa-trash-can delete"></i>
+                ) : (
+                  <i className="fa-solid fa-xmark delete"></i>
+                )}
+              </div>
+            )}
           </div>
         </>
       )}
