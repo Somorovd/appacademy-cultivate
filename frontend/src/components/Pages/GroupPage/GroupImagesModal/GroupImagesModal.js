@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as groupActions from "../../../../store/groups";
 import "./GroupImagesModal.css";
@@ -30,19 +30,28 @@ export default function GroupImagesModal() {
 
 function ImageCard({ image, addCard, groupId }) {
   const dispatch = useDispatch();
-  const [imageFiles, setImageFiles] = useState([]);
+  const deleteAction = useRef();
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
-  const updateFiles = (e) => {
-    const files = e.target.files;
-    setImageFiles(files);
+  useEffect(() => {
+    document.addEventListener("click", cancelConfirm);
+    return () => document.addEventListener("click", cancelConfirm);
+  }, []);
+
+  const cancelConfirm = (e) => {
+    if (addCard || deleteAction.current?.contains(e.target)) return;
+    else setConfirmDelete(false);
   };
 
   const handleImageUpload = (e) => {
-    updateFiles(e);
     dispatch(groupActions.thunkBulkAddGroupImages(e.target.files, groupId));
   };
 
-  const handleDelete = () => {};
+  const handleDelete = (e) => {
+    e.stopPropagation();
+    if (confirmDelete) dispatch(groupActions.thunkDeleteGroupImage(image));
+    else return setConfirmDelete(true);
+  };
 
   return (
     <div className="group-image-card">
@@ -66,10 +75,17 @@ function ImageCard({ image, addCard, groupId }) {
             alt=""
           />
           <div className="group-image-card__actions">
-            <i
-              className="fa-regular fa-trash-can delete"
+            <div
+              className="group-image-card__delete"
               onClick={handleDelete}
-            ></i>
+              ref={deleteAction}
+            >
+              {confirmDelete ? (
+                <i className="fa-regular fa-trash-can delete"></i>
+              ) : (
+                <i className="fa-solid fa-xmark delete"></i>
+              )}
+            </div>
           </div>
         </>
       )}

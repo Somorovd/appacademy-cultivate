@@ -52,8 +52,11 @@ input#group-image-input {
 }
 
 .group-image-card__actions i {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 1rem;
-  padding: 5px;
   border-radius: 50%;
+  width: 1.5rem;
   aspect-ratio: 1;
 }
