@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 
 import ImageCard from "./ImageCard";
+import NewImageCard from "./NewImageCard";
 import "./GroupImagesModal.css";
 
 export default function GroupImagesModal() {
@@ -17,13 +18,9 @@ export default function GroupImagesModal() {
           <ImageCard
             key={image.id}
             image={image}
-            single={images.length === 1}
           />
         ))}
-        <ImageCard
-          addCard={true}
-          groupId={group.id}
-        />
+        <NewImageCard groupId={group.id} />
       </section>
     </div>
   );
