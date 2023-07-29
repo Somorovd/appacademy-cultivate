@@ -23,7 +23,9 @@ export default function ImageCard({ image }) {
     else return setConfirmDelete(true);
   };
 
-  const handleChangePreview = () => {};
+  const handleChangePreview = () => {
+    dispatch(groupActions.thunkSetPreviewImage(image.id));
+  };
 
   return (
     <div className="group-image-card">
