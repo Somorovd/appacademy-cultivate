@@ -23,6 +23,8 @@ export default function ImageCard({ image }) {
     else return setConfirmDelete(true);
   };
 
+  const handleChangePreview = () => {};
+
   return (
     <div className="group-image-card">
       <img
@@ -30,6 +32,12 @@ export default function ImageCard({ image }) {
         alt=""
       />
       <div className="group-image-card__actions">
+        <div
+          className="group-image-card__preview"
+          onClick={handleChangePreview}
+        >
+          <i class={"fa-solid fa-star " + (image.preview && "preview")}></i>
+        </div>
         {!image.preview && (
           <div
             className="group-image-card__delete"
@@ -37,9 +45,9 @@ export default function ImageCard({ image }) {
             ref={deleteAction}
           >
             {confirmDelete ? (
-              <i className="fa-regular fa-trash-can delete"></i>
+              <i className="fa-regular fa-trash-can"></i>
             ) : (
-              <i className="fa-solid fa-xmark delete"></i>
+              <i className="fa-solid fa-xmark"></i>
             )}
           </div>
         )}
