@@ -6,6 +6,7 @@ export default function ImageCard({ image }) {
   const dispatch = useDispatch();
   const deleteAction = useRef();
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [isPreview, setIsPreview] = useState(image.preview);
 
   useEffect(() => {
     document.addEventListener("click", cancelConfirm);
@@ -28,7 +29,7 @@ export default function ImageCard({ image }) {
   };
 
   return (
-    <div className="group-image-card">
+    <div className={"group-image-card " + (isPreview ? "preview-image" : "")}>
       <img
         src={image.url}
         alt=""
@@ -38,7 +39,7 @@ export default function ImageCard({ image }) {
           className="group-image-card__preview"
           onClick={handleChangePreview}
         >
-          <i class={"fa-solid fa-star " + (image.preview && "preview")}></i>
+          <i class={"fa-solid fa-star " + (image.preview ? "preview" : "")}></i>
         </div>
         {!image.preview && (
           <div
