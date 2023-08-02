@@ -34,7 +34,7 @@ const CreateGroupForm = ({ group, isEditting }) => {
     if (!state) errors["state"] = "State is required";
     if (!name) errors["name"] = "Name is required";
     if (!type) errors["type"] = "Type is required";
-    if (!imageFile) errors["image"] = "Group image is required";
+    if (!isEditting && !imageFile) errors["image"] = "Group image is required";
     if (
       isPrivate !== true &&
       isPrivate !== false &&
@@ -82,11 +82,8 @@ const CreateGroupForm = ({ group, isEditting }) => {
         : groupActions.thunkCreateGroup(groupData)
     )
       .then(async (group) => {
-        await dispatch(
-          isEditting
-            ? groupActions.thunkUpdateGroupImage(groupImage, group.id)
-            : groupActions.thunkAddGroupImage(groupImage, group.id)
-        );
+        if (!isEditting)
+          await dispatch(groupActions.thunkAddGroupImage(groupImage, group.id));
         history.push(`/groups/${group.id}`);
       })
       .catch(async (res) => {
@@ -252,14 +249,18 @@ const CreateGroupForm = ({ group, isEditting }) => {
           {validationErrors.private && (
             <p className="error">{validationErrors.private}</p>
           )}
-          <p>Please add an image url for your group</p>
-          <input
-            type="file"
-            onChange={updateFile}
-            accept=".jpg, .jpeg, .png"
-          />
-          {validationErrors.image && (
-            <p className="error">{validationErrors.image}</p>
+          {!isEditting && (
+            <>
+              <p>Please add an image url for your group</p>
+              <input
+                type="file"
+                onChange={updateFile}
+                accept=".jpg, .jpeg, .png"
+              />
+              {validationErrors.image && (
+                <p className="error">{validationErrors.image}</p>
+              )}
+            </>
           )}
         </section>
         <section>
