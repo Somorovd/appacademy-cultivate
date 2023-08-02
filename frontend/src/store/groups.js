@@ -148,28 +148,6 @@ export const thunkBulkAddGroupImages =
     return resBody;
   };
 
-export const thunkUpdateGroupImage =
-  (groupImage, groupId) => async (dispatch) => {
-    const deleted = await csrfFetch(`/api/group-images/${groupImage.id}`, {
-      method: "delete",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(groupImage),
-    });
-
-    const response = await csrfFetch(`/api/groups/${groupId}/images`, {
-      method: "post",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(groupImage),
-    });
-    const resBody = await response.json();
-    if (response.ok) dispatch(actionAddGroupImage(groupImage));
-    return resBody;
-  };
-
 export const thunkDeleteGroupImage = (groupImage) => async (dispatch) => {
   const response = await csrfFetch(`/api/group-images/${groupImage.id}`, {
     method: "delete",
