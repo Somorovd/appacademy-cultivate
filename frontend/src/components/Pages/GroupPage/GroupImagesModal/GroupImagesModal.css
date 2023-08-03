@@ -6,12 +6,13 @@
 }
 
 .group-image-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
 .group-image-card {
+  flex: 0 0 calc(25% - 10px);
   position: relative;
   display: flex;
   justify-content: center;
@@ -19,9 +20,12 @@
   overflow: hidden;
   width: 100%;
   aspect-ratio: 1;
-  padding: 5px;
   border: 1px solid var(--gray);
   box-sizing: border-box;
+}
+
+.preview-image {
+  order: -1;
 }
 
 .group-image-card img {
@@ -47,8 +51,16 @@ input#group-image-input {
 
 .group-image-card__actions {
   position: absolute;
-  top: 10px;
+  border: 1px solid var(--gray);
+  border-top: none;
+  top: 0px;
   right: 10px;
+  padding: 5px;
+  padding-top: 10px;
+  background-color: var(--light-purple);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .group-image-card__actions i {
@@ -59,4 +71,16 @@ input#group-image-input {
   border-radius: 50%;
   width: 1.5rem;
   aspect-ratio: 1;
+}
+
+.group-image-card__preview i {
+  color: var(--gray);
+}
+
+.group-image-card__preview .preview {
+  color: var(--blue);
+}
+
+.group-image-card__delete i {
+  color: var(--red);
 }

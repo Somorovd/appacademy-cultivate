@@ -7,6 +7,7 @@ const ADD_GROUP_IMAGE = "groups/ADD_GROUP_IMAGE";
 const BULK_ADD_GROUP_IMAGES = "groups/BULK_ADD_GROUP_IMAGES";
 const DELETE_GROUP = "groups/DELETE_GROUP";
 const DELETE_GROUP_IMAGE = "groups/DELETE_GROUP_IMAGE";
+const SET_PREVIEW_IMAGE = "groups/SET_PREVIEW_IMAGE";
 
 const actionGetAllGroups = (groups) => {
   return {
@@ -53,6 +54,13 @@ const actionBulkAddGroupImages = (groupImages) => {
 const actionDeleteGroupImage = (groupImageId) => {
   return {
     type: DELETE_GROUP_IMAGE,
+    groupImageId,
+  };
+};
+
+const actionSetPreviewImage = (groupImageId) => {
+  return {
+    type: SET_PREVIEW_IMAGE,
     groupImageId,
   };
 };
@@ -140,28 +148,6 @@ export const thunkBulkAddGroupImages =
     return resBody;
   };
 
-export const thunkUpdateGroupImage =
-  (groupImage, groupId) => async (dispatch) => {
-    const deleted = await csrfFetch(`/api/group-images/${groupImage.id}`, {
-      method: "delete",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(groupImage),
-    });
-
-    const response = await csrfFetch(`/api/groups/${groupId}/images`, {
-      method: "post",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(groupImage),
-    });
-    const resBody = await response.json();
-    if (response.ok) dispatch(actionAddGroupImage(groupImage));
-    return resBody;
-  };
-
 export const thunkDeleteGroupImage = (groupImage) => async (dispatch) => {
   const response = await csrfFetch(`/api/group-images/${groupImage.id}`, {
     method: "delete",
@@ -169,6 +155,16 @@ export const thunkDeleteGroupImage = (groupImage) => async (dispatch) => {
 
   const resBody = await response.json();
   if (response.ok) dispatch(actionDeleteGroupImage(groupImage.id));
+  return resBody;
+};
+
+export const thunkSetPreviewImage = (groupImageId) => async (dispatch) => {
+  const response = await csrfFetch(`/api/group-images/${groupImageId}`, {
+    method: "put",
+  });
+
+  const resBody = await response.json();
+  if (response.ok) dispatch(actionSetPreviewImage(groupImageId));
   return resBody;
 };
 
@@ -221,6 +217,17 @@ const groupsReducer = (state = initialState, action) => {
       singleGroup["GroupImages"] = singleGroup["GroupImages"].filter(
         (img) => img.id !== action.groupImageId
       );
+      return { ...state, singleGroup };
+    }
+    case SET_PREVIEW_IMAGE: {
+      const singleGroup = {
+        ...state.singleGroup,
+      };
+      singleGroup["GroupImages"] = singleGroup["GroupImages"].map((img) => {
+        if (img.id === action.groupImageId) img.preview = true;
+        else if (img.preview) img.preview = false;
+        return img;
+      });
       return { ...state, singleGroup };
     }
     default:
