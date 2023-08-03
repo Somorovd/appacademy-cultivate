@@ -17,20 +17,19 @@ const EditGroupForm = () => {
 
   useEffect(() => {
     if (!isCurrentGroup) dispatch(groupActions.thunkGetOneGroup(groupId));
-  }, [dispatch])
+  }, [dispatch]);
 
-  if (!isAuthorized)
-    history.push("/");
+  if (isCurrentGroup && !isAuthorized) history.push("/");
+  if (!isCurrentGroup) return null;
 
   return (
-    <>
-      {
-        isAuthorized
-          ? isCurrentGroup && <CreateGroupForm group={group} isEditting={true} />
-          : <h2>Not Authorized</h2>
-      }
-    </>
+    isCurrentGroup && (
+      <CreateGroupForm
+        group={group}
+        isEditting={true}
+      />
+    )
   );
-}
+};
 
 export default EditGroupForm;
